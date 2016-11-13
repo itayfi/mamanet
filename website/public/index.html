@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My File Share - Files Index</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.1.0/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/remarkable@1.7.1/dist/remarkable.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel">
+      var ListItem = React.createClass({
+        enterEdit: function (e) {
+          e.preventDefault();
+          this.setState({edit: true});
+        },
+        saveEdit: function (e) {
+          e.preventDefault();
+          this.props.onChange({description: this._input.value})
+          this.setState({edit: false});
+        },
+        cancelEdit: function (e) {
+          e.preventDefault();
+          this.setState({edit: false});
+        },
+        getInitialState: function () {
+          return {edit: false};
+        },
+        render: function () {
+          var description, actions;
+          if (this.state.edit) {
+            description = <textarea defaultValue={this.props.children} ref={(c) => this._input = c}/>;
+            actions = [
+              <li key="save">
+                <a href="#" onClick={this.saveEdit}>
+                  <i className="fa fa-save"></i>
+                  <span>Save</span>
+                </a>
+              </li>,
+              <li key="cancel">
+                <a href="#" onClick={this.cancelEdit}>
+                  <i className="fa fa-times"></i>
+                  <span>Cancel</span>
+                </a>
+              </li>
+            ];
+          } else {
+            description = <div className="description">{this.props.children}</div>;
+            actions = [
+              <li key="edit">
+                <a href="#" onClick={this.enterEdit}>
+                  <i className="fa fa-pencil"></i>
+                  <span>Edit</span>
+                </a>
+              </li>
+            ];
+          }
+          return <li className="item">
+            <strong>{this.props.name}</strong>
+            <div className="item-hash">{this.props.hash}</div>
+            {description}
+            <ul className="inline-list">
+              <li>
+                <a href={"mfs:" + this.props.hash}>
+                  <i className="fa fa-download"></i>
+                  <span>Download</span>
+                </a>
+                <span className="item-size"> ({this.props.size})</span>
+              </li>
+              {actions}
+            </ul>
+          </li>;
+        }
+      });
+      var List = React.createClass({
+        loadItemsFromServer: function () {
+          var self = this;
+          $.getJSON('/api/items', function (items) {
+            self.setState({data: items});
+          });
+        },
+        getInitialState: function () {
+          return {data: []}
+        },
+        componentDidMount: function () {
+          this.loadItemsFromServer();
+          setInterval(this.loadItemsFromServer, this.props.pollInterval || 2000);
+        },
+        render: function () {
+          var data = this.state.data;
+          var self = this;
+          if (this.props.filter != '') {
+            var regex = new RegExp(this.props.filter.replace(/\s+/g, '|'), 'i');
+            data = data.filter(function (item) {
+              return regex.test(item.name) || regex.test(item.description);
+            });
+          }
+          var items = data.map(function (item) {
+            var changed = function (diff) {
+              item.description = diff.description;
+              $.ajax({
+                url: '/api/items/' + item.hash,
+                method: 'PUT',
+                data: item
+              });
+            };
+            return <ListItem key={item.hash} hash={item.hash} size={item.size} name={item.name} onChange={changed}>{item.description}</ListItem>
+          });
+          if (items.length == 0) {
+            return <div className="no-results">No results found</div>;
+          }
+          return <ul className="list">
+            {items}
+          </ul>;
+        }
+      });
+      var ListFilter = React.createClass({
+        getInitialState: function () {
+          return {filter: ''};
+        },
+        handleFilterChange: function (e) {
+          this.setState({filter: e.target.value});
+        },
+        render: function () {
+          return <div>
+            <input id="filter-box" type="text" value={this.state.filter} onChange={this.handleFilterChange} placeholder="Filter" />
+            <List url={this.props.url} filter={this.state.filter} />
+          </div>;
+        }
+      });
+      ReactDOM.render(
+        <div>
+          <h1>My File Share</h1>
+          <ListFilter url="/api/items" />
+        </div>,
+        document.getElementById('content')
+        );
+    </script>
+  </body>
+</html>
