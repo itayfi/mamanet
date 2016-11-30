@@ -27,9 +27,8 @@ namespace LibMamanet.Files
             get; private set;
         }
 
-        private FileStream GoToPart()
+        private FileStream GoToPart(FileStream stream)
         {
-            FileStream stream = File.GetStream();
             stream.Seek(File.PartSize * Number, SeekOrigin.Begin);
             return stream;
         }
@@ -40,7 +39,8 @@ namespace LibMamanet.Files
             {
                 throw new NotAvailableException(string.Format("The part {0} of file {0} was not downloaded yet", Number, File));
             }
-            FileStream stream = GoToPart();
+            FileStream stream = File.GetInputStream();
+            GoToPart(stream);
             byte[] buffer = new byte[File.PartSize];
             stream.Read(buffer, 0, File.PartSize);
             return buffer;
@@ -52,7 +52,8 @@ namespace LibMamanet.Files
             {
                 throw new MalformedDataException("Part data size should be same as file part size");
             }
-            FileStream stream = GoToPart();
+            FileStream stream = File.GetOutputStream();
+            GoToPart(stream);
             stream.Write(data, 0, File.PartSize);
             IsAvailable = true;
             File.UpdateAvailability();

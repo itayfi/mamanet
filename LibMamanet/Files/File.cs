@@ -12,7 +12,8 @@ namespace LibMamanet.Files
         private byte[] hash;
         private FilePart[] parts;
         internal FileInfo localFile;
-        internal FileStream fileStream;
+        internal FileStream inputStream;
+        internal FileStream outputStream;
 
         public MamanetFile(string name, byte[] hash, FileInfo localFile, int totalSize, int partSize = 1024, bool isAvailable = false)
         {
@@ -92,21 +93,38 @@ namespace LibMamanet.Files
                 return Convert.ToDecimal(parts.Count(part => part.IsAvailable)) / Convert.ToDecimal(NumberOfParts);
             }
         }
-        internal FileStream GetStream()
+        internal FileStream GetInputStream()
         {
-            if (this.fileStream == null)
+            if (this.inputStream == null)
             {
-                this.fileStream = this.localFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                this.inputStream = this.localFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
-            return this.fileStream;
+            return this.inputStream;
         }
-        internal void Close()
+        internal FileStream GetOutputStream()
         {
-            this.fileStream.Close();
+            if (this.outputStream == null)
+            {
+                this.outputStream = this.localFile.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+            }
+            return this.outputStream;
+        }
+        public void Close()
+        {
+            if (inputStream != null)
+            {
+                inputStream.Close();
+                inputStream = null;
+            }
+            if (outputStream != null)
+            {
+                outputStream.Close();
+                outputStream = null;
+            }
         }
         internal void UpdateAvailability()
         {
-            IsAvailable = parts.All(part => part.IsAvailable);
+            IsAvailable = parts.All(part => part != null ? part.IsAvailable : false);
         }
     }
 }
