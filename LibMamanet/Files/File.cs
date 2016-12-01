@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibMamanet.Files
 {
-    public class MamanetFile
+    public class SharedFile
     {
         private byte[] hash;
         private FilePart[] parts;
@@ -15,7 +15,7 @@ namespace LibMamanet.Files
         internal FileStream inputStream;
         internal FileStream outputStream;
 
-        public MamanetFile(string name, byte[] hash, FileInfo localFile, int totalSize, int partSize = 1024, bool isAvailable = false)
+        public SharedFile(string name, byte[] hash, FileInfo localFile, int totalSize, int partSize = 1024, bool isAvailable = false)
         {
             this.Name = name;
             this.hash = (byte[])hash.Clone();
@@ -23,9 +23,10 @@ namespace LibMamanet.Files
             this.TotalSize = totalSize;
             this.PartSize = partSize;
             this.parts = new FilePart[this.NumberOfParts];
+            this.IsAvailable = isAvailable;
         }
 
-        public MamanetFile(string name, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
+        public SharedFile(string name, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
             : this(name, Utils.HexStringToByteArray(hash), new FileInfo(localPath), totalSize, partSize, isAvailable)
         {
         }
@@ -68,6 +69,10 @@ namespace LibMamanet.Files
             get;
             private set;
         }
+        public MamanetFile MamanetFile
+        {
+            get; set;
+        }
         public int NumberOfParts
         {
             get
@@ -90,7 +95,7 @@ namespace LibMamanet.Files
         {
             get
             {
-                return Convert.ToDecimal(parts.Count(part => part.IsAvailable)) / Convert.ToDecimal(NumberOfParts);
+                return Convert.ToDecimal(parts.Count(part => part != null ? part.IsAvailable : false)) / Convert.ToDecimal(NumberOfParts);
             }
         }
         internal FileStream GetInputStream()

@@ -5,14 +5,14 @@ namespace LibMamanet.Files
 {
     public class FilePart
     {
-        public FilePart(MamanetFile file, int number)
+        public FilePart(SharedFile file, int number)
         {
             this.File = file;
             this.Number = number;
             this.IsAvailable = file.IsAvailable;
         }
 
-        public MamanetFile File
+        public SharedFile File
         {
             get; private set;
         }
