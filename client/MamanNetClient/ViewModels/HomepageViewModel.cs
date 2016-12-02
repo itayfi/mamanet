@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    public class Browser:INotifyPropertyChanged
+    public class HomepageViewModel:INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
     }

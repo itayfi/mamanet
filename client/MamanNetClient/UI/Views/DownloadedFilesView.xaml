@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
+                    xmlns:filesViewModels="clr-namespace:ViewModel.FilesViewModels;assembly=ViewModel">
+    <DataTemplate DataType="{x:Type filesViewModels:DownloadedFilesViewModel}" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="5,4,8,0" Text="כפתורים"/>
+            <ListView Grid.Row="1" Margin="5,10,8,10" ItemsSource="{Binding DownloadedFiles}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="auto" Header="סוג" DisplayMemberBinding="{Binding Type}"/>
+                        <GridViewColumn Width="auto" Header="שם" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Width="auto" Header="גודל" DisplayMemberBinding="{Binding FileSizeInBytes}"/>
+                        <GridViewColumn Width="auto" Header="ירד" DisplayMemberBinding="{Binding BytesDownloaded}"/>
+                        <GridViewColumn Width="auto" Header="סיים" />
+                        <GridViewColumn Width="auto" Header="סטטוס" DisplayMemberBinding="{Binding DownloadStatus}"/>
+                        <GridViewColumn Width="auto" Header="מפיצים" DisplayMemberBinding="{Binding Seeders}"/>
+                        <GridViewColumn Width="auto" Header="משתפים" DisplayMemberBinding="{Binding Leechers}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <TabControl Grid.Row="2" Margin="5,0,8,5">
+                <TabItem Header="עמיתים"/>
+                <TabItem Header="חלקי קובץ"/>
+                <TabItem Header="מידע"/>
+            </TabControl>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

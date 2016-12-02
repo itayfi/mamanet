@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 
-namespace ViewModel.DAL
+namespace DAL
 {
     public class SqLiteContext
     {
-        public List<File> FileCollection { get; set; }
+        public List<MamanNetFile> FileCollection { get; set; }
         private SQLiteConnection m_dbConnection;
 
         public SqLiteContext()
@@ -26,7 +26,7 @@ namespace ViewModel.DAL
             m_dbConnection.Open();
         }
 
-        public void Insert(File file)
+        public void Insert(MamanNetFile file)
         {
             string sql = "insert into highscores (name, score) values ('Me', 9001)";
             //string sql = "insert into highscores (name, score) values ('Me', 3000)";
@@ -40,14 +40,14 @@ namespace ViewModel.DAL
             //command.ExecuteNonQuery();
         }
 
-        public List<File> Get()
+        public List<MamanNetFile> Get()
         {
             string sql = "select * from File";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                var file = new File()
+                var file = new MamanNetFile()
                 {
                     BytesDownloaded = int.Parse(reader["BytesDownloaded"].ToString()),
                     Name = reader["Name"].ToString(),

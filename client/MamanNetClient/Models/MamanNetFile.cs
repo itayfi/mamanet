@@ -21,7 +21,7 @@ namespace Models
         Failed
     }
 
-    public class File:IFileRow
+    public class MamanNetFile:IFileRow
     {
         //MD5 of the File
         public string ID { get; set; }

@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Hardcodet.Wpf;
-using Hardcodet.Wpf.TaskbarNotification;
 using Samples;
 using ViewModel;
 
@@ -28,8 +13,8 @@ namespace MamanNet
         public MainWindow()
         {
             InitializeComponent();
-            (DataContext as Main).ShowPopup += Execute_ShowPopup;
-            
+            var mainViewModel = DataContext as MainViewModel;
+            if (mainViewModel != null) mainViewModel.ShowPopup += Execute_ShowPopup;
         }
 
         void Execute_ShowPopup(object sender, string e)

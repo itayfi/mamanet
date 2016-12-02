@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel">
+    <DataTemplate DataType="{x:Type viewModel:HomepageViewModel}">
+        <Grid Background="White" Margin="5,6,8,5">
+            <Image x:Name="flagImage" StretchDirection="Both" Stretch="Uniform" Source="../Icons/maxresdefault.jpg"/>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

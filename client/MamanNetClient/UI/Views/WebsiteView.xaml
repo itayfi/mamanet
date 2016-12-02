@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
+                    xmlns:cef="ce">
+    
+    <DataTemplate DataType="{x:Type viewModel:WebsiteViewModel}">        
+        <Grid Margin="5,6,8,5">
+            <WebBrowser x:Name="Browser" Source="http://www.ynet.co.il"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

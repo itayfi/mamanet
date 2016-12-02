@@ -1,8 +1,18 @@
 ﻿<Application x:Class="MamanNet.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Views/MainWindowView.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+                 <ResourceDictionary Source="Views/HomepageView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/AllFilesView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/DownloadingFilesView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/UploadingFilesView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/DownloadedFilesView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/BrowserView.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Views/WebsiteView.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>
