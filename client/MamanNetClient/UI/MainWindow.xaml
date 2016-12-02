@@ -1,0 +1,134 @@
+﻿<Window x:Class="MamanNet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:converters="clr-namespace:MamanNet.Converters"
+        Title="Maman-Net" Height="853" Width="1361" FlowDirection="RightToLeft" 
+        Background="#FFF7F7F7" Icon="Icons/MamanNetIcon.ico" WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True" x:Name="MyWindow" Topmost="True" Closing="MyWindow_Closing" >
+   
+    <Window.DataContext>
+        <viewModel:Main/>
+    </Window.DataContext>
+    <Window.Resources>
+        <converters:TreeViewItemConverter x:Key="TreeViewItemConverter"/>
+        <DataTemplate DataType="{x:Type viewModel:Homepage}">
+            <Grid Background="White" Margin="5,6,8,5">
+                <Image x:Name="flagImage" StretchDirection="Both" Stretch="Uniform" Source="Icons/maxresdefault.jpg"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:Files}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="200"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Margin="5,4,8,0" Text="כפתורים"/>
+                <ListView Grid.Row="1" Margin="5,10,8,10">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="auto" Header="סוג">
+                            </GridViewColumn>
+                            <GridViewColumn Width="auto" Header="שם"/>
+                            <GridViewColumn Width="auto" Header="גודל"/>
+                            <GridViewColumn Width="auto" Header="ירד"/>
+                            <GridViewColumn Width="auto" Header="סיים"/>
+                            <GridViewColumn Width="auto" Header="סטטוס"/>
+                            <GridViewColumn Width="auto" Header="מפיצים"/>
+                            <GridViewColumn Width="auto" Header="משתפים"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <TabControl Grid.Row="2" Margin="5,0,8,5">
+                    <TabItem Header="עמיתים"/>
+                    <TabItem Header="חלקי קובץ"/>
+                    <TabItem Header="מידע"/>
+                </TabControl>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="37*"/>
+            <RowDefinition Height="205*"/>
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="Icons/MamanNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="ShowApplication">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu Width="auto" FlowDirection="RightToLeft"
+                    Background="LightGray">
+                    <MenuItem VerticalAlignment="Center" Command="{Binding ExitApplication}" >
+                        <MenuItem.Header>
+                            <TextBlock Width="auto" VerticalAlignment="Center" Text="יציאה"/>
+                        </MenuItem.Header>
+                        <MenuItem.Icon>
+                            <Image Source="Icons/Alecive-Flatwoken-Apps-Dialog-Shutdown.ico" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+        <Border BorderThickness="5" Grid.RowSpan="2">
+            <TreeView Name="MyTreeView" Grid.Row="0" Grid.Column="0" Margin="0" Background="#FFF0F4FA" FontSize="18" FontFamily="Arial" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedItemChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedCommandChanged}" CommandParameter="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource TreeViewItemConverter}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <TreeViewItem Header="מסך פתיחה" IsSelected="True"/>
+                <TreeViewItem Header="קבצים" >
+                    <TreeViewItem Header="בהורדה כעת"></TreeViewItem>
+                    <TreeViewItem Header="בשיתוף כעת"></TreeViewItem>
+                    <TreeViewItem Header="מוכנים"></TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem Header="אתרי חיפוש">
+                    <TreeViewItem Header="Mega-Maman"/>
+                </TreeViewItem>
+            </TreeView>
+        </Border>
+        <GridSplitter HorizontalAlignment="Stretch" 
+                      FlowDirection="LeftToRight"
+                      VerticalAlignment="Stretch" 
+                      Grid.Column="1" ResizeBehavior="PreviousAndNext"
+                      Grid.RowSpan="2" Width="5" Background="#FFBCBCBC"
+                      Margin="0,5,0,5"/>
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding SelectedPage}" Grid.RowSpan="2"/>
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid FlowDirection="LeftToRight">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="מהירות הורדה: "></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="350 kb/s"></TextBlock>
+                    <Image Source="Icons\download-triangle.png"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator  Grid.Column="1" Background="#FFD7D7D7" Width="2"/>
+            <StatusBarItem Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="מהירות העלאה: "></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="120 kb/s"></TextBlock>
+                    <Image Source="Icons\upload-triangle.png"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+
+</Window>
