@@ -61,12 +61,12 @@
                     <TreeViewItem DataContext="{Binding Path=.UploadingFilesViewModel}"  Header="{Binding Path=.UploadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=משתף}"/>
                     <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}" Header="{Binding Path=.DownloadedFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוכן}" />
                 </TreeViewItem>
-                <TreeViewItem Header="אתרי חיפוש" DataContext="{StaticResource BrowserViewModel}" ItemsSource="{Binding MamanWebsites}">
-                    <TreeViewItem.ItemTemplate>
+                <TreeViewItem Header="חפש" DataContext="{StaticResource BrowserViewModel}">
+                    <!--<TreeViewItem.ItemTemplate>
                         <DataTemplate DataType="{x:Type viewModel:WebsiteViewModel}">
                             <TextBlock Text="{Binding Path=Website}" DataContext="{Binding }"/>
                         </DataTemplate>
-                    </TreeViewItem.ItemTemplate>
+                    </TreeViewItem.ItemTemplate>-->
                 </TreeViewItem>
             </TreeView>
         </Border>

@@ -17,7 +17,7 @@ namespace Models
     {
         NotStarted,
         Downloading,
-        Succeeded,
+        Downloaded,
         Failed
     }
 

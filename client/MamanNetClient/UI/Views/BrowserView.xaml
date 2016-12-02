@@ -1,9 +1,57 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel">
+                    xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
+                    xmlns:intr="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" >
     <DataTemplate DataType="{x:Type viewModel:BrowserViewModel}">
-        <Grid Background="White" Margin="5,6,8,5">
-            <TextBlock Text="Browser!"/>
+        <Grid Margin="5,6,8,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock  Grid.Row="0" Text="לחץ על הכפתור על מנת לחפש קבצי MamanNet חדשים:" Margin="0,0,0,10"/>
+            <Border Grid.Row="1">
+                <Button Content="MamanNet Serach" Command="{Binding OpenWebBrowser}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="#373737" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border CornerRadius="4" Background="{TemplateBinding Background}">
+                                            <Grid>
+                                                <Path x:Name="PathIconLeft" FlowDirection="RightToLeft" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Left" Margin="17,0,0,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
+                                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
+                                                <Path x:Name="PathIconRight" FlowDirection="LeftToRight" Width="15" Height="25" Stretch="Fill" Fill="#4C87B3" HorizontalAlignment="Right" Margin="0,0,17,0" Data="F1 M 30.0833,22.1667L 50.6665,37.6043L 50.6665,38.7918L 30.0833,53.8333L 30.0833,22.1667 Z "/>
+                                            </Grid>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#E59400" />
+                                                <Setter Property="Foreground" Value="White" />
+                                                <Setter TargetName="PathIconLeft" Property="Fill" Value="Black" />
+                                                <Setter TargetName="PathIconRight" Property="Fill" Value="Black" />
+                                            </Trigger>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="OrangeRed" />
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

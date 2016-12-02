@@ -15,7 +15,6 @@ namespace ViewModel
     {
         //Private Fields
         private string _name;
-        private object _selectedPage;
 
         //Public Fields
         public event PropertyChangedEventHandler PropertyChanged;
@@ -34,30 +33,13 @@ namespace ViewModel
             }
         }
 
-        //public object SelectedPage
-        //{
-        //    get
-        //    {
-        //        return _selectedPage;
-        //    }
-        //    set
-        //    {
-        //        _selectedPage = value;
-        //        FireChangeEvent("SelectedPage");
-        //    }
-        //}
-
         //Public Methods
         public MainViewModel()
         {
-            //SelectedPage = new HomepageViewModel();
-            ChangeName = new RelayCommand(_changeName);
-            //SelectedCommandChanged = new RelayCommand<string>(_selectedPageChanged);
             ExitApplication = new RelayCommand(_exitApplication);
         }
 
         public RelayCommand ExitApplication { get; set; }
-        public RelayCommand ChangeName { get; set; }
         public RelayCommand<string> SelectedCommandChanged { get; set; }
 
         //Private Methods
@@ -71,38 +53,6 @@ namespace ViewModel
         {
             Name = "Ron Wisley";
         }
-
-        //private void _selectedPageChanged(string pageName)
-        //{
-        //    switch (pageName.ToLower())
-        //    {
-        //        case "מסך פתיחה":
-        //                SelectedPage=new HomepageViewModel();
-        //                break;
-        //        case "קבצים":
-        //                SelectedPage = new BaseFilesViewModel();
-        //                if (ShowPopup != null)
-        //                {
-        //                    ShowPopup(this, "קובץ ירד בהצלחה!");
-        //                }
-        //                break;
-        //        case "בהורדה כעת":
-        //                SelectedPage = new BaseFilesViewModel();
-        //                break;
-        //        case "בשיתוף כעת":
-        //                SelectedPage = new BaseFilesViewModel();
-        //                break;
-        //        case "מוכנים":
-        //                SelectedPage = new BaseFilesViewModel();
-        //                break;
-        //        case "אתרי חיפוש":
-        //                SelectedPage = new WebsiteViewModel();
-        //                break;
-        //        default:
-        //                SelectedPage = new BrowserViewModel();
-        //                break;
-        //    }
-        //}
 
         private void FireChangeEvent(string propertyName)
         {

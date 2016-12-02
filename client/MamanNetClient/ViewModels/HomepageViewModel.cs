@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    public class HomepageViewModel:INotifyPropertyChanged
+    public class HomepageViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+
     }
 }
