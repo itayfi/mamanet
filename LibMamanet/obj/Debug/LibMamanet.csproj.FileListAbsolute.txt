@@ -1,0 +1,5 @@
+C:\work\mamanet\LibMamanet\obj\Debug\LibMamanet.csprojResolveAssemblyReference.cache
+C:\work\mamanet\LibMamanet\bin\Debug\LibMamanet.dll
+C:\work\mamanet\LibMamanet\bin\Debug\LibMamanet.pdb
+C:\work\mamanet\LibMamanet\obj\Debug\LibMamanet.dll
+C:\work\mamanet\LibMamanet\obj\Debug\LibMamanet.pdb
