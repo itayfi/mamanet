@@ -1,4 +1,4 @@
-# mamanet
+![MamaNet](https://github.com/itayfi/mamanet/raw/master/MamaNet.png "MamaNet")
 
 A project for course 20588 Computer Communication Workshop
 
