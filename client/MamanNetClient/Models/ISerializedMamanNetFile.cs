@@ -10,7 +10,7 @@ namespace Models
     public interface ISerializedMamanNetFile
     {
         //MD5 of the File
-        string ID { get; set; }
+        string Id { get; set; }
         string Name { get; set; }
         FileType Type { get; set; }
         int FileSizeInBytes { get; set; }

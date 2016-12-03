@@ -1,0 +1,14 @@
+== Business Actions ==
+<FilesView>
+- Add Buttons to Buttons Panel 
+- Filter image by file type
+
+== Architecture ==
+<FilesView>
+- Reuse in the views of AllFilesView / DownloadedFilesView / DownloadingFilesView / UploadingFilesView
+
+== Bonus Actions ==
+<App>
+- Support Popup window through-out the application
+<FilesView>
+- Support dragging a new a file into the grid

@@ -12,12 +12,29 @@ namespace ViewModel.FilesViewModels
 {
     public class BaseFilesViewModel:INotifyPropertyChanged
     {
-        //Public Fields
-        public ObservableCollection<MamanNetFile> AllFilesCollection { get; set; }
+        #region Public Fields
 
+        public ObservableCollection<MamanNetFile> AllFilesCollection { get; set; }
         public DownloadingFilesViewModel DownloadingFilesViewModel { get; set; }
         public UploadingFilesViewModel UploadingFilesViewModel { get; set; }
         public DownloadedFilesViewModel DownloadedFilesViewModel { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Private Fields
+
+        #endregion
+
+        #region Methods
+
+        public BaseFilesViewModel()
+        {
+            AllFilesCollection = new ObservableCollection<MamanNetFile>();
+            DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFilesCollection);
+            UploadingFilesViewModel = new UploadingFilesViewModel(AllFilesCollection);
+            DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFilesCollection);
+        }
 
         public void FireChangeEvent(string propertyName)
         {
@@ -28,18 +45,6 @@ namespace ViewModel.FilesViewModels
             }
         }
 
-        public BaseFilesViewModel()
-        {
-            AllFilesCollection = new ObservableCollection<MamanNetFile>();
-            DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFilesCollection);
-            UploadingFilesViewModel = new UploadingFilesViewModel(AllFilesCollection);
-            DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFilesCollection);
-
-            //var context = new SqLiteContext();
-            //context.Connect();
-            //context.GetAllSavedFiles();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

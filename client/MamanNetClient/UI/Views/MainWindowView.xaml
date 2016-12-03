@@ -63,11 +63,6 @@
                     <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}" Header="{Binding Path=.DownloadedFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוכן}" />
                 </TreeViewItem>
                 <TreeViewItem Header="חפש" DataContext="{StaticResource BrowserViewModel}">
-                    <!--<TreeViewItem.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModel:WebsiteViewModel}">
-                            <TextBlock Text="{Binding Path=Website}" DataContext="{Binding }"/>
-                        </DataTemplate>
-                    </TreeViewItem.ItemTemplate>-->
                 </TreeViewItem>
             </TreeView>
         </Border>
@@ -95,7 +90,7 @@
             <StatusBarItem Grid.Column="2" DataContext="{StaticResource FileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות הורדה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"/>
                     <Image Source="../Icons/download-triangle.png"/>
                 </StackPanel>
             </StatusBarItem>
@@ -103,7 +98,7 @@
             <StatusBarItem Grid.Column="0" DataContext="{StaticResource FileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות העלאה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"/>
                     <Image Source="..\Icons\upload-triangle.png"/>
                 </StackPanel>
             </StatusBarItem>

@@ -13,47 +13,18 @@ namespace ViewModel
 {
     public class MainViewModel:INotifyPropertyChanged
     {
-        //Private Fields
-        private string _name;
+        #region Public Fields
 
-        //Public Fields
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler<string> ShowPopup;
 
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-                FireChangeEvent("Name");
-            }
-        }
+        #endregion
 
-        //Public Methods
-        public MainViewModel()
-        {
-            ExitApplication = new RelayCommand(_exitApplication);
-        }
+        #region Public Methods
 
-        public RelayCommand ExitApplication { get; set; }
-        public RelayCommand<string> SelectedCommandChanged { get; set; }
+        #endregion
 
-        //Private Methods
-
-        private void _exitApplication()
-        {
-            Environment.Exit(5);
-        }
-
-        private void _changeName()
-        {
-            Name = "Ron Wisley";
-        }
-
+        #region Private Methods
         private void FireChangeEvent(string propertyName)
         {
             var handler = PropertyChanged;
@@ -62,5 +33,7 @@ namespace ViewModel
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        #endregion
     }
 }

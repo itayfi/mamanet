@@ -11,15 +11,44 @@ namespace ViewModel.FilesViewModels
 {
     public class UploadingFilesViewModel : INotifyPropertyChanged
     {
+        #region Public Fields
         public ObservableCollection<MamanNetFile> UploadingFiles { get; set; }
+
+        public int UploadSpeed
+        {
+            get
+            {
+                return _uploadSpeed;
+            }
+            set
+            {
+                _uploadSpeed = value;
+                FireChangeEvent("UploadSpeed");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Private Fields
         private ObservableCollection<MamanNetFile> _allFiles { get; set; }
         private int _uploadSpeed;
+        #endregion
 
+        #region Methods
         public UploadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
         {
             _allFiles = allFiles;
             UploadingFiles = new ObservableCollection<MamanNetFile>();
             UploadSpeed = 24;
+        }
+        public void FireChangeEvent(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
@@ -34,27 +63,6 @@ namespace ViewModel.FilesViewModels
             _allFiles.Remove(serializedMamanNetFile);
         }
 
-        public int UploadSpeed
-        {
-            get
-            {
-                return _uploadSpeed;
-            }
-            set
-            {
-                _uploadSpeed = value;
-                FireChangeEvent("UploadSpeed");
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        #endregion
     }
 }

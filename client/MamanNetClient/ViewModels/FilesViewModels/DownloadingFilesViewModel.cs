@@ -11,9 +11,8 @@ namespace ViewModel.FilesViewModels
 {
     public class DownloadingFilesViewModel:INotifyPropertyChanged
     {
-        //Public Fields
+        #region Public Fields
         public ObservableCollection<MamanNetFile> DownloadingFiles { get; set; }
-        private ObservableCollection<MamanNetFile> _allFiles { get; set; }
 
         public int DownloadSpeed
         {
@@ -27,35 +26,8 @@ namespace ViewModel.FilesViewModels
                 FireChangeEvent("DownloadSpeed");
             }
         }
-
-        //Private Fields
-        private int _downloadSpeed;
-
-
-
-        public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
-        {
-            _allFiles = allFiles;
-            DownloadingFiles = new ObservableCollection<MamanNetFile>();
-            AddDownloadedFile(
-                new MamanNetFile() { BytesDownloaded = 500, DownloadStatus = DownloadStatus.Downloading, FinishedPercentage = 33, ID = "sad-asd-22", FileSizeInBytes = 4202, Leechers = 4, Name = "MyFile", Seeders = 23, Type = FileType.Pdf });
-            DownloadSpeed = 500;
-            
-        }
-
-        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
-        {
-            DownloadingFiles.Add(serializedMamanNetFile);
-            _allFiles.Add(serializedMamanNetFile);
-        }
-
-        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
-        {
-            DownloadingFiles.Remove(serializedMamanNetFile);
-            _allFiles.Remove(serializedMamanNetFile);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void FireChangeEvent(string propertyName)
         {
             var handler = PropertyChanged;
@@ -64,5 +36,35 @@ namespace ViewModel.FilesViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
+
+        #region Private Fields
+        private ObservableCollection<MamanNetFile> AllFiles { get; set; }
+        private int _downloadSpeed;
+
+        #endregion
+
+        #region Methods
+        public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
+        {
+            AllFiles = allFiles;
+            DownloadingFiles = new ObservableCollection<MamanNetFile>();
+            AddDownloadedFile(
+                new MamanNetFile() { BytesDownloaded = 500, DownloadStatus = DownloadStatus.Downloading, FinishedPercentage = 33, Id = "sad-asd-22", FileSizeInBytes = 4202, Leechers = 4, Name = "MyFile", Seeders = 23, Type = FileType.Pdf });
+            DownloadSpeed = 500;
+        }
+        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
+        {
+            DownloadingFiles.Add(serializedMamanNetFile);
+            AllFiles.Add(serializedMamanNetFile);
+        }
+
+        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
+        {
+            DownloadingFiles.Remove(serializedMamanNetFile);
+            AllFiles.Remove(serializedMamanNetFile);
+        }
+
+        #endregion
     }
 }

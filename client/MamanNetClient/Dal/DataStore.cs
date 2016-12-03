@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 
-namespace MyDal
+namespace DAL
 {
     [Serializable]
     public class DataStore

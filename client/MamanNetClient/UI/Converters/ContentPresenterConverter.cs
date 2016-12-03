@@ -7,6 +7,7 @@ using System.Windows.Data;
 
 namespace MamanNet.Converters
 {
+    //Todo: delete, for future use only if necessery
     public class ContentPresenterConverter:IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

@@ -12,7 +12,7 @@ namespace MamanNet.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var header = parameter.ToString();
-            return string.Format("{0} ({1})", header, value.ToString());
+            return string.Format("{0} ({1})", header, value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

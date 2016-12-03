@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace MamanNet.Views
+namespace MamanNet.Views.Files
 {
     public partial class FileViewCodeBehind
     {
@@ -12,7 +12,7 @@ namespace MamanNet.Views
             InitializeComponent();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void AddNewFileClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             var result = openFileDialog.ShowDialog();

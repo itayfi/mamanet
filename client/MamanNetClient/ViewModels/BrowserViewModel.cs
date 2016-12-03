@@ -13,13 +13,22 @@ namespace ViewModel
 {
     public class BrowserViewModel:INotifyPropertyChanged
     {
+        #region Public Fields
+
+        public RelayCommand OpenWebBrowser { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion
+
+        #region Private Fields
+
+        #endregion
+
+        #region Methods
         public BrowserViewModel()
         {
             OpenWebBrowser = new RelayCommand(_OpenWebBrowser);
         }
-
-        public RelayCommand OpenWebBrowser { get; set; }
-
         private void _OpenWebBrowser()
         {
             Process.Start("http://www.ynet.co.il");
@@ -34,6 +43,6 @@ namespace ViewModel
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

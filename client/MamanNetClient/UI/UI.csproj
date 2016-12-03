@@ -108,9 +108,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Views\FileViewCodeBehind.cs" />
+    <Compile Include="Views\Files\FileViewCodeBehind.cs" />
     <Compile Include="Behaviors\WindowBehaviour.cs" />
-    <Page Include="Views\AllFilesView.xaml">
+    <Page Include="Views\Files\AllFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -118,11 +118,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DownloadedFilesView.xaml">
+    <Page Include="Views\Files\DownloadedFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DownloadingFilesView.xaml">
+    <Page Include="Views\Files\DownloadingFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,7 +150,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\UploadingFilesView.xaml">
+    <Page Include="Views\Files\UploadingFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

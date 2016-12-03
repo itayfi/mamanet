@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
@@ -25,7 +21,7 @@ namespace Models
     public class MamanNetFile : ISerializedMamanNetFile
     {
         //Serialized Fields
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public FileType Type { get; set; }
         public int FileSizeInBytes { get; set; }
@@ -33,7 +29,7 @@ namespace Models
 
         public MamanNetFile(ISerializedMamanNetFile serializedFile)
         {
-            ID = serializedFile.ID;
+            Id = serializedFile.Id;
             Name = serializedFile.Name;
             Type = serializedFile.Type;
             FileSizeInBytes = serializedFile.FileSizeInBytes;

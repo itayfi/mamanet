@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
+    //Deliberately left empty
     public class HomepageViewModel
     {
 

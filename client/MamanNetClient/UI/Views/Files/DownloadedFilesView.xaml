@@ -3,7 +3,7 @@
                     xmlns:filesViewModels="clr-namespace:ViewModel.FilesViewModels;assembly=ViewModel"
                     xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    x:Class="MamanNet.Views.FileViewCodeBehind">
+                    x:Class="MamanNet.Views.Files.FileViewCodeBehind">
     <DataTemplate DataType="{x:Type filesViewModels:DownloadedFilesViewModel}" >
         <Grid>
             <i:Interaction.Behaviors>
@@ -15,23 +15,23 @@
                 <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="5,4,8,0" Orientation="Horizontal">
-                <Button x:Name="MyButton" Height="30"  Command="{Binding AddNewDownloadedFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="ButtonBase_OnClick">
+                <Button x:Name="MyButton" Height="30"  Command="{Binding AddNewDownloadedFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="AddNewFileClick">
                     <Button.Content>
-                        <Image Source="../Icons/Add.ico"/>  
+                        <Image Source="../../Icons/Add.ico"/>  
                     </Button.Content>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button Height="30" Command="{Binding Path=RemoveExistingDownloadedFileCommand}" CommandParameter="{Binding ElementName=MyListView, Path=SelectedItem, Mode=TwoWay}">
                     <Button.Content>
-                        <Image Source="../Icons/Remove.ico"/>
+                        <Image Source="../../Icons/Remove.ico"/>
                     </Button.Content>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Image Height="30" Source="../Icons/stop.ico"/>
-                <Image Height="30" Source="../Icons/play.ico"/>
+                <Image Height="30" Source="../../Icons/stop.ico"/>
+                <Image Height="30" Source="../../Icons/play.ico"/>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Image Height="30" Source="../Icons/up.ico"/>
-                <Image Height="30" Source="../Icons/down.ico"/>
+                <Image Height="30" Source="../../Icons/up.ico"/>
+                <Image Height="30" Source="../../Icons/down.ico"/>
             </StackPanel>
             <ListView x:Name="MyListView" Grid.Row="1" Margin="5,10,8,10" ItemsSource="{Binding DownloadedFiles}" SelectedItem="{Binding DownloadedSelectedFile}" >
                 <!--<i:Interaction.Triggers>

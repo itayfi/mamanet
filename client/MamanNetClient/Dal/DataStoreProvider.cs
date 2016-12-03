@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Models;
-using MyDal;
 
 namespace DAL
 {
@@ -20,12 +19,9 @@ namespace DAL
 
         public DataStore LoadData()
         {
-            if (FileStream.Length > 0)
-            {
-                DataStore data = (DataStore)BinaryFormatter.Deserialize(FileStream);
-                return data;    
-            }
-            return new DataStore();
+            if (FileStream.Length <= 0) return new DataStore();
+            DataStore data = (DataStore)BinaryFormatter.Deserialize(FileStream);
+            return data;
         }
 
         public void SaveData(List<MamanNetFile> mamanNetFiles)

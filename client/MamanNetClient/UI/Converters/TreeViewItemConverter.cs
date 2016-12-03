@@ -9,6 +9,7 @@ namespace MamanNet.Converters
 {
     public class TreeViewItemConverter : IValueConverter
     {
+        //Todo: delete, for future use only if necessery
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var treeViewItem = value as System.Windows.Controls.TreeViewItem;
