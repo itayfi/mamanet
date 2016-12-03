@@ -8,7 +8,7 @@
         xmlns:converters="clr-namespace:MamanNet.Converters"
         xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
         Title="Maman-Net" Height="853" Width="1361" FlowDirection="RightToLeft" 
-        Background="#FFF7F7F7" Icon="../Icons/MamanNetIcon.ico" WindowStartupLocation="CenterScreen"
+        Background="#FFF7F7F7" Icon="../Icons/MamaNet.ico" WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True" x:Name="MyWindow" Topmost="False" Closing="MainWindow_OnClosing">
     <Window.DataContext>
         <viewModel:MainViewModel/>
@@ -33,7 +33,7 @@
             <RowDefinition Height="205*"/>
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="../Icons/MamanNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
+        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="../Icons/MamaNet.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Width="auto" FlowDirection="RightToLeft"
                     Background="LightGray">
