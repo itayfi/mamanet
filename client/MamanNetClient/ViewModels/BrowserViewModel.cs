@@ -15,8 +15,6 @@ namespace ViewModel
     {
         public BrowserViewModel()
         {
-            var website1 = new MamanWebsite() {WebsiteName = "Ynet", WebsiteUri = new Uri("http://www.ynet.co.il")};
-            var website2 = new MamanWebsite() { WebsiteName = "Walla", WebsiteUri = new Uri("http://www.walla.co.il") };
             OpenWebBrowser = new RelayCommand(_OpenWebBrowser);
         }
 

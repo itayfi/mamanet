@@ -7,7 +7,7 @@ using Models;
 
 namespace Models
 {
-    public interface IFileRow
+    public interface ISerializedMamanNetFile
     {
         //MD5 of the File
         string ID { get; set; }
@@ -15,7 +15,5 @@ namespace Models
         FileType Type { get; set; }
         int FileSizeInBytes { get; set; }
         DownloadStatus DownloadStatus { get; set; }
-        int Leechers { get; set; }
-        int Seeders { get; set; }
     }
 }

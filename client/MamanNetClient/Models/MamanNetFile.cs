@@ -21,21 +21,34 @@ namespace Models
         Failed
     }
 
-    public class MamanNetFile:IFileRow
+    [Serializable]
+    public class MamanNetFile : ISerializedMamanNetFile
     {
-        //MD5 of the File
+        //Serialized Fields
         public string ID { get; set; }
         public string Name { get; set; }
         public FileType Type { get; set; }
         public int FileSizeInBytes { get; set; }
         public DownloadStatus DownloadStatus { get; set; }
-        public int Leechers { get; set; }
-        public int Seeders { get; set; }
 
-        //Calculated Field
+        public MamanNetFile(ISerializedMamanNetFile serializedFile)
+        {
+            ID = serializedFile.ID;
+            Name = serializedFile.Name;
+            Type = serializedFile.Type;
+            FileSizeInBytes = serializedFile.FileSizeInBytes;
+            DownloadStatus = serializedFile.DownloadStatus;
+        }
+
+        public MamanNetFile()
+        {
+            
+        }
+
+        //Calculated Fields
         public int BytesDownloaded { get; set; }
-        //Calculated Field
         public int FinishedPercentage { get; set; }
-    
+        public int Seeders { get; set; }
+        public int Leechers { get; set; }
     }
 }

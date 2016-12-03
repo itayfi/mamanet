@@ -46,7 +46,7 @@ namespace ViewModel
 
         private void _exitApplication()
         {
-            Environment.Exit(1);
+            Environment.Exit(5);
         }
 
         private void _changeName()

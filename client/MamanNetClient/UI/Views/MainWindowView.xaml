@@ -4,21 +4,22 @@
         xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
         xmlns:converters="clr-namespace:MamanNet.Converters"
         xmlns:filesViewModels="clr-namespace:ViewModel.FilesViewModels;assembly=ViewModel"
         Title="Maman-Net" Height="853" Width="1361" FlowDirection="RightToLeft" 
         Background="#FFF7F7F7" Icon="../Icons/MamanNetIcon.ico" WindowStartupLocation="CenterScreen"
-        ShowInTaskbar="True" x:Name="MyWindow" Topmost="False" Closing="MyWindow_Closing">
+        ShowInTaskbar="True" x:Name="MyWindow" Topmost="False" Closing="MainWindow_OnClosing">
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <converters:TreeViewItemConverter x:Key="TreeViewItemConverter"/>
         <converters:FilesCounterConverter x:Key="FilesCounterConverter"/>
+        <converters:SpeedConverter x:Key="SpeedConverter"/>
         <converters:ContentPresenterConverter x:Key="ContentPresenterConverter"/>
         <filesViewModels:BaseFilesViewModel x:Key="FileViewModel"/>
         <viewModel:HomepageViewModel x:Key="HomepageViewModel"/>
-        <!--<viewModel:WebsiteViewModel x:Key="WebsiteViewModel"/>-->
         <viewModel:BrowserViewModel x:Key="BrowserViewModel"/>
     </Window.Resources>
     <Grid>
@@ -32,11 +33,11 @@
             <RowDefinition Height="205*"/>
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="../Icons/MamanNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="ShowApplication">
+        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="../Icons/MamanNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Width="auto" FlowDirection="RightToLeft"
                     Background="LightGray">
-                    <MenuItem VerticalAlignment="Center" Command="{Binding ExitApplication}" >
+                    <MenuItem VerticalAlignment="Center" Click="MenuItem_OnExitClick" >
                         <MenuItem.Header>
                             <TextBlock Width="auto" VerticalAlignment="Center" Text="יציאה"/>
                         </MenuItem.Header>
@@ -76,8 +77,10 @@
                       Grid.Column="1" ResizeBehavior="PreviousAndNext"
                       Grid.RowSpan="2" Width="5" Background="#FFBCBCBC"
                       Margin="0,5,0,5"/>
-        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2"/>
-        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0">
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2">
+        
+        </ContentControl>
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid FlowDirection="LeftToRight">
@@ -89,18 +92,18 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="2">
+            <StatusBarItem Grid.Column="2" DataContext="{StaticResource FileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות הורדה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="350 kb/s"></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"></TextBlock>
                     <Image Source="../Icons/download-triangle.png"/>
                 </StackPanel>
             </StatusBarItem>
             <Separator  Grid.Column="1" Background="#FFD7D7D7" Width="2"/>
-            <StatusBarItem Grid.Column="0">
+            <StatusBarItem Grid.Column="0" DataContext="{StaticResource FileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות העלאה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="120 kb/s"></TextBlock>
+                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"></TextBlock>
                     <Image Source="..\Icons\upload-triangle.png"/>
                 </StackPanel>
             </StatusBarItem>

@@ -28,44 +28,31 @@ namespace ViewModel.FilesViewModels
             }
         }
 
-        public int UploadSpeed
-        {
-            get
-            {
-                return _uploadSpeed;
-            }
-            set
-            {
-                _uploadSpeed = value;
-                FireChangeEvent("UploadSpeed");
-            }
-        }
-
         //Private Fields
         private int _downloadSpeed;
-        private int _uploadSpeed;
-        
+
+
 
         public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
         {
             _allFiles = allFiles;
             DownloadingFiles = new ObservableCollection<MamanNetFile>();
             AddDownloadedFile(
-                new MamanNetFile(){BytesDownloaded = 500, DownloadStatus = DownloadStatus.Downloading,FinishedPercentage = 33,ID = "sad-asd-22",FileSizeInBytes = 4202,Leechers = 4,Name = "MyFile",Seeders = 23,Type = FileType.Pdf});
+                new MamanNetFile() { BytesDownloaded = 500, DownloadStatus = DownloadStatus.Downloading, FinishedPercentage = 33, ID = "sad-asd-22", FileSizeInBytes = 4202, Leechers = 4, Name = "MyFile", Seeders = 23, Type = FileType.Pdf });
             DownloadSpeed = 500;
-            UploadSpeed = 24;
+            
         }
 
-        private void AddDownloadedFile(MamanNetFile file)
+        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
         {
-            DownloadingFiles.Add(file);
-            _allFiles.Add(file);
+            DownloadingFiles.Add(serializedMamanNetFile);
+            _allFiles.Add(serializedMamanNetFile);
         }
 
-        private void DeleteDownloadedFile(MamanNetFile file)
+        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
         {
-            DownloadingFiles.Remove(file);
-            _allFiles.Remove(file);
+            DownloadingFiles.Remove(serializedMamanNetFile);
+            _allFiles.Remove(serializedMamanNetFile);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
