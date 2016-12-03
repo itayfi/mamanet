@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 using GalaSoft.MvvmLight.Command;
-using ViewModel.FilesViewModels;
 
 namespace ViewModel
 {
@@ -21,6 +20,14 @@ namespace ViewModel
         #endregion
 
         #region Public Methods
+
+        public MainViewModel()
+        {
+            if (ShowPopup != null)
+            {
+                ShowPopup(this, "hello world");
+            }
+        }
 
         #endregion
 

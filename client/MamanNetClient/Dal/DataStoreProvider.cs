@@ -10,23 +10,34 @@ namespace DAL
     public class DataStoreProvider
     {
         private IFormatter BinaryFormatter { get; set; }
-        private Stream FileStream { get; set; }
+        private const string FileName = "MamanNetDataStore.bin";
+
+
         public DataStoreProvider()
         {
             BinaryFormatter = new BinaryFormatter();
-            FileStream = new FileStream("MamanNetDataStore.bin", FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);
         }
 
         public DataStore LoadData()
         {
-            if (FileStream.Length <= 0) return new DataStore();
-            DataStore data = (DataStore)BinaryFormatter.Deserialize(FileStream);
+            DataStore data;
+            using (var fileStream = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
+            {
+                if (fileStream.Length > 0)
+                {
+                    data = (DataStore)BinaryFormatter.Deserialize(fileStream);
+                }
+                else
+                {
+                    data = new DataStore();
+                }
+            }
             return data;
         }
 
         public void SaveData(List<MamanNetFile> mamanNetFiles)
         {
-            DataStore data = new DataStore();
+            var data = new DataStore();
             var serializeableFiles = mamanNetFiles.ToList<ISerializedMamanNetFile>();
 
             foreach (var file in serializeableFiles)
@@ -34,7 +45,10 @@ namespace DAL
                 data.AddDataFileToDataStore(file);
             }
 
-            BinaryFormatter.Serialize(FileStream,data);
+            using (var fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Write, FileShare.None))
+            {
+                BinaryFormatter.Serialize(fileStream, data);
+            }
         }
     }
 }

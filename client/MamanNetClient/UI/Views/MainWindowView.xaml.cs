@@ -5,31 +5,33 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using Samples;
 using ViewModel;
-using ViewModel.FilesViewModels;
+using ViewModel.Files;
 
-namespace MamanNet
+namespace MamanNet.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly AllFilesViewModel _baseFilesViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
-            var mainViewModel = DataContext as MainViewModel;
-            if (mainViewModel != null) mainViewModel.ShowPopup += Execute_ShowPopup;
+
             Application.Current.Exit += OnApplicationExit;
+            _baseFilesViewModel = Resources["FileViewModel"] as AllFilesViewModel;
+            if (_baseFilesViewModel == null) throw new ArgumentNullException();
+            _baseFilesViewModel.DownloadedFilesViewModel.ShowPopup += ShowPopup;
         }
 
         void OnApplicationExit(object sender, ExitEventArgs e)
         {
-            var fileViewModel = Resources["FileViewModel"] as BaseFilesViewModel;
-            if (fileViewModel == null) throw new ArgumentNullException("sender");
-            fileViewModel.DownloadedFilesViewModel.SavedDownloadedFiles();
+            _baseFilesViewModel.SavedDownloadedFiles();
         }
 
-        void Execute_ShowPopup(object sender, string e)
+        void ShowPopup(object sender, string e)
         {
             SystemTray.ShowCustomBalloon(new FancyBalloon(e), PopupAnimation.Fade, 5000);
         }
@@ -46,7 +48,7 @@ namespace MamanNet
             WindowState = WindowState.Maximized;
         }
 
-        private void MenuItem_OnExitClick(object sender, RoutedEventArgs e)
+        private void SystemTray_OnExitClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown(1);
         }

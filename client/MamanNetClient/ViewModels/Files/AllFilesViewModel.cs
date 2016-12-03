@@ -6,11 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using DAL;
 using Models;
 
-namespace ViewModel.FilesViewModels
+namespace ViewModel.Files
 {
-    public class BaseFilesViewModel:INotifyPropertyChanged
+    public class AllFilesViewModel:INotifyPropertyChanged
     {
         #region Public Fields
 
@@ -24,16 +25,35 @@ namespace ViewModel.FilesViewModels
 
         #region Private Fields
 
+        private readonly DataStoreProvider _dataStoreProvider;
+
         #endregion
 
         #region Methods
 
-        public BaseFilesViewModel()
+        public AllFilesViewModel()
         {
             AllFilesCollection = new ObservableCollection<MamanNetFile>();
+            _dataStoreProvider = new DataStoreProvider();
+            LoadSavedFiles();
+
             DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFilesCollection);
             UploadingFilesViewModel = new UploadingFilesViewModel(AllFilesCollection);
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFilesCollection);
+        }
+
+        public void SavedDownloadedFiles()
+        {
+            _dataStoreProvider.SaveData(AllFilesCollection.ToList());
+        }
+        private void LoadSavedFiles()
+        {
+            var dataStore = _dataStoreProvider.LoadData();
+            foreach (var serializedFile in dataStore.SavedDataFiles)
+            {
+                var mamanNetFile = new MamanNetFile(serializedFile);
+                AllFilesCollection.Add(mamanNetFile);
+            }
         }
 
         public void FireChangeEvent(string propertyName)

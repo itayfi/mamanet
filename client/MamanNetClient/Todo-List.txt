@@ -8,7 +8,5 @@
 - Reuse in the views of AllFilesView / DownloadedFilesView / DownloadingFilesView / UploadingFilesView
 
 == Bonus Actions ==
-<App>
-- Support Popup window through-out the application
 <FilesView>
 - Support dragging a new a file into the grid

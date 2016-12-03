@@ -9,7 +9,7 @@ using DAL;
 using GalaSoft.MvvmLight.Command;
 using Models;
 
-namespace ViewModel.FilesViewModels
+namespace ViewModel.Files
 {
     public class DownloadedFilesViewModel:INotifyPropertyChanged
     {
@@ -18,6 +18,7 @@ namespace ViewModel.FilesViewModels
         public ObservableCollection<MamanNetFile> DownloadedFiles { get; set; }
         public RelayCommand<string> AddNewDownloadedFileCommand { get; set; }
         public RelayCommand<MamanNetFile> RemoveExistingDownloadedFileCommand { get; set; }
+        public event EventHandler<string> ShowPopup;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MamanNetFile DownloadedSelectedFile
@@ -36,7 +37,6 @@ namespace ViewModel.FilesViewModels
 
         private readonly ObservableCollection<MamanNetFile> _allFiles;
         private MamanNetFile _selectedFile;
-        private readonly DataStoreProvider _dataStoreProvider;
 
         #endregion
 
@@ -44,16 +44,19 @@ namespace ViewModel.FilesViewModels
         public DownloadedFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
         {
             _allFiles = allFiles;
-            _dataStoreProvider = new DataStoreProvider();
             DownloadedFiles = new ObservableCollection<MamanNetFile>();
-            AddDownloadedFile(new MamanNetFile() { BytesDownloaded = 1, DownloadStatus = DownloadStatus.Failed, FileSizeInBytes = 1, FinishedPercentage = 99, Id = "aas", Leechers = 4, Seeders = 4, Name = "hello world", Type = FileType.Word });
-            GetDownloadedFiles();
+            FilterDownloadedFiles();
             AddNewDownloadedFileCommand = new RelayCommand<string>(AddPath);
             RemoveExistingDownloadedFileCommand = new RelayCommand<MamanNetFile>(_deleteDownloadedFile, _canDeleteDownloadFile);
         }
-        public void SavedDownloadedFiles()
+
+        private void FilterDownloadedFiles()
         {
-            _dataStoreProvider.SaveData(DownloadedFiles.ToList());
+            var downloadedFiles = _allFiles.Where(file => file.DownloadStatus == DownloadStatus.Downloaded);
+            foreach (var file in downloadedFiles)
+            {
+                DownloadedFiles.Add(file);
+            }
         }
 
         public void FireChangeEvent(string propertyName)
@@ -71,9 +74,9 @@ namespace ViewModel.FilesViewModels
             _allFiles.Add(file);
         }
 
-        private void AddPath(string file)
+        private void AddPath(string filePath)
         {
-
+            if (ShowPopup != null) ShowPopup(this, "קובץ התווסף בהצלחה!");
         }
 
         private void _deleteDownloadedFile(MamanNetFile file)
@@ -87,16 +90,6 @@ namespace ViewModel.FilesViewModels
             if (file == null)
                 return false;
             return true;
-        }
-
-        private void GetDownloadedFiles()
-        {
-            var dataStore = _dataStoreProvider.LoadData();
-            foreach (var serializedFile in dataStore.SavedDataFiles)
-            {
-                var mamanNetFile = new MamanNetFile(serializedFile);
-                AddDownloadedFile(mamanNetFile);
-            }
         }
 
         #endregion

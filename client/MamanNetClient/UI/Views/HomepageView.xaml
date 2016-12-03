@@ -6,5 +6,4 @@
             <Image x:Name="flagImage" StretchDirection="Both" Stretch="Uniform" Source="../Icons/maxresdefault.jpg"/>
         </Grid>
     </DataTemplate>
-
 </ResourceDictionary>

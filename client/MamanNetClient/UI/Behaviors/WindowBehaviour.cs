@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
-using ViewModel.FilesViewModels;
 
 namespace MamanNet.Behaviors
 {

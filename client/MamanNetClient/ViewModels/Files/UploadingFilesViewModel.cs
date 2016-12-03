@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 
-namespace ViewModel.FilesViewModels
+namespace ViewModel.Files
 {
     public class UploadingFilesViewModel : INotifyPropertyChanged
     {
@@ -51,13 +51,13 @@ namespace ViewModel.FilesViewModels
             }
         }
 
-        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
+        private void AddUploadingFile(MamanNetFile serializedMamanNetFile)
         {
             UploadingFiles.Add(serializedMamanNetFile);
             _allFiles.Add(serializedMamanNetFile);
         }
 
-        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
+        private void RemoveUploadingFile(MamanNetFile serializedMamanNetFile)
         {
             UploadingFiles.Remove(serializedMamanNetFile);
             _allFiles.Remove(serializedMamanNetFile);

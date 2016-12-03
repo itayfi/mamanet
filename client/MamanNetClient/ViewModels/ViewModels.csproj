@@ -112,13 +112,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowserViewModel.cs" />
-    <Compile Include="FilesViewModels\DownloadedFilesViewModel.cs" />
-    <Compile Include="FilesViewModels\DownloadingFilesViewModel.cs" />
+    <Compile Include="Files\DownloadedFilesViewModel.cs" />
+    <Compile Include="Files\DownloadingFilesViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="HomepageViewModel.cs" />
-    <Compile Include="FilesViewModels\BaseFilesViewModel.cs" />
+    <Compile Include="Files\AllFilesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FilesViewModels\UploadingFilesViewModel.cs" />
+    <Compile Include="Files\UploadingFilesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dal\DAL.csproj">

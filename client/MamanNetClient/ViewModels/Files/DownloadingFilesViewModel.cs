@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 
-namespace ViewModel.FilesViewModels
+namespace ViewModel.Files
 {
     public class DownloadingFilesViewModel:INotifyPropertyChanged
     {
@@ -39,7 +39,7 @@ namespace ViewModel.FilesViewModels
         #endregion
 
         #region Private Fields
-        private ObservableCollection<MamanNetFile> AllFiles { get; set; }
+        private ObservableCollection<MamanNetFile> _allFiles { get; set; }
         private int _downloadSpeed;
 
         #endregion
@@ -47,22 +47,31 @@ namespace ViewModel.FilesViewModels
         #region Methods
         public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
         {
-            AllFiles = allFiles;
+            _allFiles = allFiles;
             DownloadingFiles = new ObservableCollection<MamanNetFile>();
-            AddDownloadedFile(
-                new MamanNetFile() { BytesDownloaded = 500, DownloadStatus = DownloadStatus.Downloading, FinishedPercentage = 33, Id = "sad-asd-22", FileSizeInBytes = 4202, Leechers = 4, Name = "MyFile", Seeders = 23, Type = FileType.Pdf });
+            FilterDownloadedingFiles();
             DownloadSpeed = 500;
         }
+
+        private void FilterDownloadedingFiles()
+        {
+            var downloadedingFiles = _allFiles.Where(file => file.DownloadStatus == DownloadStatus.Downloading || file.DownloadStatus == DownloadStatus.Failed);
+            foreach (var file in downloadedingFiles)
+            {
+                DownloadingFiles.Add(file);
+            }
+        }
+
         private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
         {
             DownloadingFiles.Add(serializedMamanNetFile);
-            AllFiles.Add(serializedMamanNetFile);
+            _allFiles.Add(serializedMamanNetFile);
         }
 
         private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
         {
             DownloadingFiles.Remove(serializedMamanNetFile);
-            AllFiles.Remove(serializedMamanNetFile);
+            _allFiles.Remove(serializedMamanNetFile);
         }
 
         #endregion
