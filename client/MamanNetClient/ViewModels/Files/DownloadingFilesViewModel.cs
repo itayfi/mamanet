@@ -5,14 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
+using Models.Files;
 
 namespace ViewModel.Files
 {
     public class DownloadingFilesViewModel:INotifyPropertyChanged
     {
         #region Public Fields
-        public ObservableCollection<MamanNetFile> DownloadingFiles { get; set; }
+        public ObservableCollection<SharedFile> DownloadingFiles { get; set; }
 
         public int DownloadSpeed
         {
@@ -39,16 +39,16 @@ namespace ViewModel.Files
         #endregion
 
         #region Private Fields
-        private ObservableCollection<MamanNetFile> _allFiles { get; set; }
+        private ObservableCollection<SharedFile> _allFiles { get; set; }
         private int _downloadSpeed;
 
         #endregion
 
         #region Methods
-        public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
+        public DownloadingFilesViewModel(ObservableCollection<SharedFile> allFiles)
         {
             _allFiles = allFiles;
-            DownloadingFiles = new ObservableCollection<MamanNetFile>();
+            DownloadingFiles = new ObservableCollection<SharedFile>();
             FilterDownloadedingFiles();
             DownloadSpeed = 500;
         }
@@ -62,13 +62,18 @@ namespace ViewModel.Files
             }
         }
 
-        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
+        private void AddDownloadedFile(MamanetFile serializedMamanNetFile)
         {
-            DownloadingFiles.Add(serializedMamanNetFile);
-            _allFiles.Add(serializedMamanNetFile);
+            SharedFile sharedFile = serializedMamanNetFile as SharedFile;
+            if (sharedFile == null)
+            {
+                sharedFile = new SharedFile(serializedMamanNetFile);
+            }
+            DownloadingFiles.Add(sharedFile);
+            _allFiles.Add(sharedFile);
         }
 
-        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
+        private void DeleteDownloadedFile(SharedFile serializedMamanNetFile)
         {
             DownloadingFiles.Remove(serializedMamanNetFile);
             _allFiles.Remove(serializedMamanNetFile);

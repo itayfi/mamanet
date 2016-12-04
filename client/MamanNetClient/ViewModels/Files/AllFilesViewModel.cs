@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using DAL;
 using Models;
+using Models.Files;
 
 namespace ViewModel.Files
 {
@@ -15,7 +11,7 @@ namespace ViewModel.Files
     {
         #region Public Fields
 
-        public ObservableCollection<MamanNetFile> AllFilesCollection { get; set; }
+        public ObservableCollection<SharedFile> AllFilesCollection { get; set; }
         public DownloadingFilesViewModel DownloadingFilesViewModel { get; set; }
         public UploadingFilesViewModel UploadingFilesViewModel { get; set; }
         public DownloadedFilesViewModel DownloadedFilesViewModel { get; set; }
@@ -33,7 +29,7 @@ namespace ViewModel.Files
 
         public AllFilesViewModel()
         {
-            AllFilesCollection = new ObservableCollection<MamanNetFile>();
+            AllFilesCollection = new ObservableCollection<SharedFile>();
             _dataStoreProvider = new DataStoreProvider();
             LoadSavedFiles();
 
@@ -51,7 +47,7 @@ namespace ViewModel.Files
             var dataStore = _dataStoreProvider.LoadData();
             foreach (var serializedFile in dataStore.SavedDataFiles)
             {
-                var mamanNetFile = new MamanNetFile(serializedFile);
+                var mamanNetFile = new SharedFile(serializedFile);
                 AllFilesCollection.Add(mamanNetFile);
             }
         }

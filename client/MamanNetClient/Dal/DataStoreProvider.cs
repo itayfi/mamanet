@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Models;
+using Models.Files;
 
 namespace DAL
 {
@@ -35,12 +36,11 @@ namespace DAL
             return data;
         }
 
-        public void SaveData(List<MamanNetFile> mamanNetFiles)
+        public void SaveData(List<SharedFile> mamanNetFiles)
         {
             var data = new DataStore();
-            var serializeableFiles = mamanNetFiles.ToList<ISerializedMamanNetFile>();
 
-            foreach (var file in serializeableFiles)
+            foreach (var file in mamanNetFiles)
             {
                 data.AddDataFileToDataStore(file);
             }

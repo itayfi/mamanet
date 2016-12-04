@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Models.Files;
 
 namespace DAL
 {
@@ -12,14 +13,14 @@ namespace DAL
     {
         public DataStore()
         {
-            SavedDataFiles = new List<ISerializedMamanNetFile>();
+            SavedDataFiles = new List<SharedFile>();
         }
 
-        public void AddDataFileToDataStore(ISerializedMamanNetFile file)
+        public void AddDataFileToDataStore(SharedFile file)
         {
             SavedDataFiles.Add(file);
         }
 
-        public List<ISerializedMamanNetFile> SavedDataFiles{ get; set; }
+        public List<SharedFile> SavedDataFiles{ get; set; }
     }
 }

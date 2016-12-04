@@ -8,28 +8,49 @@ using Models;
 
 namespace Models.Files
 {
-    public class SharedFile
+    public enum DownloadStatus
     {
-        private byte[] hash;
+        NotStarted,
+        Downloading,
+        Downloaded,
+        Uploading,
+        Failed
+    }
+
+    [Serializable]
+    public class SharedFile : MamanetFile
+    {
         private FilePart[] parts;
-        internal FileInfo localFile;
+        private string localPath;
+        [NonSerialized]
         internal FileStream inputStream;
+        [NonSerialized]
         internal FileStream outputStream;
 
-        public SharedFile(string name, byte[] hash, FileInfo localFile, int totalSize, int partSize = 1024, bool isAvailable = false)
+        public SharedFile(string name, byte[] hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false, string[] hubs = null)
+            : base(name, hash, hubs, totalSize, partSize)
         {
-            this.Name = name;
-            this.hash = (byte[])hash.Clone();
-            this.localFile = localFile;
-            this.TotalSize = totalSize;
-            this.PartSize = partSize;
+            this.localPath = localPath;
             this.parts = new FilePart[this.NumberOfParts];
             this.IsAvailable = isAvailable;
         }
 
         public SharedFile(string name, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
-            : this(name, Utils.HexStringToByteArray(hash), new FileInfo(localPath), totalSize, partSize, isAvailable)
+            : this(name, Utils.HexStringToByteArray(hash), localPath, totalSize, partSize, isAvailable)
         {
+        }
+
+        public SharedFile(SharedFile other)
+            : base(other)
+        {
+            localPath = other.localPath;
+            parts = other.parts.Select(p => (FilePart)p.Clone()).ToArray();
+            IsAvailable = other.IsAvailable;
+        }
+
+        public SharedFile(MamanetFile other) : base(other)
+        {
+            parts = new FilePart[this.NumberOfParts];
         }
 
         public FilePart this[int number]
@@ -44,49 +65,9 @@ namespace Models.Files
             }
         }
 
-        public string Name
-        {
-            get;
-            set;
-        }
-        public byte[] Hash
-        {
-            get
-            {
-                return (byte[])hash.Clone();
-            }
-            set
-            {
-                this.hash = (byte[])value.Clone();
-            }
-        }
-        public int TotalSize
-        {
-            get;
-            private set;
-        }
-        public int PartSize
-        {
-            get;
-            private set;
-        }
-        public MamanetFile MamanetFile
-        {
-            get; set;
-        }
-        public int NumberOfParts
-        {
-            get
-            {
-                return Convert.ToInt32(Math.Ceiling(Convert.ToDouble(TotalSize) / Convert.ToDouble(PartSize)));
-            }
-        }
         public string LocalPath
         {
-            get
-            {
-                return localFile.FullName;
-            }
+            get; private set;
         }
         public bool IsAvailable
         {
@@ -96,14 +77,38 @@ namespace Models.Files
         {
             get
             {
-                return Convert.ToDecimal(parts.Count(part => part != null ? part.IsAvailable : false)) / Convert.ToDecimal(NumberOfParts);
+                return Convert.ToDecimal(parts.Count(part => part != null ? part.IsAvailable : false)) / 
+                    Convert.ToDecimal(NumberOfParts);
+            }
+        }
+        public bool IsActive
+        {
+            get; set;
+        }
+        public DownloadStatus DownloadStatus
+        {
+            get
+            {
+                if (IsActive)
+                {
+                    return IsAvailable ? DownloadStatus.Uploading : DownloadStatus.Downloading;
+                }
+                if (Availability == 0)
+                {
+                    return DownloadStatus.NotStarted;
+                }
+                if (IsAvailable)
+                {
+                    return DownloadStatus.Downloaded;
+                }
+                return DownloadStatus.Failed;
             }
         }
         internal FileStream GetInputStream()
         {
             if (this.inputStream == null)
             {
-                this.inputStream = this.localFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                this.inputStream = File.Open(localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
             return this.inputStream;
         }
@@ -111,7 +116,8 @@ namespace Models.Files
         {
             if (this.outputStream == null)
             {
-                this.outputStream = this.localFile.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+                this.outputStream = File.Open(localPath, FileMode.OpenOrCreate, FileAccess.Write, 
+                    FileShare.Read);
             }
             return this.outputStream;
         }
@@ -130,7 +136,7 @@ namespace Models.Files
         }
         internal void UpdateAvailability()
         {
-            IsAvailable = parts.All(part => part != null ? part.IsAvailable : false);
+            IsAvailable = IsAvailable || parts.All(part => part != null ? part.IsAvailable : false);
         }
     }
 }

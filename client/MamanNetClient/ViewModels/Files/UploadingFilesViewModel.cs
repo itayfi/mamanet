@@ -5,14 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
+using Models.Files;
 
 namespace ViewModel.Files
 {
     public class UploadingFilesViewModel : INotifyPropertyChanged
     {
         #region Public Fields
-        public ObservableCollection<MamanNetFile> UploadingFiles { get; set; }
+        public ObservableCollection<SharedFile> UploadingFiles { get; set; }
 
         public int UploadSpeed
         {
@@ -31,15 +31,15 @@ namespace ViewModel.Files
         #endregion
 
         #region Private Fields
-        private ObservableCollection<MamanNetFile> _allFiles { get; set; }
+        private ObservableCollection<SharedFile> _allFiles { get; set; }
         private int _uploadSpeed;
         #endregion
 
         #region Methods
-        public UploadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
+        public UploadingFilesViewModel(ObservableCollection<SharedFile> allFiles)
         {
             _allFiles = allFiles;
-            UploadingFiles = new ObservableCollection<MamanNetFile>();
+            UploadingFiles = new ObservableCollection<SharedFile>();
             UploadSpeed = 24;
         }
         public void FireChangeEvent(string propertyName)
@@ -51,13 +51,13 @@ namespace ViewModel.Files
             }
         }
 
-        private void AddUploadingFile(MamanNetFile serializedMamanNetFile)
+        private void AddUploadingFile(SharedFile serializedMamanNetFile)
         {
             UploadingFiles.Add(serializedMamanNetFile);
             _allFiles.Add(serializedMamanNetFile);
         }
 
-        private void RemoveUploadingFile(MamanNetFile serializedMamanNetFile)
+        private void RemoveUploadingFile(SharedFile serializedMamanNetFile)
         {
             UploadingFiles.Remove(serializedMamanNetFile);
             _allFiles.Remove(serializedMamanNetFile);

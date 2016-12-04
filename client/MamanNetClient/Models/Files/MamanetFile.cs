@@ -12,17 +12,55 @@ namespace Models.Files
     [Serializable]
     public class MamanetFile
     {
-        private string name;
-        private byte[] hash;
-        private string[] hubs;
-        private int fileSize;
+        protected byte[] hash;
+        protected string[] hubs;
 
-        public MamanetFile(string name, byte[] hash, string[] hubs, int fileSize)
+        public MamanetFile(string name, byte[] hash, string[] hubs, int fileSize, int partSize)
         {
-            this.name = name;
+            this.Name = name;
             this.hash = (byte[])hash.Clone();
-            this.hubs = (string[])hubs.Clone();
-            this.fileSize = fileSize;
+            this.hubs = hubs != null ? (string[])hubs.Clone() : null;
+            this.FileSize = fileSize;
+            this.PartSize = partSize;
+        }
+
+        public MamanetFile(MamanetFile other)
+        {
+            Name = other.Name;
+            hash = (byte[])other.hash.Clone();
+            hubs = (string[])(other.hubs != null ? other.hubs.Clone() : null);
+            FileSize = other.FileSize;
+            PartSize = other.PartSize;
+        }
+
+        public string Name
+        {
+            get; set;
+        }
+        public byte[] Hash
+        {
+            get { return (byte[])hash.Clone(); }
+            set { this.hash = (byte[])value.Clone(); }
+        }
+        public string HexHash
+        {
+            get { return Utils.ByteArrayToHexString(hash); }
+            set { this.hash = (byte[])value.Clone(); }
+        }
+        public int FileSize
+        {
+            get; private set;
+        }
+        public int PartSize
+        {
+            get; private set;
+        }
+        public int NumberOfParts
+        {
+            get
+            {
+                return Convert.ToInt32(Math.Ceiling(Convert.ToDouble(FileSize) / Convert.ToDouble(PartSize)));
+            }
         }
 
         public void Save(string path)
@@ -50,8 +88,13 @@ namespace Models.Files
                 return false;
             }
             MamanetFile other = (MamanetFile)obj;
-            return other.name == name && other.hash.SequenceEqual(hash) &&
+            return other.Name == Name && other.hash.SequenceEqual(hash) &&
                 other.hubs.OrderBy(h => h).SequenceEqual(hubs.OrderBy(h => h));
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() + hash.GetHashCode() + hubs.OrderBy(h => h).ToArray().GetHashCode();
         }
     }
 }

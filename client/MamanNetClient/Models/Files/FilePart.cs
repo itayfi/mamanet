@@ -1,9 +1,11 @@
 ﻿using Models.Exceptions;
+using System;
 using System.IO;
 
 namespace Models.Files
 {
-    public class FilePart
+    [Serializable]
+    public class FilePart :ICloneable
     {
         public FilePart(SharedFile file, int number)
         {
@@ -57,6 +59,13 @@ namespace Models.Files
             stream.Write(data, 0, File.PartSize);
             IsAvailable = true;
             File.UpdateAvailability();
+        }
+
+        public object Clone()
+        {
+            FilePart other = new FilePart(File, Number);
+            other.IsAvailable = IsAvailable;
+            return other;
         }
     }
 }
