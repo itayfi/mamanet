@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models;
 
-namespace LibMamanet.Files
+namespace Models.Files
 {
     public class SharedFile
     {

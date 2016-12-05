@@ -1,7 +1,7 @@
-﻿using LibMamanet.Exceptions;
+﻿using Models.Exceptions;
 using System.IO;
 
-namespace LibMamanet.Files
+namespace Models.Files
 {
     public class FilePart
     {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LibMamanet")]
+[assembly: AssemblyTitle("Networking")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("OpenU")]
-[assembly: AssemblyProduct("LibMamanet")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Networking")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bb90b920-c452-4d58-80cd-c3be27d84443")]
+[assembly: Guid("3c70044c-e5bf-43b0-9bbe-fa9753e454e9")]
 
 // Version information for an assembly consists of the following four values:
 //

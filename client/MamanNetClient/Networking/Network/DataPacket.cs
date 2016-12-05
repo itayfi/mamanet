@@ -1,12 +1,12 @@
-﻿using LibMamanet.Files;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Files;
 
-namespace LibMamanet.Network
+namespace Networking.Network
 {
     [Serializable]
     class DataPacket : Packet

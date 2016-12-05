@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace LibMamanet.Exceptions
+namespace Models.Exceptions
 {
     [Serializable]
     internal class NotAvailableException : Exception

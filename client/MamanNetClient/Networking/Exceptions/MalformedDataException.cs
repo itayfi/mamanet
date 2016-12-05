@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace LibMamanet.Exceptions
+namespace Networking.Exceptions
 {
     [Serializable]
     internal class MalformedDataException : Exception
