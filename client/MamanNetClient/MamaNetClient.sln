@@ -11,11 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModels", "ViewModels\Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "Dal\DAL.csproj", "{F3F818BF-3881-4F0F-9288-DE1F5ADD8D11}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{63A9CF85-2F88-4C95-9377-6C8E18A5E982}"
-	ProjectSection(SolutionItems) = preProject
-		Todo-List.txt = Todo-List.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Networking", "Networking\Networking.csproj", "{3C70044C-E5BF-43B0-9BBE-FA9753E454E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMamaNetLib", "Networking\TestMamaNetLib.csproj", "{B8059155-5B3B-48E2-BF73-464DF8921BFD}"
