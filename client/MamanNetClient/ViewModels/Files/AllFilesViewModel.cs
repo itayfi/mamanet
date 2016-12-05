@@ -37,14 +37,14 @@ namespace ViewModel.Files
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);
         }
 
-        public override void AddFile(SharedFile file)
+        public override void AddFile(MamaNetFile file)
         {
             AllFiles.Add(file);
         }
 
-        public override void AddFile(MamanetFile file)
+        public override void AddFile(MetadataFile file)
         {
-            AllFiles.Add(new SharedFile(file));
+            AllFiles.Add(new MamaNetFile(file));
         }
 
         public override void _deleteFile()
@@ -72,7 +72,7 @@ namespace ViewModel.Files
             var dataStore = _dataStoreProvider.LoadData();
             foreach (var serializedFile in dataStore.SavedDataFiles)
             {
-                var mamanNetFile = new SharedFile(serializedFile);
+                var mamanNetFile = new MamaNetFile(serializedFile);
                 AllFiles.Add(mamanNetFile);
             }
         }

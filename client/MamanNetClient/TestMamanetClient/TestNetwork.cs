@@ -25,8 +25,8 @@ namespace TestMamanetLib
             File.WriteAllText(sourceFile, LOREM);
             NetworkController sender = new NetworkController(NetworkController.DEFAULT_PORT + 1);
             NetworkController receiver = new NetworkController(NetworkController.DEFAULT_PORT + 2);
-            SharedFile source = new SharedFile("test.txt", HASH, sourceFile, DATA.Length, isAvailable: true);
-            SharedFile dest = new SharedFile("test.txt", HASH, destFile, DATA.Length);
+            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isAvailable: true);
+            MamaNetFile dest = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
 
             sender.AddFile(source);
             receiver.AddFile(dest);

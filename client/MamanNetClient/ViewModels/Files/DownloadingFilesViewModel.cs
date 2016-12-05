@@ -12,7 +12,7 @@ namespace ViewModel.Files
     public class DownloadingFilesViewModel:BaseFilesViewModel
     {
         #region Public Fields
-        public ObservableCollection<SharedFile> DownloadingFiles { get; set; }
+        public ObservableCollection<MamaNetFile> DownloadingFiles { get; set; }
 
         public int DownloadSpeed
         {
@@ -35,9 +35,9 @@ namespace ViewModel.Files
         #endregion
 
         #region Methods
-        public DownloadingFilesViewModel(ObservableCollection<SharedFile> allFiles):base(allFiles)
+        public DownloadingFilesViewModel(ObservableCollection<MamaNetFile> allFiles):base(allFiles)
         {
-            DownloadingFiles = new ObservableCollection<SharedFile>();
+            DownloadingFiles = new ObservableCollection<MamaNetFile>();
             RelevatFilesCollection = DownloadingFiles;
             DownloadSpeed = 500;
             FilterAllFilesToCollectionFiles();

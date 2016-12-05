@@ -12,7 +12,7 @@ namespace ViewModel.Files
     public class UploadingFilesViewModel : BaseFilesViewModel
     {
         #region Public Fields
-        public ObservableCollection<SharedFile> UploadingFiles { get; set; }
+        public ObservableCollection<MamaNetFile> UploadingFiles { get; set; }
 
         public int UploadSpeed
         {
@@ -35,9 +35,9 @@ namespace ViewModel.Files
         #endregion
 
         #region Methods
-        public UploadingFilesViewModel(ObservableCollection<SharedFile> allFiles):base(allFiles)
+        public UploadingFilesViewModel(ObservableCollection<MamaNetFile> allFiles):base(allFiles)
         {
-            UploadingFiles = new ObservableCollection<SharedFile>();
+            UploadingFiles = new ObservableCollection<MamaNetFile>();
             RelevatFilesCollection = UploadingFiles;
             UploadSpeed = 27;
         }

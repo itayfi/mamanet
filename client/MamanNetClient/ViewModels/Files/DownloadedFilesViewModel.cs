@@ -16,7 +16,7 @@ namespace ViewModel.Files
     {
         #region Public Fields
 
-        public ObservableCollection<SharedFile> DownloadedFiles { get; set; }
+        public ObservableCollection<MamaNetFile> DownloadedFiles { get; set; }
        
         #endregion
 
@@ -26,9 +26,9 @@ namespace ViewModel.Files
 
         #region Methods
 
-        public DownloadedFilesViewModel(ObservableCollection<SharedFile> allFiles):base(allFiles)
+        public DownloadedFilesViewModel(ObservableCollection<MamaNetFile> allFiles):base(allFiles)
         {
-            DownloadedFiles = new ObservableCollection<SharedFile>();
+            DownloadedFiles = new ObservableCollection<MamaNetFile>();
             RelevatFilesCollection = DownloadedFiles;
             FilterAllFilesToCollectionFiles();
         }

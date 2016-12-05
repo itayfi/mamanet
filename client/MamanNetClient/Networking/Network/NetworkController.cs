@@ -32,19 +32,19 @@ namespace Networking.Network
     public class NetworkController
     {
         public const int DEFAULT_PORT = 20588;
-        private Dictionary<byte[], SharedFile> files;
+        private Dictionary<byte[], MamaNetFile> files;
         private UdpClient client;
         private IPEndPoint myEndPoint;
         private int port;
 
         public NetworkController(int port = DEFAULT_PORT)
         {
-            this.files = new Dictionary<byte[], SharedFile>(new ByteArrayComparer());
+            this.files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
             this.port = port;
         }
 
         #region Public API
-        public void AddFile(SharedFile file)
+        public void AddFile(MamaNetFile file)
         {
             files.Add(file.Hash, file);
         }

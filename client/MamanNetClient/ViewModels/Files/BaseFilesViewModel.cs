@@ -15,9 +15,9 @@ namespace ViewModel.Files
     public abstract class BaseFilesViewModel:INotifyPropertyChanged
     {
         #region Public Fields
-        public ObservableCollection<SharedFile> AllFiles { get; set; }
-        public ObservableCollection<SharedFile> RelevatFilesCollection { get; set; }
-        public RelayCommand<SharedFile> SelectionChangedCommand { get; set; }
+        public ObservableCollection<MamaNetFile> AllFiles { get; set; }
+        public ObservableCollection<MamaNetFile> RelevatFilesCollection { get; set; }
+        public RelayCommand<MamaNetFile> SelectionChangedCommand { get; set; }
         public RelayCommand<string> AddFileCommand { get; set; }
         public RelayCommand RemoveFileCommand { get; set; }
         public RelayCommand StopCommand { get; set; }
@@ -25,7 +25,7 @@ namespace ViewModel.Files
         public RelayCommand UpCommand { get; set; }
         public RelayCommand DownCommand { get; set; }
 
-        public SharedFile SelectedFile
+        public MamaNetFile SelectedFile
         {
             get { return _selectedFile; }
             set
@@ -42,25 +42,25 @@ namespace ViewModel.Files
 
         #region Private Fields
 
-        private SharedFile _selectedFile;
+        private MamaNetFile _selectedFile;
     
         #endregion
 
         #region Commands
 
-        public virtual void _selectionChanged(SharedFile file)
+        public virtual void _selectionChanged(MamaNetFile file)
         {
             SelectedFile = file;
             _rasieCommandsCanExecute();
         }
 
-        public virtual void AddFile(MamanetFile file)
+        public virtual void AddFile(MetadataFile file)
         {
-            SharedFile sharedFile = new SharedFile(file);
+            MamaNetFile sharedFile = new MamaNetFile(file);
             AddFile(sharedFile);
         }
 
-        public virtual void AddFile(SharedFile file)
+        public virtual void AddFile(MamaNetFile file)
         {
             AllFiles.Add(file);
             RelevatFilesCollection.Add(file);
@@ -73,7 +73,7 @@ namespace ViewModel.Files
                 var index1 = filePath.LastIndexOf(@"\", StringComparison.Ordinal);
                 var index2 = filePath.LastIndexOf(".", StringComparison.Ordinal);
                 var fileInfo = new FileInfo(filePath);
-                SharedFile mamanNetFile = new SharedFile(fileInfo.Name, new byte[0], filePath, (int)fileInfo.Length, isAvailable: true);
+                MamaNetFile mamanNetFile = new MamaNetFile(fileInfo.Name, new byte[0], filePath, (int)fileInfo.Length, isAvailable: true);
                 mamanNetFile.IsActive = false;
                 mamanNetFile.Name = filePath.Substring(index1 + 1, (index2 - index1) - 1);
                 AddFile(mamanNetFile);
@@ -169,7 +169,7 @@ namespace ViewModel.Files
 
         #region Methods
 
-        protected BaseFilesViewModel(ObservableCollection<SharedFile> allFiles):this()
+        protected BaseFilesViewModel(ObservableCollection<MamaNetFile> allFiles):this()
         {
             AllFiles = allFiles;
             RelevatFilesCollection = AllFiles;
@@ -177,8 +177,8 @@ namespace ViewModel.Files
 
         protected BaseFilesViewModel()
         {
-            AllFiles = new ObservableCollection<SharedFile>();
-            SelectionChangedCommand = new RelayCommand<SharedFile>(_selectionChanged);
+            AllFiles = new ObservableCollection<MamaNetFile>();
+            SelectionChangedCommand = new RelayCommand<MamaNetFile>(_selectionChanged);
             AddFileCommand = new RelayCommand<string>(_addFileByPath, _canAddFile);
             RemoveFileCommand = new RelayCommand(_deleteFile, _canDeleteFile);
             StopCommand = new RelayCommand(_stopFile, _canStopFile);

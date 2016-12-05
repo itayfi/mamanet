@@ -1,101 +1,193 @@
-﻿using Networking;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using Models;
+using Networking;
+using System.ComponentModel;
 
 namespace Models.Files
 {
-    [Serializable]
-    public class MamanetFile
+    public enum DownloadStatus
     {
-        protected byte[] hash;
-        protected string[] hubs;
+        Paused,
+        Downloading,
+        Downloaded,
+        Uploading,
+        Failed
+    }
 
-        public MamanetFile(string name, byte[] hash, string[] hubs, int fileSize, int partSize)
+    [Serializable]
+    public class MamaNetFile : MetadataFile, INotifyPropertyChanged
+    {
+        private FilePart[] parts;
+        private string _localPath;
+        private bool _isAvailable;
+        private bool _isActive;
+        [NonSerialized]
+        internal FileStream inputStream;
+        [NonSerialized]
+        internal FileStream outputStream;
+
+        #region Ctors
+        public MamaNetFile(string name, byte[] hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false, string[] hubs = null)
+            : base(name, hash, hubs, totalSize, partSize)
         {
-            this.Name = name;
-            this.hash = (byte[])hash.Clone();
-            this.hubs = hubs != null ? (string[])hubs.Clone() : null;
-            this.FileSize = fileSize;
-            this.PartSize = partSize;
+            this._localPath = localPath;
+            this.parts = new FilePart[this.NumberOfParts];
+            this.IsAvailable = isAvailable;
         }
 
-        public MamanetFile(MamanetFile other)
+        public MamaNetFile(string name, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
+            : this(name, Utils.HexStringToByteArray(hash), localPath, totalSize, partSize, isAvailable)
         {
-            Name = other.Name;
-            hash = (byte[])other.hash.Clone();
-            hubs = (string[])(other.hubs != null ? other.hubs.Clone() : null);
-            FileSize = other.FileSize;
-            PartSize = other.PartSize;
         }
 
-        public string Name
+        public MamaNetFile(MamaNetFile other)
+            : base(other)
         {
-            get; set;
+            _localPath = other._localPath;
+            parts = other.parts.Select(p => (FilePart)p.Clone()).ToArray();
+            IsAvailable = other.IsAvailable;
         }
-        public byte[] Hash
+
+        public MamaNetFile(MetadataFile other) : base(other)
         {
-            get { return (byte[])hash.Clone(); }
-            set { this.hash = (byte[])value.Clone(); }
+            parts = new FilePart[this.NumberOfParts];
         }
-        public string HexHash
-        {
-            get { return Utils.ByteArrayToHexString(hash); }
-            set { this.hash = (byte[])value.Clone(); }
-        }
-        public int FileSize
-        {
-            get; private set;
-        }
-        public int PartSize
-        {
-            get; private set;
-        }
-        public int NumberOfParts
+        #endregion
+
+        public FilePart this[int number]
         {
             get
             {
-                return Convert.ToInt32(Math.Ceiling(Convert.ToDouble(FileSize) / Convert.ToDouble(PartSize)));
+                if (parts[number] == null)
+                {
+                    parts[number] = new FilePart(this, number);
+                }
+                return parts[number];
             }
         }
 
-        public void Save(string path)
+        #region Serialized Properties
+        public string LocalPath
         {
-            using (var stream = File.OpenWrite(path))
+            get { return _localPath; }
+            private set
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, this);
+                _localPath = value;
+                FireChangeEvent("LocalPath");
             }
         }
-
-        public static MamanetFile Load(string path)
+        public bool IsAvailable
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (var stream = File.OpenRead(path))
+            get { return _isAvailable; }
+            private set
             {
-                return (MamanetFile)formatter.Deserialize(stream);
+                _isAvailable = value;
+                FireChangeEvent("IsAvailable");
+                FireChangeEvent("Availability");
+                FireChangeEvent("DownloadStatus");
             }
         }
-
-        public override bool Equals(object obj)
+        public bool IsActive
         {
-            if (!(obj is MamanetFile))
+            get { return _isActive; }
+            set
             {
-                return false;
+                _isActive = value;
+                FireChangeEvent("IsActive");
+                FireChangeEvent("DownloadStatus");
             }
-            MamanetFile other = (MamanetFile)obj;
-            return other.Name == Name && other.hash.SequenceEqual(hash) &&
-                ((hubs == null || other.hubs == null) ? hubs == other.hubs : other.hubs.OrderBy(h => h).SequenceEqual(hubs.OrderBy(h => h)));
+        }
+        #endregion
+        #region Calculated Properties
+        public decimal Availability
+        {
+            get
+            {
+                return Convert.ToDecimal(parts.Count(part => part != null ? part.IsAvailable : false)) / 
+                    Convert.ToDecimal(NumberOfParts);
+            }
+        }
+        public DownloadStatus DownloadStatus
+        {
+            get
+            {
+                if (IsActive)
+                {
+                    return IsAvailable ? DownloadStatus.Uploading : DownloadStatus.Downloading;
+                }
+                if (Availability == 0)
+                {
+                    return DownloadStatus.Paused;
+                }
+                if (IsAvailable)
+                {
+                    return DownloadStatus.Downloaded;
+                }
+                return DownloadStatus.Failed;
+            }
+        }
+        public string Type
+        {
+            get
+            {
+                return Name.Split('.').Last();
+            }
+        }
+        #endregion
+        #region Methods
+        internal FileStream GetInputStream()
+        {
+            if (this.inputStream == null)
+            {
+                this.inputStream = File.Open(_localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
+            return this.inputStream;
+        }
+        internal FileStream GetOutputStream()
+        {
+            if (this.outputStream == null)
+            {
+                this.outputStream = File.Open(_localPath, FileMode.OpenOrCreate, FileAccess.Write, 
+                    FileShare.Read);
+            }
+            return this.outputStream;
+        }
+        public void Close()
+        {
+            if (inputStream != null)
+            {
+                inputStream.Close();
+                inputStream = null;
+            }
+            if (outputStream != null)
+            {
+                outputStream.Close();
+                outputStream = null;
+            }
+        }
+        internal void UpdateAvailability()
+        {
+            IsAvailable = IsAvailable || parts.All(part => part != null ? part.IsAvailable : false);
+        }
+        #endregion
+
+        #region INotifyPropertyChanged
+        private void FireChangeEvent(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode() + hash.GetHashCode() + (hubs != null ? hubs.OrderBy(h => h).ToArray().GetHashCode() : -1);
-        }
+        [field: NonSerializedAttribute()]
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

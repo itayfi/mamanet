@@ -13,14 +13,14 @@ namespace DAL
     {
         public DataStore()
         {
-            SavedDataFiles = new List<SharedFile>();
+            SavedDataFiles = new List<MamaNetFile>();
         }
 
-        public void AddDataFileToDataStore(SharedFile file)
+        public void AddDataFileToDataStore(MamaNetFile file)
         {
             SavedDataFiles.Add(file);
         }
 
-        public List<SharedFile> SavedDataFiles{ get; set; }
+        public List<MamaNetFile> SavedDataFiles{ get; set; }
     }
 }

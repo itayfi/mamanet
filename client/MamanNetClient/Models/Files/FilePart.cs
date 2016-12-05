@@ -7,14 +7,14 @@ namespace Models.Files
     [Serializable]
     public class FilePart :ICloneable
     {
-        public FilePart(SharedFile file, int number)
+        public FilePart(MamaNetFile file, int number)
         {
             this.File = file;
             this.Number = number;
             this.IsAvailable = file.IsAvailable;
         }
 
-        public SharedFile File
+        public MamaNetFile File
         {
             get; private set;
         }

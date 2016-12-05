@@ -36,7 +36,7 @@ namespace DAL
             return data;
         }
 
-        public void SaveData(List<SharedFile> mamanNetFiles)
+        public void SaveData(List<MamaNetFile> mamanNetFiles)
         {
             var data = new DataStore();
 
