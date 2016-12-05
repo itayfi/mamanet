@@ -23,7 +23,7 @@ namespace MamanNet.Views
             Application.Current.Exit += OnApplicationExit;
             _baseFilesViewModel = Resources["AllFileViewModel"] as AllFilesViewModel;
             if (_baseFilesViewModel == null) throw new ArgumentNullException();
-            _baseFilesViewModel.DownloadedFilesViewModel.ShowPopup += ShowPopup;
+            _baseFilesViewModel.DownloadingFilesViewModel.ShowPopup += ShowPopup;
         }
 
         void OnApplicationExit(object sender, ExitEventArgs e)

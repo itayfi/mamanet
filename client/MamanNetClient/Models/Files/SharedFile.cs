@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Networking;
 
 namespace Models.Files
 {
@@ -70,7 +71,7 @@ namespace Models.Files
             get;
             private set;
         }
-        public MamanetFile MamanetFile
+        public MamaNetFile MamaNetFile
         {
             get; set;
         }

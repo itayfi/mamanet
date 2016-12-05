@@ -7,8 +7,8 @@
         xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
         xmlns:converters="clr-namespace:MamanNet.Converters"
         xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
-        Title="Maman-Net" Height="853" Width="1361" FlowDirection="RightToLeft" 
-        Background="#FFF7F7F7" Icon="../Icons/MamanNetIcon.ico" WindowStartupLocation="CenterScreen"
+        Title="MamaNet" Height="853" Width="1361" FlowDirection="RightToLeft" 
+        Background="#FFF7F7F7" Icon="../Icons/MamaNetIcon.ico" WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True" x:Name="MyWindow" Topmost="False" Closing="MainWindow_OnClosing">
     <Window.DataContext>
         <viewModel:MainViewModel/>
@@ -33,7 +33,7 @@
             <RowDefinition Height="205*"/>
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <tb:TaskbarIcon x:Name="SystemTray" Visibility="Visible" IconSource="../Icons/MamanNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
+        <tb:TaskbarIcon x:Name="SystemTray" ToolTip="MamaNet" ToolTipText="MamaNet" Visibility="Visible" IconSource="../Icons/MamaNetIcon.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Width="auto" FlowDirection="RightToLeft"
                     Background="LightGray">
@@ -42,7 +42,7 @@
                             <TextBlock Width="auto" VerticalAlignment="Center" Text="יציאה"/>
                         </MenuItem.Header>
                         <MenuItem.Icon>
-                            <Image Source="../Icons/Alecive-Flatwoken-Apps-Dialog-Shutdown.ico" />
+                            <Image Source="../Icons/shutdown.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
@@ -55,7 +55,6 @@
                         <i:InvokeCommandAction Command="{Binding SelectedCommandChanged}" CommandParameter="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource TreeViewItemConverter}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>-->
-                
                 <TreeViewItem Header="מסך פתיחה" IsSelected="True" DataContext="{StaticResource HomepageViewModel}"/>
                 <TreeViewItem Header="{Binding Path=.AllFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=קבצים}" DataContext="{StaticResource AllFileViewModel}" >
                     <TreeViewItem DataContext="{Binding Path=.DownloadingFilesViewModel}" Header="{Binding Path=.DownloadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוריד}" />
@@ -90,7 +89,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות הורדה: "></TextBlock>
                     <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="../Icons/download-triangle.png"/>
+                    <Image Source="../Icons/download.png"/>
                 </StackPanel>
             </StatusBarItem>
             <Separator  Grid.Column="1" Background="#FFD7D7D7" Width="2"/>
@@ -98,7 +97,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות העלאה: "></TextBlock>
                     <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="..\Icons\upload-triangle.png"/>
+                    <Image Source="..\Icons\upload.png"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

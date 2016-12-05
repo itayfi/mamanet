@@ -5,7 +5,6 @@
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
                     x:Class="MamanNet.Views.FileViewCodeBehind">
-    
     <DataTemplate x:Key="BasicDataTemplate">
         <Grid>
             <i:Interaction.Behaviors>
@@ -37,7 +36,7 @@
                 </Button>
                 <Button Command="{Binding Path=RemoveFileCommand}">
                     <Button.Content>
-                        <Image Source="../Icons/Remove.ico"/>
+                        <Image Source="../Icons/remove.ico"/>
                     </Button.Content>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>

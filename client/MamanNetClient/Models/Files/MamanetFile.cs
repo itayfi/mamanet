@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace Models.Files
 {
     [Serializable]
-    public class MamanetFile
+    public class MamaNetFile
     {
         private string name;
         private byte[] hash;
         private string[] hubs;
         private int fileSize;
 
-        public MamanetFile(string name, byte[] hash, string[] hubs, int fileSize)
+        public MamaNetFile(string name, byte[] hash, string[] hubs, int fileSize)
         {
             this.name = name;
             this.hash = (byte[])hash.Clone();
@@ -34,22 +34,22 @@ namespace Models.Files
             }
         }
 
-        public static MamanetFile Load(string path)
+        public static MamaNetFile Load(string path)
         {
             BinaryFormatter formatter = new BinaryFormatter();
             using (var stream = File.OpenRead(path))
             {
-                return (MamanetFile)formatter.Deserialize(stream);
+                return (MamaNetFile)formatter.Deserialize(stream);
             }
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is MamanetFile))
+            if (!(obj is MamaNetFile))
             {
                 return false;
             }
-            MamanetFile other = (MamanetFile)obj;
+            MamaNetFile other = (MamaNetFile)obj;
             return other.name == name && other.hash.SequenceEqual(hash) &&
                 other.hubs.OrderBy(h => h).SequenceEqual(hubs.OrderBy(h => h));
         }

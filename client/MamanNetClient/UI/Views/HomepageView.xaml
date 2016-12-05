@@ -3,7 +3,7 @@
                     xmlns:viewModel="clr-namespace:ViewModel;assembly=ViewModel">
     <DataTemplate DataType="{x:Type viewModel:HomepageViewModel}">
         <Grid Background="White" Margin="5,6,8,5">
-            <Image x:Name="flagImage" StretchDirection="Both" Stretch="Uniform" Source="../Icons/maxresdefault.jpg"/>
+            <Image x:Name="flagImage" StretchDirection="Both" Stretch="Uniform" Source="../Icons/MamaNetHomepage.png"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

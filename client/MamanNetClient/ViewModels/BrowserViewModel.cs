@@ -11,12 +11,11 @@ using Models;
 
 namespace ViewModel
 {
-    public class BrowserViewModel:INotifyPropertyChanged
+    public class BrowserViewModel
     {
         #region Public Fields
 
         public RelayCommand OpenWebBrowser { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 

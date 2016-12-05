@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Networking
 {
-    static class Utils
+    public static class Utils
     {
         public static string ByteArrayToHexString(byte[] ba)
         {

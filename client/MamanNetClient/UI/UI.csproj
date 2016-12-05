@@ -177,11 +177,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\download-triangle.png" />
+    <Resource Include="Icons\download.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\MamanNetIcon.ico" />
-    <Resource Include="Icons\upload-triangle.png" />
+    <Resource Include="Icons\bitornetIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj">
@@ -194,29 +193,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\splash-screen.jpg" />
+    <Resource Include="Icons\bitornetSplashScreen.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\maxresdefault.jpg" />
+    <Resource Include="Icons\bitornetHomepage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Close.png" />
-    <Resource Include="Icons\Info.png" />
+    <Resource Include="Icons\close.png" />
+    <Resource Include="Icons\info.png" />
     <Resource Include="Icons\play.ico" />
     <Resource Include="Icons\down.ico" />
-    <Resource Include="Icons\Remove.ico" />
+    <Resource Include="Icons\remove.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\warning-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\close.jpg" />
+    <Resource Include="Icons\warning.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\shutdown.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\Alecive-Flatwoken-Apps-Dialog-Shutdown.ico" />
+    <Resource Include="Icons\shutdown.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\stop.ico" />
@@ -233,6 +229,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\imageIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\mamaNetIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\mamaNetHomepage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Upload.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
