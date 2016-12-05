@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Networking;
+using System.ComponentModel;
 
 namespace Models.Files
 {
     public enum DownloadStatus
     {
-        NotStarted,
+        Paused,
         Downloading,
         Downloaded,
         Uploading,
@@ -18,19 +20,22 @@ namespace Models.Files
     }
 
     [Serializable]
-    public class SharedFile : MamanetFile
+    public class SharedFile : MamanetFile, INotifyPropertyChanged
     {
         private FilePart[] parts;
-        private string localPath;
+        private string _localPath;
+        private bool _isAvailable;
+        private bool _isActive;
         [NonSerialized]
         internal FileStream inputStream;
         [NonSerialized]
         internal FileStream outputStream;
 
+        #region Ctors
         public SharedFile(string name, byte[] hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false, string[] hubs = null)
             : base(name, hash, hubs, totalSize, partSize)
         {
-            this.localPath = localPath;
+            this._localPath = localPath;
             this.parts = new FilePart[this.NumberOfParts];
             this.IsAvailable = isAvailable;
         }
@@ -43,7 +48,7 @@ namespace Models.Files
         public SharedFile(SharedFile other)
             : base(other)
         {
-            localPath = other.localPath;
+            _localPath = other._localPath;
             parts = other.parts.Select(p => (FilePart)p.Clone()).ToArray();
             IsAvailable = other.IsAvailable;
         }
@@ -52,6 +57,7 @@ namespace Models.Files
         {
             parts = new FilePart[this.NumberOfParts];
         }
+        #endregion
 
         public FilePart this[int number]
         {
@@ -65,14 +71,39 @@ namespace Models.Files
             }
         }
 
+        #region Serialized Properties
         public string LocalPath
         {
-            get; private set;
+            get { return _localPath; }
+            private set
+            {
+                _localPath = value;
+                FireChangeEvent("LocalPath");
+            }
         }
         public bool IsAvailable
         {
-            get; private set;
+            get { return _isAvailable; }
+            private set
+            {
+                _isAvailable = value;
+                FireChangeEvent("IsAvailable");
+                FireChangeEvent("Availability");
+                FireChangeEvent("DownloadStatus");
+            }
         }
+        public bool IsActive
+        {
+            get { return _isActive; }
+            set
+            {
+                _isActive = value;
+                FireChangeEvent("IsActive");
+                FireChangeEvent("DownloadStatus");
+            }
+        }
+        #endregion
+        #region Calculated Properties
         public decimal Availability
         {
             get
@@ -80,10 +111,6 @@ namespace Models.Files
                 return Convert.ToDecimal(parts.Count(part => part != null ? part.IsAvailable : false)) / 
                     Convert.ToDecimal(NumberOfParts);
             }
-        }
-        public bool IsActive
-        {
-            get; set;
         }
         public DownloadStatus DownloadStatus
         {
@@ -95,7 +122,7 @@ namespace Models.Files
                 }
                 if (Availability == 0)
                 {
-                    return DownloadStatus.NotStarted;
+                    return DownloadStatus.Paused;
                 }
                 if (IsAvailable)
                 {
@@ -104,11 +131,20 @@ namespace Models.Files
                 return DownloadStatus.Failed;
             }
         }
+        public string Type
+        {
+            get
+            {
+                return Name.Split('.').Last();
+            }
+        }
+        #endregion
+        #region Methods
         internal FileStream GetInputStream()
         {
             if (this.inputStream == null)
             {
-                this.inputStream = File.Open(localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                this.inputStream = File.Open(_localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
             return this.inputStream;
         }
@@ -116,7 +152,7 @@ namespace Models.Files
         {
             if (this.outputStream == null)
             {
-                this.outputStream = File.Open(localPath, FileMode.OpenOrCreate, FileAccess.Write, 
+                this.outputStream = File.Open(_localPath, FileMode.OpenOrCreate, FileAccess.Write, 
                     FileShare.Read);
             }
             return this.outputStream;
@@ -138,5 +174,20 @@ namespace Models.Files
         {
             IsAvailable = IsAvailable || parts.All(part => part != null ? part.IsAvailable : false);
         }
+        #endregion
+
+        #region INotifyPropertyChanged
+        private void FireChangeEvent(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        [field: NonSerializedAttribute()]
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Networking;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,12 +90,12 @@ namespace Models.Files
             }
             MamanetFile other = (MamanetFile)obj;
             return other.Name == Name && other.hash.SequenceEqual(hash) &&
-                other.hubs.OrderBy(h => h).SequenceEqual(hubs.OrderBy(h => h));
+                ((hubs == null || other.hubs == null) ? hubs == other.hubs : other.hubs.OrderBy(h => h).SequenceEqual(hubs.OrderBy(h => h)));
         }
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode() + hash.GetHashCode() + hubs.OrderBy(h => h).ToArray().GetHashCode();
+            return Name.GetHashCode() + hash.GetHashCode() + (hubs != null ? hubs.OrderBy(h => h).ToArray().GetHashCode() : -1);
         }
     }
 }

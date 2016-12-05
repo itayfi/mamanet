@@ -7,7 +7,7 @@
         xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
         xmlns:converters="clr-namespace:MamanNet.Converters"
         xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
-        Title="Maman-Net" Height="853" Width="1361" FlowDirection="RightToLeft" 
+        Title="MamaNet" Height="853" Width="1361" FlowDirection="RightToLeft" 
         Background="#FFF7F7F7" Icon="../Icons/MamaNet.ico" WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True" x:Name="MyWindow" Topmost="False" Closing="MainWindow_OnClosing">
     <Window.DataContext>
@@ -18,7 +18,7 @@
         <converters:FilesCounterConverter x:Key="FilesCounterConverter"/>
         <converters:SpeedConverter x:Key="SpeedConverter"/>
         <converters:ContentPresenterConverter x:Key="ContentPresenterConverter"/>
-        <files:AllFilesViewModel x:Key="FileViewModel"/>
+        <files:AllFilesViewModel x:Key="AllFileViewModel"/>
         <viewModel:HomepageViewModel x:Key="HomepageViewModel"/>
         <viewModel:BrowserViewModel x:Key="BrowserViewModel"/>
     </Window.Resources>
@@ -42,7 +42,7 @@
                             <TextBlock Width="auto" VerticalAlignment="Center" Text="יציאה"/>
                         </MenuItem.Header>
                         <MenuItem.Icon>
-                            <Image Source="../Icons/Alecive-Flatwoken-Apps-Dialog-Shutdown.ico" />
+                            <Image Source="../Icons/shutdown.ico" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
@@ -50,14 +50,13 @@
         </tb:TaskbarIcon>
         <Border BorderThickness="5" Grid.RowSpan="2">
             <TreeView x:Name="MyTreeView" Grid.Row="0" Grid.Column="0" Margin="0" Background="#FFF0F4FA" FontSize="18" FontFamily="Arial" >
-                <i:Interaction.Triggers>
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectedItemChanged">
                         <i:InvokeCommandAction Command="{Binding SelectedCommandChanged}" CommandParameter="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource TreeViewItemConverter}}"/>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
-                
+                </i:Interaction.Triggers>-->
                 <TreeViewItem Header="מסך פתיחה" IsSelected="True" DataContext="{StaticResource HomepageViewModel}"/>
-                <TreeViewItem Header="{Binding Path=.AllFilesCollection.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=קבצים}" DataContext="{StaticResource FileViewModel}" >
+                <TreeViewItem Header="{Binding Path=.AllFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=קבצים}" DataContext="{StaticResource AllFileViewModel}" >
                     <TreeViewItem DataContext="{Binding Path=.DownloadingFilesViewModel}" Header="{Binding Path=.DownloadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוריד}" />
                     <TreeViewItem DataContext="{Binding Path=.UploadingFilesViewModel}"  Header="{Binding Path=.UploadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=משתף}"/>
                     <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}" Header="{Binding Path=.DownloadedFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוכן}" />
@@ -72,9 +71,8 @@
                       Grid.Column="1" ResizeBehavior="PreviousAndNext"
                       Grid.RowSpan="2" Width="5" Background="#FFBCBCBC"
                       Margin="0,5,0,5"/>
-        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2">
-        
-        </ContentControl>
+        <!--<ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2"/>-->
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem.DataContext}" Grid.RowSpan="2"/>
         <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -87,19 +85,19 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="2" DataContext="{StaticResource FileViewModel}">
+            <StatusBarItem Grid.Column="2" DataContext="{StaticResource AllFileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות הורדה: "></TextBlock>
                     <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="../Icons/download-triangle.png"/>
+                    <Image Source="../Icons/download.png"/>
                 </StackPanel>
             </StatusBarItem>
             <Separator  Grid.Column="1" Background="#FFD7D7D7" Width="2"/>
-            <StatusBarItem Grid.Column="0" DataContext="{StaticResource FileViewModel}">
+            <StatusBarItem Grid.Column="0" DataContext="{StaticResource AllFileViewModel}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="מהירות העלאה: "></TextBlock>
                     <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="..\Icons\upload-triangle.png"/>
+                    <Image Source="..\Icons\upload.png"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

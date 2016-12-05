@@ -9,7 +9,7 @@ using Models.Files;
 
 namespace ViewModel.Files
 {
-    public class UploadingFilesViewModel : INotifyPropertyChanged
+    public class UploadingFilesViewModel : BaseFilesViewModel
     {
         #region Public Fields
         public ObservableCollection<SharedFile> UploadingFiles { get; set; }
@@ -26,43 +26,32 @@ namespace ViewModel.Files
                 FireChangeEvent("UploadSpeed");
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
         #region Private Fields
-        private ObservableCollection<SharedFile> _allFiles { get; set; }
+
         private int _uploadSpeed;
         #endregion
 
         #region Methods
-        public UploadingFilesViewModel(ObservableCollection<SharedFile> allFiles)
+        public UploadingFilesViewModel(ObservableCollection<SharedFile> allFiles):base(allFiles)
         {
-            _allFiles = allFiles;
             UploadingFiles = new ObservableCollection<SharedFile>();
-            UploadSpeed = 24;
-        }
-        public void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            RelevatFilesCollection = UploadingFiles;
+            UploadSpeed = 27;
         }
 
-        private void AddUploadingFile(SharedFile serializedMamanNetFile)
+        public override bool _canAddFile(string filePath)
         {
-            UploadingFiles.Add(serializedMamanNetFile);
-            _allFiles.Add(serializedMamanNetFile);
+            return false;
         }
-
-        private void RemoveUploadingFile(SharedFile serializedMamanNetFile)
-        {
-            UploadingFiles.Remove(serializedMamanNetFile);
-            _allFiles.Remove(serializedMamanNetFile);
-        }
-
+  
         #endregion
+
+        public override void FilterAllFilesToCollectionFiles()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

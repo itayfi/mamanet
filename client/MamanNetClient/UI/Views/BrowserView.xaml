@@ -51,7 +51,6 @@
                     </Button.Style>
                 </Button>
             </Border>
-
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

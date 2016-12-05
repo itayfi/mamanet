@@ -11,12 +11,11 @@ using Models;
 
 namespace ViewModel
 {
-    public class BrowserViewModel:INotifyPropertyChanged
+    public class BrowserViewModel
     {
         #region Public Fields
 
         public RelayCommand OpenWebBrowser { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
@@ -32,15 +31,6 @@ namespace ViewModel
         private void _OpenWebBrowser()
         {
             Process.Start("http://www.ynet.co.il");
-        }
-
-        private void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
 
         #endregion

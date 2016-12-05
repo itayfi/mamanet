@@ -16,7 +16,6 @@
                                       Value="0.95" />
                 <SplineDoubleKeyFrame KeyTime="00:00:03"
                                       Value="0.95" />
-                <!--				<SplineDoubleKeyFrame KeyTime="00:00:05" Value="0"/>-->
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="HighlightCloseButton">
@@ -108,7 +107,7 @@
         <Image HorizontalAlignment="Left"
                Margin="10,42,0,0"
                Width="55"
-               Source="../Icons/warning-icon.png"
+               Source="../Icons/warning.png"
                Stretch="Fill"
                Height="55"
                VerticalAlignment="Top" />

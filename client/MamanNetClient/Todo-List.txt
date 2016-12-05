@@ -1,12 +1,14 @@
 == Business Actions ==
 <FilesView>
-- Add Buttons to Buttons Panel 
-- Filter image by file type
+- Suppot transition of downloading File to downloaded  File --> use events in base class?
+- Add additional details view
+<MamaNet>
+- fix visual issue with application logo
 
 == Architecture ==
-<FilesView>
-- Reuse in the views of AllFilesView / DownloadedFilesView / DownloadingFilesView / UploadingFilesView
+- add dependency injection?
 
 == Bonus Actions ==
 <FilesView>
 - Support dragging a new a file into the grid
+- fix binding mismatch after each window switch

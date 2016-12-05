@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Networking")]
+[assembly: AssemblyTitle("TestMamaNetLib")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Networking")]
+[assembly: AssemblyProduct("TestMamaNetLib")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3c70044c-e5bf-43b0-9bbe-fa9753e454e9")]
+[assembly: Guid("b8059155-5b3b-48e2-bf73-464df8921bfd")]
 
 // Version information for an assembly consists of the following four values:
 //
