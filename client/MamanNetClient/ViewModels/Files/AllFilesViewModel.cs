@@ -11,15 +11,13 @@ using Models;
 
 namespace ViewModel.Files
 {
-    public class AllFilesViewModel:INotifyPropertyChanged
+    public class AllFilesViewModel:BaseFilesViewModel
     {
         #region Public Fields
-
-        public ObservableCollection<MamanNetFile> AllFilesCollection { get; set; }
+       
         public DownloadingFilesViewModel DownloadingFilesViewModel { get; set; }
         public UploadingFilesViewModel UploadingFilesViewModel { get; set; }
         public DownloadedFilesViewModel DownloadedFilesViewModel { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
@@ -31,40 +29,57 @@ namespace ViewModel.Files
 
         #region Methods
 
-        public AllFilesViewModel()
+        public AllFilesViewModel():base()
         {
-            AllFilesCollection = new ObservableCollection<MamanNetFile>();
+            RelevatFilesCollection = AllFiles;
             _dataStoreProvider = new DataStoreProvider();
             LoadSavedFiles();
 
-            DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFilesCollection);
-            UploadingFilesViewModel = new UploadingFilesViewModel(AllFilesCollection);
-            DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFilesCollection);
+            DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFiles);
+            UploadingFilesViewModel = new UploadingFilesViewModel(AllFiles);
+            DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);
+        }
+
+        public override void AddFile(MamanNetFile file)
+        {
+            AllFiles.Add(file);
+        }
+
+        public override void _deleteFile()
+        {
+            AllFiles.Remove(SelectedFile);
+        }
+
+        public override bool _canDeleteFile()
+        {
+            return false;
+        }
+
+        public override bool _canAddFile(string filePath)
+        {
+            return false;
         }
 
         public void SavedDownloadedFiles()
         {
-            _dataStoreProvider.SaveData(AllFilesCollection.ToList());
+            _dataStoreProvider.SaveData(AllFiles.ToList());
         }
+
         private void LoadSavedFiles()
         {
             var dataStore = _dataStoreProvider.LoadData();
             foreach (var serializedFile in dataStore.SavedDataFiles)
             {
                 var mamanNetFile = new MamanNetFile(serializedFile);
-                AllFilesCollection.Add(mamanNetFile);
-            }
-        }
-
-        public void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                AllFiles.Add(mamanNetFile);
             }
         }
 
         #endregion
+
+        public override void FilterAllFilesToCollectionFiles()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

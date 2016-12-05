@@ -9,7 +9,7 @@ using Models;
 
 namespace ViewModel.Files
 {
-    public class DownloadingFilesViewModel:INotifyPropertyChanged
+    public class DownloadingFilesViewModel:BaseFilesViewModel
     {
         #region Public Fields
         public ObservableCollection<MamanNetFile> DownloadingFiles { get; set; }
@@ -26,52 +26,30 @@ namespace ViewModel.Files
                 FireChangeEvent("DownloadSpeed");
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+       
         #endregion
 
         #region Private Fields
-        private ObservableCollection<MamanNetFile> _allFiles { get; set; }
         private int _downloadSpeed;
 
         #endregion
 
         #region Methods
-        public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles)
+        public DownloadingFilesViewModel(ObservableCollection<MamanNetFile> allFiles):base(allFiles)
         {
-            _allFiles = allFiles;
             DownloadingFiles = new ObservableCollection<MamanNetFile>();
-            FilterDownloadedingFiles();
+            RelevatFilesCollection = DownloadingFiles;
             DownloadSpeed = 500;
+            FilterAllFilesToCollectionFiles();
         }
 
-        private void FilterDownloadedingFiles()
+        public sealed override void FilterAllFilesToCollectionFiles()
         {
-            var downloadedingFiles = _allFiles.Where(file => file.DownloadStatus == DownloadStatus.Downloading || file.DownloadStatus == DownloadStatus.Failed);
+            var downloadedingFiles = AllFiles.Where(file => file.DownloadStatus != DownloadStatus.Downloaded);
             foreach (var file in downloadedingFiles)
             {
                 DownloadingFiles.Add(file);
             }
-        }
-
-        private void AddDownloadedFile(MamanNetFile serializedMamanNetFile)
-        {
-            DownloadingFiles.Add(serializedMamanNetFile);
-            _allFiles.Add(serializedMamanNetFile);
-        }
-
-        private void DeleteDownloadedFile(MamanNetFile serializedMamanNetFile)
-        {
-            DownloadingFiles.Remove(serializedMamanNetFile);
-            _allFiles.Remove(serializedMamanNetFile);
         }
 
         #endregion

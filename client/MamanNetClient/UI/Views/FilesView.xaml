@@ -1,0 +1,188 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
+                    xmlns:converters="clr-namespace:MamanNet.Converters"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
+                    x:Class="MamanNet.Views.FileViewCodeBehind">
+    
+    <DataTemplate x:Key="BasicDataTemplate">
+        <Grid>
+            <i:Interaction.Behaviors>
+                <!--<behaviors:WindowBehaviour/>-->
+            </i:Interaction.Behaviors>
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Height" Value="30"/>
+                    <Setter Property="Margin" Value="2,0,2,0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.2"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Margin="5,4,8,0" Orientation="Horizontal">
+                <Button x:Name="MyButton" Command="{Binding AddFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="AddNewFileClick">
+                    <Button.Content>
+                        <Image Source="../Icons/add.ico"/>
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding Path=RemoveFileCommand}">
+                    <Button.Content>
+                        <Image Source="../Icons/Remove.ico"/>
+                    </Button.Content>
+                </Button>
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <Button Command="{Binding Path=StopCommand}">
+                    <Button.Content>
+                        <Image Source="../Icons/stop.ico"/>
+                    </Button.Content>
+                </Button>
+                <Button Command="{Binding Path=PlayCommand}">
+                    <Button.Content>
+                        <Image Source="../Icons/play.ico"/>
+                    </Button.Content>
+                </Button>
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                <Button Command="{Binding Path=UpCommand}">
+                    <Button.Content>
+                        <Image Source="../Icons/up.ico"/>
+                    </Button.Content>
+                </Button>
+                <Button  Command="{Binding Path=DownCommand}">
+                    <Button.Content>
+                        <Image Source="../Icons/down.ico"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <DataGrid IsReadOnly="True" 
+                      HeadersVisibility="Column"
+                      VerticalContentAlignment="Center" 
+                      SelectionUnit="FullRow" 
+                      HorizontalContentAlignment="Center" 
+                      CanUserResizeColumns="False" 
+                      CanUserResizeRows="False" 
+                      CanUserReorderColumns="True" 
+                      CanUserAddRows="False" 
+                      CanUserDeleteRows="False" 
+                      CanUserSortColumns="True" 
+                      SelectionMode="Extended" 
+                      AutoGenerateColumns="False" 
+                      x:Name="MyDataGrid"
+                      Grid.Row="1" 
+                      Margin="5,10,8,10" 
+                      SelectedItem="{Binding SelectedFile}" 
+                      Background="White"
+                      BorderBrush="Gray"
+                      GridLinesVisibility="None">
+                <DataGrid.Resources>
+                    <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" >
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                    <Style x:Key="CenteredCell" TargetType="DataGridCell">
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="0.1"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    </Style>
+                    <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.Resources>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding Path=SelectionChangedCommand}" CommandParameter="{Binding ElementName=MyDataGrid, Path=SelectedItem, Mode=TwoWay}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns >
+                    <DataGridTemplateColumn Width="32" Header="סוג" HeaderStyle="{StaticResourceExtension CenteredHeader}" CellStyle="{StaticResource CenteredCell}" SortMemberPath="Type">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image FlowDirection="LeftToRight">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Setters>
+                                                <Setter Property="Stretch" Value="Uniform"/>
+                                            </Style.Setters>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="Image">
+                                                    <Setter Property="Source" Value="../Icons/imageIcon.ico"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Pdf">
+                                                    <Setter Property="Source" Value="../Icons/pdfIcon.ico"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Word">
+                                                    <Setter Property="Source" Value="../Icons/wordIcon.ico"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם" Binding="{Binding Name}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="גודל" Binding="{Binding FileSizeInBytes}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="ירד" Binding="{Binding BytesDownloaded}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="סטטוס" Binding="{Binding DownloadStatus}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מפיצים" Binding="{Binding Seeders}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="משתפים" Binding="{Binding Leechers}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TabControl Grid.Row="2" Margin="5,0,8,5">
+                <TabItem Header="עמיתים"/>
+                <TabItem Header="חלקי קובץ"/>
+                <TabItem Header="מידע"/>
+            </TabControl>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type files:AllFilesViewModel}"  >
+        <ContentPresenter x:Name="AllFilesPresenter" ContentTemplate="{StaticResource BasicDataTemplate}">
+            <ContentPresenter.Resources>
+                <Style x:Name="allFilesStyle" TargetType="DataGrid">
+                    <Setter x:Name="allFilesSetter" Property="ItemsSource" Value="{Binding AllFiles}"/>
+                </Style>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type files:DownloadingFilesViewModel}"  >
+        <ContentPresenter x:Name="DownloadingFilesPresenter" ContentTemplate="{StaticResource BasicDataTemplate}">
+            <ContentPresenter.Resources>
+                <Style x:Name="downloadingStyle" TargetType="DataGrid">
+                    <Setter x:Name="downloadingFilesSetter" Property="ItemsSource" Value="{Binding DownloadingFiles}"/>
+                </Style>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type files:UploadingFilesViewModel}"  >
+        <ContentPresenter x:Name="UploadingFilesPresenter" ContentTemplate="{StaticResource BasicDataTemplate}">
+            <ContentPresenter.Resources>
+                <Style x:Name="uploadingStyle" TargetType="DataGrid">
+                    <Setter x:Name="uploadingFilesSetter" Property="ItemsSource" Value="{Binding UploadingFiles}"/>
+                </Style>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type files:DownloadedFilesViewModel}" >
+        <ContentPresenter x:Name="DownloadedFilesPresenter"  ContentTemplate="{StaticResource BasicDataTemplate}">
+            <ContentPresenter.Resources>
+                <Style x:Name="downloadedStyle" TargetType="DataGrid">
+                    <Setter x:Name="downloadedFilesSetter" Property="ItemsSource" Value="{Binding DownloadedFiles}"/>
+                </Style>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
+    </DataTemplate>
+    
+</ResourceDictionary>

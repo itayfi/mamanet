@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowserViewModel.cs" />
+    <Compile Include="Files\BaseFilesViewModel.cs" />
     <Compile Include="Files\DownloadedFilesViewModel.cs" />
     <Compile Include="Files\DownloadingFilesViewModel.cs" />
     <Compile Include="MainViewModel.cs" />

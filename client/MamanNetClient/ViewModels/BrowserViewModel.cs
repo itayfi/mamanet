@@ -34,15 +34,6 @@ namespace ViewModel
             Process.Start("http://www.ynet.co.il");
         }
 
-        private void FireChangeEvent(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         #endregion
     }
 }

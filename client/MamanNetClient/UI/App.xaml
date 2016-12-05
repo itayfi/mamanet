@@ -7,10 +7,7 @@
          <ResourceDictionary>
              <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/HomepageView.xaml"/>
-                <ResourceDictionary Source="Views/Files/AllFilesView.xaml"/>
-                <ResourceDictionary Source="Views/Files/DownloadingFilesView.xaml"/>
-                <ResourceDictionary Source="Views/Files/UploadingFilesView.xaml"/>
-                <ResourceDictionary Source="Views/Files/DownloadedFilesView.xaml"/>
+                <ResourceDictionary Source="Views/FilesView.xaml"/>
                 <ResourceDictionary Source="Views/BrowserView.xaml"/>
             </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>
