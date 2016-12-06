@@ -1,13 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Networking.Network;
-using Models.Files;
 using System.IO;
 using System.Text;
 using System.Net;
 using System.Threading;
+using Common.Models.Files;
 
-namespace TestMamanetLib
+namespace TestMamaNetClient
 {
     [TestClass]
     public class TestNetwork

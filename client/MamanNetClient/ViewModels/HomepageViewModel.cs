@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViewModel
+namespace ViewModels
 {
     //Deliberately left empty
     public class HomepageViewModel

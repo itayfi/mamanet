@@ -3,11 +3,11 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using Common.Utilities;
 using Samples;
-using ViewModel;
-using ViewModel.Files;
+using ViewModels.Files;
 
-namespace MamanNet.Views
+namespace UI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -18,12 +18,19 @@ namespace MamanNet.Views
 
         public MainWindow()
         {
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             InitializeComponent();
 
             Application.Current.Exit += OnApplicationExit;
             _baseFilesViewModel = Resources["AllFileViewModel"] as AllFilesViewModel;
             if (_baseFilesViewModel == null) throw new ArgumentNullException();
             _baseFilesViewModel.DownloadingFilesViewModel.ShowPopup += ShowPopup;
+            
+        }
+
+        void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Logger.WriteLogEntry(e.Exception.ToString(),LogSeverity.CriticalError);
         }
 
         void OnApplicationExit(object sender, ExitEventArgs e)

@@ -1,8 +1,8 @@
-﻿using Models.Exceptions;
-using System;
+﻿using System;
 using System.IO;
+using Common.Models.Exceptions;
 
-namespace Models.Files
+namespace Common.Models.Files
 {
     [Serializable]
     public class FilePart :ICloneable

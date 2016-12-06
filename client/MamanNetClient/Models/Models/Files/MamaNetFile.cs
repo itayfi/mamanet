@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models;
-using Networking;
 using System.ComponentModel;
+using Common;
+using Common.Utilities;
 
-namespace Models.Files
+namespace Common.Models.Files
 {
     public enum DownloadStatus
     {

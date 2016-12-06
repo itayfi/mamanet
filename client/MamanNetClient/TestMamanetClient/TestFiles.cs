@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System.IO;
-using Models.Files;
 using System.Linq;
+using Common.Models.Files;
 
-namespace TestMamanetLib
+namespace TestMamaNetClient
 {
     [TestClass]
     public class TestSharedFile

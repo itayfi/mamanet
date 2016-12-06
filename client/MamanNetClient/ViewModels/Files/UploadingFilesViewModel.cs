@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Files;
+using Common.Models.Files;
 
-namespace ViewModel.Files
+namespace ViewModels.Files
 {
     public class UploadingFilesViewModel : BaseFilesViewModel
     {

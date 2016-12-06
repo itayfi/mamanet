@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
-using Models;
 
-namespace ViewModel
+namespace ViewModels
 {
     public class BrowserViewModel
     {

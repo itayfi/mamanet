@@ -3,8 +3,8 @@
                     xmlns:behaviors="clr-namespace:MamanNet.Behaviors"
                     xmlns:converters="clr-namespace:MamanNet.Converters"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:files="clr-namespace:ViewModel.Files;assembly=ViewModel"
-                    x:Class="MamanNet.Views.FileViewCodeBehind">
+                    xmlns:files="clr-namespace:ViewModels.Files;assembly=ViewModels"
+                    x:Class="UI.Views.FileViewCodeBehind">
     <DataTemplate x:Key="BasicDataTemplate">
         <Grid>
             <i:Interaction.Behaviors>

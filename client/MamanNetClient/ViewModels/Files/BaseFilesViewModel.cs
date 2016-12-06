@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
-using Models;
-using Models.Files;
 using System.IO;
+using Common.Models.Files;
 
-namespace ViewModel.Files
+namespace ViewModels.Files
 {
     public abstract class BaseFilesViewModel:INotifyPropertyChanged
     {

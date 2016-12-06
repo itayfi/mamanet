@@ -6,8 +6,8 @@
     <ProjectGuid>{E8464CDB-7618-4F3E-85F7-6A60FB926228}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestMamanetClient</RootNamespace>
-    <AssemblyName>TestMamanetClient</AssemblyName>
+    <RootNamespace>TestMamaNetClient</RootNamespace>
+    <AssemblyName>TestMamaNetClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -74,9 +74,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Models\Models.csproj">
+    <ProjectReference Include="..\Models\Common.csproj">
       <Project>{6a74c252-b8ed-46a2-a140-1d7d86f848e5}</Project>
-      <Name>Models</Name>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{3c70044c-e5bf-43b0-9bbe-fa9753e454e9}</Project>

@@ -3,15 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Models;
-using Models.Files;
+using Common.Models.Files;
 
 namespace DAL
 {
     public class DataStoreProvider
     {
         private IFormatter BinaryFormatter { get; set; }
-        private const string FileName = "MamanNetDataStore.bin";
+        private const string FileName = "MamaNetDataStore.bin";
 
 
         public DataStoreProvider()

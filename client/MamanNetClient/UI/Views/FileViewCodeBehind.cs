@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace MamanNet.Views
+namespace UI.Views
 {
     public partial class FileViewCodeBehind
     {

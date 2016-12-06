@@ -7,8 +7,8 @@
     <ProjectGuid>{5FB0FDB8-CDF3-4019-9697-29981BCDF167}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ViewModel</RootNamespace>
-    <AssemblyName>ViewModel</AssemblyName>
+    <RootNamespace>ViewModels</RootNamespace>
+    <AssemblyName>ViewModels</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -126,9 +126,9 @@
       <Project>{f3f818bf-3881-4f0f-9288-de1f5add8d11}</Project>
       <Name>DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Models\Models.csproj">
+    <ProjectReference Include="..\Models\Common.csproj">
       <Project>{6a74c252-b8ed-46a2-a140-1d7d86f848e5}</Project>
-      <Name>Models</Name>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{3c70044c-e5bf-43b0-9bbe-fa9753e454e9}</Project>

@@ -5,12 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Models.Files;
 using DAL;
 using GalaSoft.MvvmLight.Command;
-using Models;
-using Models.Files;
 
-namespace ViewModel.Files
+namespace ViewModels.Files
 {
     public class DownloadedFilesViewModel:BaseFilesViewModel
     {

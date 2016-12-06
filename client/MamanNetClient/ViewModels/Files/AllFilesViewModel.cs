@@ -2,11 +2,10 @@
 using System.ComponentModel;
 using System.Linq;
 using DAL;
-using Models;
-using Models.Files;
 using System;
+using Common.Models.Files;
 
-namespace ViewModel.Files
+namespace ViewModels.Files
 {
     public class AllFilesViewModel:BaseFilesViewModel
     {
