@@ -8,6 +8,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Models.Files;
+using Common.Models;
+using System.Runtime.Serialization.Json;
 
 namespace Networking.Network
 {
@@ -56,14 +58,30 @@ namespace Networking.Network
             Tuple<UdpClient, IPEndPoint> state = new Tuple<UdpClient, IPEndPoint>(client, myEndPoint);
 
             client.BeginReceive(new AsyncCallback(HandlePacket), state);
+            IsListenning = true;
         }
 
-        public void UpdateFromHub()
+        public Task UpdateFromHub()
         {
+            List<Task> tasks = new List<Task>();
             foreach (var file in files.Values)
             {
-
+                PeerDetails myDetails = new PeerDetails(port, file.Availability);
+                if (file.IsActive)
+                {
+                    foreach (var hub in file.Hubs)
+                    {
+                        StringBuilder url = new StringBuilder(hub);
+                        if (!hub.EndsWith("/"))
+                        {
+                            url.Append("/");
+                        }
+                        url.Append(file.HexHash);
+                        tasks.Add(GetPeers(url.ToString(), myDetails));
+                    }
+                }
             }
+            return Task.WhenAll(tasks);
         }
 
         public void Close()
@@ -73,6 +91,12 @@ namespace Networking.Network
             {
                 file.Close();
             }
+            IsListenning = false;
+        }
+
+        public bool IsListenning
+        {
+            get; private set;
         }
         #endregion
 
@@ -166,6 +190,39 @@ namespace Networking.Network
         #endregion
 
         #region Hub Communication
+        private async void UpdateFileFromHub(MamaNetFile file, string hubUrl, PeerDetails myDetails)
+        {
+            var peers = await GetPeers(hubUrl, myDetails);
+
+            file.Peers = peers;
+            int[] missingParts = file.GetMissingParts();
+
+            foreach (var peer in peers)
+            {
+                SendPacket(new PartRequestPacket(file.Hash, missingParts), peer.IPEndPoint);
+            }
+        }
+
+        private async Task<List<PeerDetails>> GetPeers(string hubUrl, PeerDetails myDetails)
+        {
+            var request = WebRequest.CreateHttp(hubUrl.ToString());
+            request.Method = "POST";
+            request.ContentType = "application/json; charset=UTF-8";
+            request.Accept = "application/json";
+
+            var stream = await request.GetRequestStreamAsync();
+            var serializer = new DataContractJsonSerializer(typeof(PeerDetails));
+            serializer.WriteObject(stream, myDetails);
+            stream.Close(); // Send the request
+
+            var response = await request.GetResponseAsync();
+            var deserializer = new DataContractJsonSerializer(typeof(List<PeerDetails>));
+            var responseStream = response.GetResponseStream();
+            var result = (List<PeerDetails>)deserializer.ReadObject(responseStream);
+            responseStream.Close();
+
+            return result;
+        }
         #endregion
     }
 }

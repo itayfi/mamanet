@@ -30,6 +30,8 @@ namespace Common.Models.Files
         internal FileStream inputStream;
         [NonSerialized]
         internal FileStream outputStream;
+        [NonSerialized]
+        private IEnumerable<PeerDetails> peers;
 
         #region Ctors
         public MamaNetFile(string name, byte[] hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false, string[] hubs = null)
@@ -138,8 +140,42 @@ namespace Common.Models.Files
                 return Name.Split('.').Last();
             }
         }
+        public IEnumerable<PeerDetails> Peers
+        {
+            get { return peers; }
+            set { peers = value; }
+        }
         #endregion
+
         #region Methods
+        public void Close()
+        {
+            if (inputStream != null)
+            {
+                inputStream.Close();
+                inputStream = null;
+            }
+            if (outputStream != null)
+            {
+                outputStream.Close();
+                outputStream = null;
+            }
+        }
+        public int[] GetMissingParts()
+        {
+            List<int> missingParts = new List<int>();
+
+            for (var i = 0; i < parts.Length; i++)
+            {
+                if (parts[i] == null || !parts[i].IsAvailable)
+                {
+                    missingParts.Add(i);
+                }
+            }
+
+            return missingParts.ToArray();
+        }
+
         internal FileStream GetInputStream()
         {
             if (this.inputStream == null)
@@ -156,19 +192,6 @@ namespace Common.Models.Files
                     FileShare.Read);
             }
             return this.outputStream;
-        }
-        public void Close()
-        {
-            if (inputStream != null)
-            {
-                inputStream.Close();
-                inputStream = null;
-            }
-            if (outputStream != null)
-            {
-                outputStream.Close();
-                outputStream = null;
-            }
         }
         internal void UpdateAvailability()
         {

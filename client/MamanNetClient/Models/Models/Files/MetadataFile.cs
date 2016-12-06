@@ -57,6 +57,10 @@ namespace Common.Models.Files
         {
             get; private set;
         }
+        public string[] Hubs
+        {
+            get { return (string[])hubs.Clone(); }
+        }
         public int NumberOfParts
         {
             get
