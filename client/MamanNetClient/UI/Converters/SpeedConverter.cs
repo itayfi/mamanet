@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace MamanNet.Converters
+namespace MamaNet.UI.Converters
 {
     public class SpeedConverter:IValueConverter
     {

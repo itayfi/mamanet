@@ -4,10 +4,10 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using Common.Utilities;
-using Samples;
+using MamaNet.UI.Popup;
 using ViewModels.Files;
 
-namespace UI.Views
+namespace MamaNet.UI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

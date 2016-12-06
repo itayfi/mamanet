@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace MamanNet.Converters
+namespace MamaNet.UI.Converters
 {
     //Todo: delete, for future use only if necessery
     public class ContentPresenterConverter:IValueConverter

@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Hardcodet.Wpf.TaskbarNotification;
 
-namespace Samples
+namespace MamaNet.UI.Popup
 {
     /// <summary>
     /// Interaction logic for FancyBalloon.xaml
@@ -118,7 +118,7 @@ namespace Samples
         /// </summary>
         private void OnFadeOutCompleted(object sender, EventArgs e)
         {
-            Popup pp = (Popup) Parent;
+            System.Windows.Controls.Primitives.Popup pp = (System.Windows.Controls.Primitives.Popup) Parent;
             pp.IsOpen = false;
         }
 

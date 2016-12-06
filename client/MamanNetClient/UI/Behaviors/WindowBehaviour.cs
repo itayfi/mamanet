@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 
-namespace MamanNet.Behaviors
+namespace MamaNet.UI.Behaviors
 {
     //Todo: delete, for future use only if necessery
     public class WindowBehaviour : Behavior<Grid>
