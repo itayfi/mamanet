@@ -63,7 +63,7 @@
     <Compile Include="Exceptions\NotAvailableException.cs" />
     <Compile Include="Network\DataPacket.cs" />
     <Compile Include="Network\NetworkController.cs" />
-    <Compile Include="Network\PAcket.cs" />
+    <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PartRequestPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
