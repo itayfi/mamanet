@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Json;
 using Common.Utilities;
 using Networking.Files;
 using Networking.Packets;
+using System.Configuration;
 
 namespace Networking.Network
 {
@@ -36,7 +37,7 @@ namespace Networking.Network
     {
         #region Private Members
 
-        public const int DefaultPort = 20588;
+        public static readonly int DefaultPort = int.Parse(ConfigurationManager.AppSettings["DefaultPort"]);
         private readonly Dictionary<byte[], MamaNetFile> _files;
         private UdpClient _client;
         private IPEndPoint _myEndPoint;
@@ -45,10 +46,16 @@ namespace Networking.Network
         #endregion
 
         #region Ctor
-        public NetworkController(int port = DefaultPort)
+        public NetworkController(int port)
         {
             _files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
             _port = port;
+        }
+
+        public NetworkController()
+        {
+            _files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
+            _port = DefaultPort;
         }
 
         #endregion
