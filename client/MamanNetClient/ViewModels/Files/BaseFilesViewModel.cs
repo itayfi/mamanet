@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using System.IO;
 using Networking.Files;
+using DAL;
+using System.Security.Cryptography;
 
 namespace ViewModels.Files
 {
-    public abstract class BaseFilesViewModel:INotifyPropertyChanged
+    public abstract class BaseFilesViewModel : INotifyPropertyChanged
     {
         #region Public Fields
         public ObservableCollection<MamaNetFile> AllFiles { get; set; }
         public ObservableCollection<MamaNetFile> RelevatFilesCollection { get; set; }
         public RelayCommand<MamaNetFile> SelectionChangedCommand { get; set; }
-        public RelayCommand<string> AddFileCommand { get; set; }
+        public RelayCommand<string> UploadFileCommand { get; set; }
+        public RelayCommand<string> AddMetadataFileCommand { get; set; }
         public RelayCommand RemoveFileCommand { get; set; }
         public RelayCommand StopCommand { get; set; }
         public RelayCommand PlayCommand { get; set; }
@@ -42,7 +45,7 @@ namespace ViewModels.Files
         #region Private Fields
 
         private MamaNetFile _selectedFile;
-    
+
         #endregion
 
         #region Commands
@@ -50,7 +53,7 @@ namespace ViewModels.Files
         public virtual void _selectionChanged(MamaNetFile file)
         {
             SelectedFile = file;
-            _rasieCommandsCanExecute();
+            _raiseCommandsCanExecute();
         }
 
         public virtual void AddFile(MetadataFile file)
@@ -65,18 +68,41 @@ namespace ViewModels.Files
             RelevatFilesCollection.Add(file);
         }
 
-        public virtual void _addFileByPath(string filePath)
+        public virtual void _uploadFileByPath(string filePath)
+        {
+            if (filePath != null && filePath.Length > 0)
+            {
+                var provider = new MetadataFileProvider();
+                var fileInfo = new FileInfo(filePath);
+                MamaNetFile file;
+                using (var stream = fileInfo.OpenRead())
+                {
+                    var md5 = MD5.Create();
+                    file = new MamaNetFile(fileInfo.Name, md5.ComputeHash(stream), filePath, (int)fileInfo.Length)
+                    {
+                        IsActive = true
+                    };
+                }
+                AddFile(file);
+                var metadata = new MetadataFile(file);
+                provider.Save(metadata, fileInfo.Directory.FullName + "\\" + fileInfo.Name + ".mamanet");
+
+                if (ShowPopup != null) ShowPopup(this, @"קובץ הועלה בהצלחה!
+קובץ ה-mamanet נמצא באותה תיקייה עם הקובץ המקורי");
+            }
+        }
+
+        public virtual bool _canUploadFile(string filePath)
+        {
+            return true;
+        }
+
+        public virtual void _addMetadataFileByPath(string filePath)
         {
             if (filePath != null)
             {
-                var index = filePath.LastIndexOf(@"\", StringComparison.Ordinal);
-                var fileInfo = new FileInfo(filePath);
-
-                MamaNetFile mamanNetFile = new MamaNetFile(filePath.Substring(index + 1), new byte[0], filePath, (int) fileInfo.Length)
-                {
-                    IsActive = false,
-                };
-                AddFile(mamanNetFile);
+                var provider = new MetadataFileProvider();
+                AddFile(provider.Load(filePath));
 
                 if (ShowPopup != null) ShowPopup(this, "קובץ התווסף בהצלחה!");
             }
@@ -98,7 +124,7 @@ namespace ViewModels.Files
             int indexInAllFiles = AllFiles.IndexOf(SelectedFile);
             if (RelevatFilesCollection != null)
             {
-                RelevatFilesCollection.RemoveAt(indexRelevantCollection);   
+                RelevatFilesCollection.RemoveAt(indexRelevantCollection);
             }
 
             AllFiles.RemoveAt(indexInAllFiles);
@@ -114,7 +140,7 @@ namespace ViewModels.Files
         public virtual void _stopFile()
         {
             SelectedFile.IsActive = false;
-            _rasieCommandsCanExecute();
+            _raiseCommandsCanExecute();
         }
 
         public virtual bool _canStopFile()
@@ -127,7 +153,7 @@ namespace ViewModels.Files
         public virtual void _playFile()
         {
             SelectedFile.IsActive = false;
-            _rasieCommandsCanExecute();
+            _raiseCommandsCanExecute();
         }
 
         public virtual bool _canPlayFile()
@@ -141,7 +167,7 @@ namespace ViewModels.Files
         {
             var index = RelevatFilesCollection.IndexOf(SelectedFile);
             RelevatFilesCollection.Move(index, index - 1);
-            _rasieCommandsCanExecute();
+            _raiseCommandsCanExecute();
         }
 
         public virtual bool _canUpFile()
@@ -155,7 +181,7 @@ namespace ViewModels.Files
         {
             var index = RelevatFilesCollection.IndexOf(SelectedFile);
             RelevatFilesCollection.Move(index, index + 1);
-            _rasieCommandsCanExecute();
+            _raiseCommandsCanExecute();
         }
 
         public virtual bool _canDownFile()
@@ -169,7 +195,7 @@ namespace ViewModels.Files
 
         #region Methods
 
-        protected BaseFilesViewModel(ObservableCollection<MamaNetFile> allFiles):this()
+        protected BaseFilesViewModel(ObservableCollection<MamaNetFile> allFiles) : this()
         {
             AllFiles = allFiles;
             RelevatFilesCollection = AllFiles;
@@ -179,7 +205,8 @@ namespace ViewModels.Files
         {
             AllFiles = new ObservableCollection<MamaNetFile>();
             SelectionChangedCommand = new RelayCommand<MamaNetFile>(_selectionChanged);
-            AddFileCommand = new RelayCommand<string>(_addFileByPath, _canAddFile);
+            UploadFileCommand = new RelayCommand<string>(_uploadFileByPath, _canUploadFile);
+            AddMetadataFileCommand = new RelayCommand<string>(_addMetadataFileByPath, _canAddFile);
             RemoveFileCommand = new RelayCommand(_deleteFile, _canDeleteFile);
             StopCommand = new RelayCommand(_stopFile, _canStopFile);
             PlayCommand = new RelayCommand(_playFile, _canPlayFile);
@@ -198,9 +225,9 @@ namespace ViewModels.Files
 
         public abstract void FilterAllFilesToCollectionFiles();
 
-        public virtual void _rasieCommandsCanExecute()
+        public virtual void _raiseCommandsCanExecute()
         {
-            AddFileCommand.RaiseCanExecuteChanged();
+            AddMetadataFileCommand.RaiseCanExecuteChanged();
             RemoveFileCommand.RaiseCanExecuteChanged();
             PlayCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();

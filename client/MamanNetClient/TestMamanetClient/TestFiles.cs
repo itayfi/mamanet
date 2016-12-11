@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using Networking.Files;
+using DAL;
 
 namespace TestMamaNetClient
 {
@@ -82,13 +83,13 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new string[] { "http://localhost:12345" }));
+            MetadataFileProvider provider = new MetadataFileProvider();
 
-            //TODO: fix this test (the lines where deleted)
-            //file.Save(filename);
-            //MetadataFile file2 = MetadataFile.Load(filename);
+            provider.Save(file, filename);
+            MetadataFile file2 = provider.Load(filename);
 
-            //Assert.AreEqual(file, file2);
-            //Assert.IsNotInstanceOfType(file2, typeof(MamaNetFile));
+            Assert.AreEqual(file, file2);
+            Assert.IsNotInstanceOfType(file2, typeof(MamaNetFile));
         }
     }
 }
