@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from collections import defaultdict
 from expiringdict import ExpiringDict
 
+from config import HOST, PORT, DEBUG
+
 
 app = Flask(__name__)
 cache = defaultdict(lambda: ExpiringDict(max_len=1000, max_age_seconds=60))
@@ -29,4 +31,4 @@ def update_file_info(file_md5):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=2143)
+    app.run(host="0.0.0.0"hOST, port=PORT, debug=DEBUG)
