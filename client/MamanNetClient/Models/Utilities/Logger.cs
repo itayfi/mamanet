@@ -16,8 +16,9 @@ namespace Common.Utilities
 
     public class Logger
     {
-        private static string FilePath = Directory.GetCurrentDirectory()+"\\"+"MamaNet.log";
+        private static readonly string FilePath = Directory.GetCurrentDirectory()+"\\"+"MamaNet.log";
 
+        //TODO: also serialize to object
         public static void WriteLogEntry(string entry, LogSeverity severity)
         {
             var logEntry = string.Format("[{0}] ({1}): {2}{3}", severity, DateTime.Now, entry, Environment.NewLine);

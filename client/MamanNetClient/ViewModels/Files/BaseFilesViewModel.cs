@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Command;
 using System.IO;
-using Common.Models.Files;
+using Networking.Files;
 
 namespace ViewModels.Files
 {
@@ -69,12 +69,13 @@ namespace ViewModels.Files
         {
             if (filePath != null)
             {
-                var index1 = filePath.LastIndexOf(@"\", StringComparison.Ordinal);
-                var index2 = filePath.LastIndexOf(".", StringComparison.Ordinal);
+                var index = filePath.LastIndexOf(@"\", StringComparison.Ordinal);
                 var fileInfo = new FileInfo(filePath);
-                MamaNetFile mamanNetFile = new MamaNetFile(fileInfo.Name, new byte[0], filePath, (int)fileInfo.Length, isAvailable: true);
-                mamanNetFile.IsActive = false;
-                mamanNetFile.Name = filePath.Substring(index1 + 1, (index2 - index1) - 1);
+
+                MamaNetFile mamanNetFile = new MamaNetFile(filePath.Substring(index + 1), new byte[0], filePath, (int) fileInfo.Length)
+                {
+                    IsActive = false,
+                };
                 AddFile(mamanNetFile);
 
                 if (ShowPopup != null) ShowPopup(this, "קובץ התווסף בהצלחה!");

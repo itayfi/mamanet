@@ -33,7 +33,7 @@
             <RowDefinition Height="205*"/>
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <tb:TaskbarIcon x:Name="SystemTray" ToolTip="MamaNet" ToolTipText="MamaNet" Visibility="Visible" IconSource="../Icons/MamaNet.ico" MenuActivation="LeftOrRightClick" PopupActivation="DoubleClick" TrayMouseDoubleClick="MainWindow_OnOpening">
+        <tb:TaskbarIcon x:Name="SystemTray" ToolTip="MamaNet" ToolTipText="MamaNet" Visibility="Visible" IconSource="../Icons/MamaNet.ico" MenuActivation="RightClick" TrayLeftMouseDown="MainWindow_OnOpening">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Width="auto" FlowDirection="RightToLeft"
                     Background="LightGray">

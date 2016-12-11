@@ -83,12 +83,18 @@
     <Compile Include="DataStoreProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Common.csproj">
       <Project>{6a74c252-b8ed-46a2-a140-1d7d86f848e5}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Networking\Networking.csproj">
+      <Project>{3c70044c-e5bf-43b0-9bbe-fa9753e454e9}</Project>
+      <Name>Networking</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DAL;
 using System;
-using Common.Models.Files;
+using Networking.Files;
 
 namespace ViewModels.Files
 {

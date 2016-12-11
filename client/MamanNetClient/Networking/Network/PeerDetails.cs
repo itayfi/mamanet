@@ -5,20 +5,18 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Models
+namespace Networking.Network
 {
     [Serializable]
-    public class PeerDetails : IComparable<PeerDetails>
+    public class PeerDetails
     {
-        public PeerDetails(int port, decimal availability, string ip=null)
+        public PeerDetails(int port, string ip=null)
         {
             Port = port;
-            Availability = availability;
             IP = ip;
         }
 
         public int Port { get; set; }
-        public decimal Availability { get; set; }
         public string IP { get; set; }
 
         public IPEndPoint IPEndPoint
@@ -31,11 +29,6 @@ namespace Common.Models
                 }
                 return new IPEndPoint(IPAddress.Parse(IP), Port);
             }
-        }
-
-        public int CompareTo(PeerDetails other)
-        {
-            return Availability.CompareTo(other.Availability);
         }
     }
 }

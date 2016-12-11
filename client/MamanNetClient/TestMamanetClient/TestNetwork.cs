@@ -1,11 +1,13 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Networking.Network;
 using System.IO;
 using System.Text;
 using System.Net;
 using System.Threading;
-using Common.Models.Files;
+using Networking;
+using Networking.Files;
+using Networking.Network;
+using Networking.Packets;
 
 namespace TestMamaNetClient
 {
@@ -23,9 +25,9 @@ namespace TestMamaNetClient
             string sourceFile = Path.GetTempFileName();
             string destFile = Path.GetTempFileName();
             File.WriteAllText(sourceFile, LOREM);
-            NetworkController sender = new NetworkController(NetworkController.DEFAULT_PORT + 1);
-            NetworkController receiver = new NetworkController(NetworkController.DEFAULT_PORT + 2);
-            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isAvailable: true);
+            NetworkController sender = new NetworkController(NetworkController.DefaultPort + 1);
+            NetworkController receiver = new NetworkController(NetworkController.DefaultPort + 2);
+            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length);
             MamaNetFile dest = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
 
             sender.AddFile(source);
@@ -33,7 +35,7 @@ namespace TestMamaNetClient
 
             sender.StartListen();
             receiver.StartListen();
-            receiver.SendPacket(new PartRequestPacket(HASH, new int[] { 0, 1 }), new IPEndPoint(IPAddress.Parse("127.0.0.1"), NetworkController.DEFAULT_PORT + 1));
+            receiver.SendPacket(new FilePartsRequestPacket(HASH, new int[] { 0, 1 }), new IPEndPoint(IPAddress.Parse("127.0.0.1"), NetworkController.DefaultPort + 1));
 
             while (dest.Availability < 1)
             {

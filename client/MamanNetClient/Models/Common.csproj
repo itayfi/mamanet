@@ -76,15 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Exceptions\MalformedDataException.cs" />
-    <Compile Include="Models\Exceptions\NotAvailableException.cs" />
-    <Compile Include="Models\Files\MamaNetFile.cs" />
-    <Compile Include="Models\Files\FilePart.cs" />
-    <Compile Include="Models\Files\MetadataFile.cs" />
-    <Compile Include="Models\PeerDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Logger.cs" />
-    <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

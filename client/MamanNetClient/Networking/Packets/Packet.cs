@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Networking.Network
+namespace Networking.Packets
 {
     [Serializable]
     public abstract class Packet
     {
+        //TODO: copy to here common members / methods
     }
 }
