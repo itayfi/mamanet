@@ -31,7 +31,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048);
+            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
             var data1 = file[0].GetData();
             var data2 = file[1].GetData();
             file.Close();
@@ -44,7 +44,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048);
+            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
             var data1 = file[0].GetData();
             file[1].SetData(data1);
             file.Close();

@@ -30,7 +30,7 @@ namespace Networking.Files
         public bool IsPartAvailable
         {
             get;
-            private set;
+            internal set;
         }
 
         #endregion
@@ -64,10 +64,13 @@ namespace Networking.Files
             }
 
             var stream = MamaNetFile.GetWriteStream();
-            GoToPart(stream);
-            stream.Write(data, 0, MamaNetFile.PartSize);
-            IsPartAvailable = true;
-            MamaNetFile.UpdateAvailability();
+            lock (MamaNetFile.writeLock)
+            {
+                GoToPart(stream);
+                stream.Write(data, 0, MamaNetFile.PartSize);
+                IsPartAvailable = true;
+                MamaNetFile.UpdateAvailability();
+            }
         }
 
         public object Clone()

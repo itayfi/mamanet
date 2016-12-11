@@ -17,12 +17,17 @@ namespace Common.Utilities
     public class Logger
     {
         private static readonly string FilePath = Directory.GetCurrentDirectory()+"\\"+"MamaNet.log";
+        private static object logLock = new Object();
 
         //TODO: also serialize to object
         public static void WriteLogEntry(string entry, LogSeverity severity)
         {
             var logEntry = string.Format("[{0}] ({1}): {2}{3}", severity, DateTime.Now, entry, Environment.NewLine);
-            File.AppendAllText(FilePath, logEntry);
+
+            lock (logLock)
+            {
+                File.AppendAllText(FilePath, logEntry);
+            }
         }
     }
 }

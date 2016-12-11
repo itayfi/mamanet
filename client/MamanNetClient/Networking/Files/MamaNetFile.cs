@@ -42,20 +42,30 @@ namespace Networking.Files
         internal FileStream _writeStream;
         [NonSerialized]
         private IEnumerable<PeerDetails> _peers;
+        [NonSerialized]
+        internal object writeLock = new Object();
 
         #endregion
 
         #region Ctors
 
-        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, string[] relatedHubs = null)
+        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, string[] relatedHubs = null, bool isAvailable = false)
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize)
         {
             this._localPath = localPath;
             this._parts = new FilePart[this.NumberOfParts];
+            if (isAvailable)
+            {
+                for (int i = 0; i < NumberOfParts; i++)
+                {
+                    _parts[i] = new FilePart(this, i) { IsPartAvailable = true };
+                }
+                UpdateAvailability();
+            }
         }
 
-        public MamaNetFile(string fullName, string hash, string localPath, int totalSize, int partSize = 1024)
-            : this(fullName, HexConverter.HexStringToByteArray(hash), localPath, totalSize, partSize)
+        public MamaNetFile(string fullName, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
+            : this(fullName, HexConverter.HexStringToByteArray(hash), localPath, totalSize, partSize, isAvailable: isAvailable)
         {
         }
 

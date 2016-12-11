@@ -114,7 +114,7 @@ namespace Networking.Network
 
         private void HandleFilePartsRequest(FilePartsRequestPacket packet, IPEndPoint peer)
         {
-            if (_files.ContainsKey(packet.FileHash))
+            if (!_files.ContainsKey(packet.FileHash))
             {
                 //Todo: generate error
                 return;
