@@ -15,10 +15,10 @@ using Networking.Utilities;
 namespace Networking.Files
 {
     [Serializable]
-    public class MetadataFile:INotifyPropertyChanged
+    public class MetadataFile : INotifyPropertyChanged
     {
         #region Private Members
-        
+
         private byte[] _hash;
 
         //for future support multiple RelatedHubs downloading
@@ -87,11 +87,11 @@ namespace Networking.Files
 
         public string[] RelatedHubs
         {
-            get 
+            get
             {
                 if (_relatedHubs != null)
                 {
-                    return (string[])_relatedHubs.Clone();     
+                    return (string[])_relatedHubs.Clone();
                 }
                 return null;
             }
@@ -140,6 +140,23 @@ namespace Networking.Files
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is MetadataFile))
+            {
+                return false;
+            }
+            MetadataFile other = (MetadataFile)obj;
+            return other._fullName == _fullName && other._hash.SequenceEqual(_hash) &&
+                ((_relatedHubs == null || other._relatedHubs == null) ? _relatedHubs == other._relatedHubs : other._relatedHubs.OrderBy(h => h).SequenceEqual(_relatedHubs.OrderBy(h => h)));
+        }
+
+        public override int GetHashCode()
+        {
+            return _fullName.GetHashCode() + _hash.GetHashCode() + (_relatedHubs != null ? _relatedHubs.OrderBy(h => h).ToArray().GetHashCode() : -1);
+        }
+
 
         #endregion
     }
