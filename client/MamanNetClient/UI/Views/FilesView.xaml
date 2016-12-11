@@ -29,28 +29,33 @@
                 <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="5,4,8,0" Orientation="Horizontal">
-                <Button x:Name="MyButton" Command="{Binding AddFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="AddNewFileClick">
+                <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}" CommandParameter="{Binding ElementName=UploadButton, Path=Tag}" Click="UploadFileClick">
                     <Button.Content>
-                        <Image Source="../Icons/add.ico"/>
+                        <Image Source="../Icons/upload-button.png"/>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="MyButton" Command="{Binding AddMetadataFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="AddNewFileClick">
+                    <Button.Content>
+                        <Image Source="../Icons/add-button.png"/>
                     </Button.Content>
                 </Button>
                 <Button Command="{Binding Path=RemoveFileCommand}">
                     <Button.Content>
-                        <Image Source="../Icons/remove.ico"/>
+                        <Image Source="../Icons/remove-button.png"/>
                     </Button.Content>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                 <Button Command="{Binding Path=StopCommand}">
                     <Button.Content>
-                        <Image Source="../Icons/stop.ico"/>
+                        <Image Source="../Icons/pause-button.png"/>
                     </Button.Content>
                 </Button>
                 <Button Command="{Binding Path=PlayCommand}">
                     <Button.Content>
-                        <Image Source="../Icons/play.ico"/>
+                        <Image Source="../Icons/start-button.png"/>
                     </Button.Content>
                 </Button>
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                <!--Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button Command="{Binding Path=UpCommand}">
                     <Button.Content>
                         <Image Source="../Icons/up.ico"/>
@@ -60,7 +65,7 @@
                     <Button.Content>
                         <Image Source="../Icons/down.ico"/>
                     </Button.Content>
-                </Button>
+                </Button-->
             </StackPanel>
             <DataGrid IsReadOnly="True" 
                       HeadersVisibility="Column"

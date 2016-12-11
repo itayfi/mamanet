@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using Networking.Files;
+using DAL;
 
 namespace TestMamaNetClient
 {
@@ -30,7 +31,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048);
+            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
             var data1 = file[0].GetData();
             var data2 = file[1].GetData();
             file.Close();
@@ -43,7 +44,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048);
+            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
             var data1 = file[0].GetData();
             file[1].SetData(data1);
             file.Close();
@@ -78,17 +79,17 @@ namespace TestMamaNetClient
         }
 
         [TestMethod]
-        public void TestMamanetFile()
+        public void TestMetadataFile()
         {
             string filename = Path.GetTempFileName();
             MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new string[] { "http://localhost:12345" }));
+            MetadataFileProvider provider = new MetadataFileProvider();
 
-            //TODO: fix this test (the lines where deleted)
-            //file.Save(filename);
-            //MetadataFile file2 = MetadataFile.Load(filename);
+            provider.Save(file, filename);
+            MetadataFile file2 = provider.Load(filename);
 
-            //Assert.AreEqual(file, file2);
-            //Assert.IsNotInstanceOfType(file2, typeof(MamaNetFile));
+            Assert.AreEqual(file, file2);
+            Assert.IsNotInstanceOfType(file2, typeof(MamaNetFile));
         }
     }
 }

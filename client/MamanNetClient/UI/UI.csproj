@@ -242,6 +242,13 @@
   <ItemGroup>
     <Resource Include="Icons\MamaNet.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\add-button.png" />
+    <Resource Include="Icons\pause-button.png" />
+    <Resource Include="Icons\remove-button.png" />
+    <Resource Include="Icons\start-button.png" />
+    <Resource Include="Icons\upload-button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
