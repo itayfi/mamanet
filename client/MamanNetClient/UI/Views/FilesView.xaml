@@ -100,6 +100,7 @@
                     <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     </Style>
+                    <converters:PrecentageConverter x:Key="precentage"/>
                 </DataGrid.Resources>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
@@ -134,8 +135,8 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם" Binding="{Binding FullName}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="גודל" Binding="{Binding FileSizeInBytes}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="ירד" Binding="{Binding BytesDownloaded}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="גודל" Binding="{Binding Size}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="ירד" Binding="{Binding Availability, Converter={StaticResource precentage}}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="סטטוס תהליך ההורדה" Binding="{Binding DownloadStatus}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מפיצים" Binding="{Binding Seeders}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="משתפים" Binding="{Binding Leechers}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>

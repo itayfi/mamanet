@@ -118,7 +118,7 @@ namespace Networking.Files
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
-            RelatedHubs = relatedHubs;
+            RelatedHubs = relatedHubs ?? new string[0];
             Size = size;
             PartSize = partSize;
         }

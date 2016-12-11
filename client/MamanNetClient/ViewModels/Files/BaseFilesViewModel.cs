@@ -78,7 +78,7 @@ namespace ViewModels.Files
                 using (var stream = fileInfo.OpenRead())
                 {
                     var md5 = MD5.Create();
-                    file = new MamaNetFile(fileInfo.Name, md5.ComputeHash(stream), filePath, (int)fileInfo.Length)
+                    file = new MamaNetFile(fileInfo.Name, md5.ComputeHash(stream), filePath, (int)fileInfo.Length, isAvailable: true)
                     {
                         IsActive = true
                     };
