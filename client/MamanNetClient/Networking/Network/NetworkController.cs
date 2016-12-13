@@ -36,8 +36,7 @@ namespace Networking.Network
     public class NetworkController
     {
         #region Private Members
-
-        public static readonly int DefaultPort = int.Parse(ConfigurationManager.AppSettings["DefaultPort"]);
+        
         private readonly Dictionary<byte[], MamaNetFile> _files;
         private UdpClient _client;
         private IPEndPoint _myEndPoint;
@@ -55,7 +54,7 @@ namespace Networking.Network
         public NetworkController()
         {
             _files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
-            _port = DefaultPort;
+            _port = int.Parse(ConfigurationManager.AppSettings["DefaultPort"]); ;
         }
 
         #endregion

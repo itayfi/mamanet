@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Networking.Files;
 using DAL;
+using Networking.Utilities;
 
 namespace TestMamaNetClient
 {
@@ -19,7 +20,7 @@ namespace TestMamaNetClient
         public void TestWrite()
         {
             string filename = Path.GetTempFileName();
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048);
+            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048);
             file[0].SetData(DATA.Take(1024).ToArray());
             file[1].SetData(DATA.Skip(1024).ToArray());
             file.Close();
@@ -31,7 +32,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
+            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable:true);
             var data1 = file[0].GetData();
             var data2 = file[1].GetData();
             file.Close();
@@ -44,7 +45,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", "deadbeef", filename, 2048, isAvailable: true);
+            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable:true);
             var data1 = file[0].GetData();
             file[1].SetData(data1);
             file.Close();
@@ -58,7 +59,7 @@ namespace TestMamaNetClient
             string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
-            var file = new MamaNetFile("test", "deadbeef", filename, (int)new FileInfo(filename).Length);
+            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, (int)new FileInfo(filename).Length);
             var data1 = file[0].GetData();
             file.Close();
             CollectionAssert.AreEqual(data, data1);
@@ -72,7 +73,7 @@ namespace TestMamaNetClient
             string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
-            var file = new MamaNetFile("test", "deadbeef", filename, data.Length);
+            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, data.Length);
             file[0].SetData(data);
             file.Close();
             Assert.AreEqual(text, File.ReadAllText(filename));

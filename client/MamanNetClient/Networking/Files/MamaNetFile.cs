@@ -44,42 +44,29 @@ namespace Networking.Files
         private IEnumerable<PeerDetails> _peers;
         [NonSerialized]
         internal object writeLock = new Object();
+        [NonSerialized]
+        private byte[] _currentFileHash;
 
         #endregion
 
         #region Ctors
 
-        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, string[] relatedHubs = null, bool isAvailable = false)
+        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, string[] relatedHubs = null, bool isFullAvailable = false)
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize)
         {
-            this._localPath = localPath;
-            this._parts = new FilePart[this.NumberOfParts];
-            if (isAvailable)
+            _localPath = localPath;
+            _parts = new FilePart[NumberOfParts];
+            for (var i = 0; i < NumberOfParts; i++)
             {
-                for (int i = 0; i < NumberOfParts; i++)
-                {
-                    _parts[i] = new FilePart(this, i) { IsPartAvailable = true };
-                }
-                UpdateAvailability();
+                _parts[i] = new FilePart(this, i) { IsPartAvailable = isFullAvailable };
             }
+            _currentFileHash = new byte[0];
+            UpdateAvailability();
         }
 
-        public MamaNetFile(string fullName, string hash, string localPath, int totalSize, int partSize = 1024, bool isAvailable = false)
-            : this(fullName, HexConverter.HexStringToByteArray(hash), localPath, totalSize, partSize, isAvailable: isAvailable)
+        public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.PartSize, other.RelatedHubs)
         {
-        }
-
-        public MamaNetFile(MamaNetFile other)
-            : base(other)
-        {
-            _localPath = other._localPath;
-            _parts = other._parts;
-        }
-
-        //TODO: 2 ctors with same signiture! remove one of them
-        public MamaNetFile(MetadataFile other) : base(other)
-        {
-            _parts = new FilePart[this.NumberOfParts];
+            
         }
 
         #endregion
@@ -120,10 +107,6 @@ namespace Networking.Files
         {
             get
             {
-                if (_parts[number] == null)
-                {
-                    _parts[number] = new FilePart(this, number);
-                }
                 return _parts[number];
             }
         }
@@ -154,7 +137,7 @@ namespace Networking.Files
                 {
                     if (Availability == 1)
                     {
-                        if (ExpectedHash == File.ReadAllBytes(LocalPath))
+                        if (ExpectedHash.SequenceEqual(_currentFileHash))
                         {
                             return DownloadStatus.Downloaded;
                         }
@@ -177,6 +160,7 @@ namespace Networking.Files
                 {
                     case "jpeg":
                     case "jpg":
+                    case "png":
                         return FileType.Image;
                     case "pdf":
                         return FileType.Pdf;
@@ -238,22 +222,33 @@ namespace Networking.Files
 
         internal FileStream GetReadStream()
         {
-            //TODO: use StreamReader instead of FileStream
             return _readStream ??
                    (_readStream = File.Open(_localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
         }
 
         internal FileStream GetWriteStream()
         {
-            //TODO: use StreamWriter instead of FileStream
             return _writeStream ??
                    (_writeStream = File.Open(_localPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
         }
 
         internal void UpdateAvailability()
         {
-            Availability = Convert.ToDecimal(_parts.Count(part => part != null && part.IsPartAvailable)) /
+            Availability = Convert.ToDecimal(_parts.Count(part => part.IsPartAvailable)) /
                     Convert.ToDecimal(NumberOfParts);
+
+            if (Availability == 1)
+            {
+                UpdateFileHash();
+            }
+        }
+
+        private void UpdateFileHash()
+        {
+            using (var fileStream = File.OpenRead(LocalPath))
+            {
+                _currentFileHash = HashUtils.CalculateHash(fileStream);
+            }
         }
 
         #endregion

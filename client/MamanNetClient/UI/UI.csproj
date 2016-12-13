@@ -183,9 +183,6 @@
     <Resource Include="Icons\download.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\bitornetIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Models\Common.csproj">
       <Project>{6a74c252-b8ed-46a2-a140-1d7d86f848e5}</Project>
       <Name>Common</Name>
@@ -196,17 +193,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\bitornetSplashScreen.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\bitornetHomepage.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\close.png" />
     <Resource Include="Icons\info.png" />
-    <Resource Include="Icons\play.ico" />
     <Resource Include="Icons\down.ico" />
-    <Resource Include="Icons\remove.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\warning.png" />
@@ -220,9 +209,6 @@
   <ItemGroup>
     <Resource Include="Icons\stop.ico" />
     <Resource Include="Icons\up.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\add.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\pdfIcon.ico" />
@@ -248,6 +234,9 @@
     <Resource Include="Icons\remove-button.png" />
     <Resource Include="Icons\start-button.png" />
     <Resource Include="Icons\upload-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\genericFileIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

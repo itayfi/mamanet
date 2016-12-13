@@ -10,6 +10,7 @@ using System.IO;
 using Networking.Files;
 using DAL;
 using System.Security.Cryptography;
+using System.Configuration;
 
 namespace ViewModels.Files
 {
@@ -58,7 +59,7 @@ namespace ViewModels.Files
 
         public virtual void AddFile(MetadataFile file)
         {
-            MamaNetFile sharedFile = new MamaNetFile(file);
+            MamaNetFile sharedFile = new MamaNetFile(file, ConfigurationManager.AppSettings["DonwloadFolderPath"]);
             AddFile(sharedFile);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using DAL;
 using System;
 using Networking.Files;
+using System.Configuration;
 
 namespace ViewModels.Files
 {
@@ -43,7 +44,7 @@ namespace ViewModels.Files
 
         public override void AddFile(MetadataFile file)
         {
-            AllFiles.Add(new MamaNetFile(file));
+            AllFiles.Add(new MamaNetFile(file, ConfigurationManager.AppSettings["DonwloadFolderPath"]));
         }
 
         public override void _deleteFile()
@@ -71,8 +72,7 @@ namespace ViewModels.Files
             var dataStore = _dataStoreProvider.LoadData();
             foreach (var serializedFile in dataStore.SavedDataFiles)
             {
-                var mamanNetFile = new MamaNetFile(serializedFile);
-                AllFiles.Add(mamanNetFile);
+                AllFiles.Add(serializedFile);
             }
         }
 

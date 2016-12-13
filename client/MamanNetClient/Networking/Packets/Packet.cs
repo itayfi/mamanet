@@ -9,6 +9,6 @@ namespace Networking.Packets
     [Serializable]
     public abstract class Packet
     {
-        //TODO: copy to here common members / methods
+        //TODO: consider copy to here common members / methods
     }
 }

@@ -61,7 +61,7 @@ namespace Networking.Files
         {
             get
             {
-                return HexConverter.ByteArrayToHexString(_hash);
+                return HashUtils.ByteArrayToHexString(_hash);
             }
         }
 

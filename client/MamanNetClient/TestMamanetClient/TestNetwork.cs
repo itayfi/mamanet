@@ -25,9 +25,9 @@ namespace TestMamaNetClient
             string sourceFile = Path.GetTempFileName();
             string destFile = Path.GetTempFileName();
             File.WriteAllText(sourceFile, LOREM);
-            NetworkController sender = new NetworkController(NetworkController.DefaultPort + 1);
-            NetworkController receiver = new NetworkController(NetworkController.DefaultPort + 2);
-            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isAvailable: true);
+            NetworkController sender = new NetworkController(20589);
+            NetworkController receiver = new NetworkController(20560);
+            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isFullAvailable: true);
             MamaNetFile dest = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
 
             sender.AddFile(source);
@@ -35,7 +35,7 @@ namespace TestMamaNetClient
 
             sender.StartListen();
             receiver.StartListen();
-            receiver.SendPacket(new FilePartsRequestPacket(HASH, new int[] { 0, 1 }), new IPEndPoint(IPAddress.Parse("127.0.0.1"), NetworkController.DefaultPort + 1));
+            receiver.SendPacket(new FilePartsRequestPacket(HASH, new int[] { 0, 1 }), new IPEndPoint(IPAddress.Parse("127.0.0.1"), 20589));
 
             while (dest.Availability < 1)
             {

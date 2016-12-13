@@ -13,8 +13,8 @@ namespace Networking.Packets
     [Serializable]
     public class FilePartsRequestPacket : Packet
     {
-        readonly byte[] _fileHash;
-        readonly int[] _parts;
+        private readonly byte[] _fileHash; //file ID
+        private readonly int[] _parts; //missing file parts
 
         public FilePartsRequestPacket(byte[] fileHash, int[] parts)
         {
@@ -34,7 +34,7 @@ namespace Networking.Packets
 
         public override string ToString()
         {
-            return string.Format("<FilePartsRequestPacket {0}/{1}>", HexConverter.ByteArrayToHexString(_fileHash), string.Join(",", _parts));
+            return string.Format("<FilePartsRequestPacket {0}/{1}>", HashUtils.ByteArrayToHexString(_fileHash), string.Join(",", _parts));
         }
     }
 }

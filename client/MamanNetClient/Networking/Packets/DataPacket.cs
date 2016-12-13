@@ -79,7 +79,7 @@ namespace Networking.Packets
 
         public override string ToString()
         {
-            return string.Format("<DataPacket {0}/{1}>", HexConverter.ByteArrayToHexString(_fileHash), _partNumber);
+            return string.Format("<DataPacket {0}/{1}>", HashUtils.ByteArrayToHexString(_fileHash), _partNumber);
         }
 
         #endregion
