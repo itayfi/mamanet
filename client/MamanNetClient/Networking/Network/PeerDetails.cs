@@ -10,24 +10,59 @@ namespace Networking.Network
     [Serializable]
     public class PeerDetails
     {
-        public PeerDetails(int port, string ip=null)
+        private int port;
+        private string ip;
+        private int[] availableFileParts;
+
+        public int Port
         {
-            Port = port;
-            IP = ip;
+            get
+            {
+                return port;
+            }
+            set
+            {
+                port = value;
+            }
         }
 
-        public int Port { get; set; }
-        public string IP { get; set; }
+        public string Ip
+        {
+            get
+            {
+                return ip;
+            }
+            set
+            {
+                ip = value;
+            }
+        }
+
+        public int[] AvailableFileParts
+        {
+            get
+            {
+                return availableFileParts;
+            }
+            set
+            {
+                availableFileParts = value;
+            }
+        }
+
+
+        public PeerDetails(int port, int[] availableFileParts, string ip = null)
+        {
+            Port = port;
+            Ip = ip;
+            AvailableFileParts = availableFileParts;
+        }
 
         public IPEndPoint IPEndPoint
         {
             get
             {
-                if (IP == null)
-                {
-                    return null;
-                }
-                return new IPEndPoint(IPAddress.Parse(IP), Port);
+                return Ip == null ? null : new IPEndPoint(IPAddress.Parse(Ip), Port);
             }
         }
     }

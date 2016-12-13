@@ -10,8 +10,9 @@ using Networking.Utilities;
 
 namespace Networking.Files
 {
-    public enum DownloadStatus
+    public enum FileStatus
     {
+        Uploading,
         Downloading,
         DownladingError,
         Downloaded,
@@ -28,7 +29,7 @@ namespace Networking.Files
     }
 
     [Serializable]
-    public class MamaNetFile : MetadataFile
+    public class MamaNetFile : MetadataFile, IDisposable
     {
         #region Private Members
 
@@ -95,8 +96,14 @@ namespace Networking.Files
             set
             {
                 _isActive = value;
+                if (!_isActive)
+                {
+                    if (_writeStream != null) _writeStream.Dispose();
+                    if (_readStream != null) _readStream.Dispose();
+                }
+
                 FireChangeEvent("IsActive");
-                FireChangeEvent("DownloadStatus");
+                FireChangeEvent("FileStatus");
             }
         }
         #endregion
@@ -117,21 +124,29 @@ namespace Networking.Files
             {
                 _availability = value;
                 FireChangeEvent("Availability");
-                FireChangeEvent("DownloadStatus");
+                FireChangeEvent("FileStatus");
             }
             get
             {
                 return _availability;
             }
         }
-        public DownloadStatus DownloadStatus
+        public FileStatus FileStatus
         {
             get
             {
                 if (IsActive)
                 {
                     //TODO: change this to find online RelatedHubs only!
-                    return RelatedHubs.Any() ? DownloadStatus.Downloading : DownloadStatus.DownladingError;
+                    if (Availability == 1)
+                    {
+                        return FileStatus.Uploading;
+                    }
+                    else
+                    {
+                        return RelatedHubs.Any() ? FileStatus.Downloading : FileStatus.DownladingError;    
+                    }
+                    
                 }
                 else
                 {
@@ -139,13 +154,13 @@ namespace Networking.Files
                     {
                         if (ExpectedHash.SequenceEqual(_currentFileHash))
                         {
-                            return DownloadStatus.Downloaded;
+                            return FileStatus.Downloaded;
                         }
-                        return DownloadStatus.DownloadFailed;
+                        return FileStatus.DownloadFailed;
                     }
                     else
                     {
-                        return DownloadStatus.Paused;
+                        return FileStatus.Paused;
                     }
                 }
             }
@@ -190,34 +205,34 @@ namespace Networking.Files
 
         #region Methods
 
-        public void Close()
-        {
-            if (_readStream != null)
-            {
-                //Todo: use dispose instead of close?
-                _readStream.Close();
-                _readStream = null;
-            }
-            if (_writeStream != null)
-            {
-                _writeStream.Close();
-                _writeStream = null;
-            }
-        }
-
         public int[] GetMissingParts()
         {
             List<int> missingParts = new List<int>();
 
             for (var i = 0; i < _parts.Length; i++)
             {
-                if (_parts[i] == null || !_parts[i].IsPartAvailable)
+                if (!_parts[i].IsPartAvailable)
                 {
                     missingParts.Add(i);
                 }
             }
 
             return missingParts.ToArray();
+        }
+
+        public int[] GetAvailableParts()
+        {
+            List<int> availableParts = new List<int>();
+
+            for (var i = 0; i < _parts.Length; i++)
+            {
+                if (_parts[i].IsPartAvailable)
+                {
+                    availableParts.Add(i);
+                }
+            }
+
+            return availableParts.ToArray();
         }
 
         internal FileStream GetReadStream()
@@ -240,17 +255,32 @@ namespace Networking.Files
             if (Availability == 1)
             {
                 UpdateFileHash();
+                if (_writeStream != null) _writeStream.Dispose();
             }
         }
 
         private void UpdateFileHash()
         {
-            using (var fileStream = File.OpenRead(LocalPath))
+            using (var fileStream = File.Open(LocalPath,FileMode.Open,FileAccess.Read, FileShare.ReadWrite))
             {
                 _currentFileHash = HashUtils.CalculateHash(fileStream);
             }
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            if (_readStream != null)
+            {
+                _readStream.Close();
+                _readStream = null;
+            }
+            if (_writeStream != null)
+            {
+                _writeStream.Close();
+                _writeStream = null;
+            }
+        }
     }
 }

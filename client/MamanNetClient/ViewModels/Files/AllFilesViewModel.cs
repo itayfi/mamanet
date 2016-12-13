@@ -5,6 +5,9 @@ using DAL;
 using System;
 using Networking.Files;
 using System.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
+using Networking.Network;
 
 namespace ViewModels.Files
 {
@@ -21,6 +24,7 @@ namespace ViewModels.Files
         #region Private Fields
 
         private readonly DataStoreProvider _dataStoreProvider;
+        private NetworkController _networkController;
 
         #endregion
 
@@ -31,7 +35,8 @@ namespace ViewModels.Files
             RelevatFilesCollection = AllFiles;
             _dataStoreProvider = new DataStoreProvider();
             LoadSavedFiles();
-
+            _networkController = new NetworkController(AllFiles);
+            Task.Run(() => _networkController.StartListen());
             DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFiles);
             UploadingFilesViewModel = new UploadingFilesViewModel(AllFiles);
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);

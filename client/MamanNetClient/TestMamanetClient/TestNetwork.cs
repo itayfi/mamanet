@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Networking;
 using Networking.Files;
 using Networking.Network;
@@ -25,25 +26,26 @@ namespace TestMamaNetClient
             string sourceFile = Path.GetTempFileName();
             string destFile = Path.GetTempFileName();
             File.WriteAllText(sourceFile, LOREM);
-            NetworkController sender = new NetworkController(20589);
-            NetworkController receiver = new NetworkController(20560);
-            MamaNetFile source = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isFullAvailable: true);
-            MamaNetFile dest = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
+            var uploader = new NetworkController(null, 20589);
+            var downloader = new NetworkController(null, 20560);
+            var uploadedFile = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isFullAvailable: true);
+            var downloadedFile = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
 
-            sender.AddFile(source);
-            receiver.AddFile(dest);
+            uploader.AddFile(uploadedFile);
+            downloader.AddFile(downloadedFile);
 
-            sender.StartListen();
-            receiver.StartListen();
-            receiver.SendPacket(new FilePartsRequestPacket(HASH, new int[] { 0, 1 }), new IPEndPoint(IPAddress.Parse("127.0.0.1"), 20589));
+            Task.Run(() => uploader.StartListen());
+            Task.Run(() => downloader.StartListen());
 
-            while (dest.Availability < 1)
+            while (downloadedFile.Availability < 1)
             {
+                downloader.SendPacket(new FilePartsRequestPacket(HASH, new[] {0, 1}),
+                    new IPEndPoint(IPAddress.Parse("127.0.0.1"), 20589));
                 Thread.Sleep(100);
             }
 
-            sender.Close();
-            receiver.Close();
+            uploader.Close();
+            downloader.Close();
 
             Assert.AreEqual(File.ReadAllText(sourceFile), File.ReadAllText(destFile));
         }

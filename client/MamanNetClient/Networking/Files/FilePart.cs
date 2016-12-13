@@ -51,8 +51,15 @@ namespace Networking.Files
 
             FileStream stream = MamaNetFile.GetReadStream();
             GoToPart(stream);
-            byte[] buffer = new byte[MamaNetFile.PartSize];
-            stream.Read(buffer, 0, MamaNetFile.PartSize);
+            var partSize = MamaNetFile.PartSize;
+
+            if (PartNumber == MamaNetFile.NumberOfParts - 1)
+            {
+                partSize = (int)(stream.Length - stream.Position);
+            }
+
+            byte[] buffer = new byte[partSize];
+            stream.Read(buffer, 0, partSize);
             return buffer;
         }
 
@@ -60,7 +67,10 @@ namespace Networking.Files
         {
             if (data.Length != MamaNetFile.PartSize)
             {
-                throw new MalformedDataException("Part data size should be same as MamaNetFile part size");
+                if (PartNumber != MamaNetFile.NumberOfParts - 1 || data.Length > MamaNetFile.PartSize)
+                {
+                    throw new MalformedDataException("Part data size should be same as MamaNetFile part size");
+                }
             }
 
             //probably already downloaded the file from someone else
@@ -70,7 +80,7 @@ namespace Networking.Files
             lock (MamaNetFile.writeLock)
             {
                 GoToPart(stream);
-                stream.Write(data, 0, MamaNetFile.PartSize);
+                stream.Write(data, 0, data.Length);
                 IsPartAvailable = true;
                 MamaNetFile.UpdateAvailability();
             }

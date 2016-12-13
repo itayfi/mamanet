@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,8 @@ using Common.Utilities;
 using Networking.Files;
 using Networking.Packets;
 using System.Configuration;
+using System.Data.SqlTypes;
+using System.Threading;
 
 namespace Networking.Network
 {
@@ -36,25 +39,32 @@ namespace Networking.Network
     public class NetworkController
     {
         #region Private Members
-        
-        private readonly Dictionary<byte[], MamaNetFile> _files;
+
+        private ObservableCollection<MamaNetFile> _files;
         private UdpClient _client;
         private IPEndPoint _myEndPoint;
         private readonly int _port;
+        private Timer _hubTimer;
 
         #endregion
 
         #region Ctor
-        public NetworkController(int port)
+        public NetworkController(ObservableCollection<MamaNetFile> files = null, int? port = null)
         {
-            _files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
-            _port = port;
-        }
+            if (files == null)
+            {
+                files = new ObservableCollection<MamaNetFile>();
+            }
+            if (!port.HasValue)
+            {
+                port = int.Parse(ConfigurationManager.AppSettings["DefaultClientPort"]);
+            }
 
-        public NetworkController()
-        {
-            _files = new Dictionary<byte[], MamaNetFile>(new ByteArrayComparer());
-            _port = int.Parse(ConfigurationManager.AppSettings["DefaultPort"]); ;
+            _files = files;
+            _port = port.Value;
+
+            _hubTimer = new Timer((state) => SynchronizeHubPeriodically(), null, 0, 5000);
+            IsListenning = false;
         }
 
         #endregion
@@ -63,47 +73,51 @@ namespace Networking.Network
 
         public void AddFile(MamaNetFile file)
         {
-            _files.Add(file.ExpectedHash, file);
+            
+            _files.Add(file);
         }
 
-        public void StartListen()
+        public async void StartListen()
         {
             SetupConnection();
-
-            var state = new Tuple<UdpClient, IPEndPoint>(_client, _myEndPoint);
-
-            //TODO: change BeginRecive to ReceiveAsync
-            _client.BeginReceive(HandlePacket, state);
             IsListenning = true;
+
+            while (IsListenning)
+            {
+                //TODO: handle dispose exception  - cannot access a disposed object
+                var recieveResult = await _client.ReceiveAsync();
+                Task.Run(() => HandlePacket(recieveResult));
+            }
         }
 
         public void Close()
         {
             _client.Close();
-            foreach (var file in _files.Values)
+            foreach (var file in _files)
             {
-                file.Close();
+                file.Dispose();
             }
             IsListenning = false;
         }
 
         public bool IsListenning
         {
-            get; private set;
+            get;
+            private set;
         }
         #endregion
 
         #region Packet Handling
 
-        private void HandlePacket(IAsyncResult ar)
+        private void HandlePacket(UdpReceiveResult receiveResult)
         {
-            var state = (Tuple<UdpClient, IPEndPoint>)ar.AsyncState;
-            var endPoint = state.Item2;
-            var data = state.Item1.EndReceive(ar, ref endPoint);
+            var endPoint = receiveResult.RemoteEndPoint;
+            var data = receiveResult.Buffer;
 
             var formatter = new BinaryFormatter();
             var packet = formatter.Deserialize(new MemoryStream(data)) as Packet;
-            Logger.WriteLogEntry(string.Format("Got {0} from {1} to {2}", packet, endPoint, _myEndPoint),LogSeverity.Info);
+
+            Logger.WriteLogEntry(string.Format("Got {0} from {1} to {2}", packet, endPoint, _myEndPoint), LogSeverity.Info);
 
             var dataPacket = packet as DataPacket;
             if (dataPacket != null)
@@ -114,24 +128,19 @@ namespace Networking.Network
             {
                 HandleFilePartsRequest((FilePartsRequestPacket)packet, endPoint);
             }
-
-            StartListen();
         }
 
         private void HandleFilePartsRequest(FilePartsRequestPacket packet, IPEndPoint peer)
         {
-            if (!_files.ContainsKey(packet.FileHash))
-            {
-                //Todo: generate error
-                return;
-            }
 
-            var file = _files[packet.FileHash];
+            var relevantFile = _files.SingleOrDefault(file => file.ExpectedHash.SequenceEqual(packet.FileHash));
+            if (relevantFile == null)
+                return;
             foreach (var part in packet.Parts)
             {
-                if (file[part].IsPartAvailable)
+                if (relevantFile[part].IsPartAvailable)
                 {
-                    SendPacket(DataPacket.FromFilePart(file[part]), peer);
+                    SendPacket(DataPacket.FromFilePart(relevantFile[part]), peer);
                 }
             }
         }
@@ -143,14 +152,14 @@ namespace Networking.Network
                 // TODO: Request resend
                 return;
             }
-            if (!_files.ContainsKey(packet.FileHash))
-            {
-                // TODO: wtf
+
+            var relevantFile = _files.SingleOrDefault(file => file.ExpectedHash.SequenceEqual(packet.FileHash));
+            if (relevantFile == null)
                 return;
-            }
-            if (!_files[packet.FileHash][packet.PartNumber].IsPartAvailable)
+
+            if (!relevantFile[packet.PartNumber].IsPartAvailable)
             {
-                _files[packet.FileHash][packet.PartNumber].SetData(packet.Data);
+                relevantFile[packet.PartNumber].SetData(packet.Data);
             }
         }
 
@@ -164,48 +173,43 @@ namespace Networking.Network
             _client = new UdpClient(_myEndPoint);
         }
 
-        private void EndSendPacket(IAsyncResult ar)
+        public async void SendPacket(Packet packet, IPEndPoint peer)
         {
-            _client.EndSend(ar);
-        }
-
-        public void SendPacket(Packet packet, IPEndPoint peer)
-        {
-            Logger.WriteLogEntry(string.Format("Send {0} from {1} to {2}", packet, _myEndPoint, peer),LogSeverity.Info);
+            Logger.WriteLogEntry(string.Format("Send {0} from {1} to {2}", packet, _myEndPoint, peer), LogSeverity.Info);
             SetupConnection();
 
             var formatter = new BinaryFormatter();
-            var ms = new MemoryStream();
-            formatter.Serialize(ms, packet);
-            var buffer = ms.GetBuffer();
 
-            _client.BeginSend(buffer, buffer.Length, peer, EndSendPacket, null);
-        } 
+            byte[] buffer;
+            using (var ms = new MemoryStream())
+            {
+                formatter.Serialize(ms, packet);
+                buffer = ms.GetBuffer();
+            }
+            await _client.SendAsync(buffer, buffer.Length, peer);
+        }
 
         #endregion
 
         #region Hub Communication
-        public Task UpdateFromHub()
+        public void SynchronizeHubPeriodically()
         {
-            List<Task> tasks = new List<Task>();
-            foreach (var file in _files.Values)
+            foreach (var file in _files)
             {
-                PeerDetails myDetails = new PeerDetails(_port);
-                if (file.IsActive)
+                PeerDetails myDetails = new PeerDetails(_port, file.GetAvailableParts());
+                if (!file.IsActive) continue;
+
+                foreach (var hub in file.RelatedHubs)
                 {
-                    foreach (var hub in file.RelatedHubs)
+                    var url = new StringBuilder(hub);
+                    if (!hub.EndsWith("/"))
                     {
-                        StringBuilder url = new StringBuilder(hub);
-                        if (!hub.EndsWith("/"))
-                        {
-                            url.Append("/");
-                        }
-                        url.Append(file.HexHash);
-                        tasks.Add(GetPeers(url.ToString(), myDetails));
+                        url.Append("/");
                     }
+                    url.Append(file.HexHash);
+                    Task.Run(()=>GetPeers(url.ToString(), myDetails));
                 }
             }
-            return Task.WhenAll(tasks);
         }
 
         private async void UpdateFileFromHub(MamaNetFile file, string hubUrl, PeerDetails myDetails)

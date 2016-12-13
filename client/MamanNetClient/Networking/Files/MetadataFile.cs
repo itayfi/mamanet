@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -118,7 +119,7 @@ namespace Networking.Files
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
-            RelatedHubs = relatedHubs ?? new string[0];
+            RelatedHubs = relatedHubs ?? new [] {ConfigurationManager.AppSettings["DefaultHubUrl"]};
             Size = size;
             PartSize = partSize;
         }

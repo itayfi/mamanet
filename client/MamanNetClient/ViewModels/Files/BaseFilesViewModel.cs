@@ -11,6 +11,9 @@ using Networking.Files;
 using DAL;
 using System.Security.Cryptography;
 using System.Configuration;
+using System.Data.Entity.Infrastructure;
+using Networking.Network;
+using Networking.Utilities;
 
 namespace ViewModels.Files
 {
@@ -71,26 +74,25 @@ namespace ViewModels.Files
 
         public virtual void _uploadFileByPath(string filePath)
         {
-            if (filePath != null && filePath.Length > 0)
+            if (string.IsNullOrEmpty(filePath)) return;
+            var provider = new MetadataFileProvider();
+            var fileInfo = new FileInfo(filePath);
+            MamaNetFile file;
+            using (var stream = fileInfo.OpenRead())
             {
-                var provider = new MetadataFileProvider();
-                var fileInfo = new FileInfo(filePath);
-                MamaNetFile file;
-                using (var stream = fileInfo.OpenRead())
+                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), filePath, (int)fileInfo.Length, isFullAvailable: true)
                 {
-                    var md5 = MD5.Create();
-                    file = new MamaNetFile(fileInfo.Name, md5.ComputeHash(stream), filePath, (int)fileInfo.Length, isAvailable: true)
-                    {
-                        IsActive = true
-                    };
-                }
-                AddFile(file);
-                var metadata = new MetadataFile(file);
-                provider.Save(metadata, fileInfo.Directory.FullName + "\\" + fileInfo.Name + ".mamanet");
-
-                if (ShowPopup != null) ShowPopup(this, @"קובץ הועלה בהצלחה!
-קובץ ה-mamanet נמצא באותה תיקייה עם הקובץ המקורי");
+                    IsActive = true
+                };
             }
+            AddFile(file);
+
+            var metadata = new MetadataFile(file);
+
+            //TODO: handle file extention name
+            provider.Save(metadata, Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileInfo.Name + ".mamanet"));
+
+            if (ShowPopup != null) ShowPopup(this, "קןבץ Metadata נוצר בהצלחה");
         }
 
         public virtual bool _canUploadFile(string filePath)
@@ -100,7 +102,7 @@ namespace ViewModels.Files
 
         public virtual void _addMetadataFileByPath(string filePath)
         {
-            if (filePath != null)
+            if (string.IsNullOrEmpty(filePath))
             {
                 var provider = new MetadataFileProvider();
                 AddFile(provider.Load(filePath));
@@ -146,7 +148,7 @@ namespace ViewModels.Files
 
         public virtual bool _canStopFile()
         {
-            if (SelectedFile != null && SelectedFile.DownloadStatus == DownloadStatus.Downloading)
+            if (SelectedFile != null && SelectedFile.FileStatus == FileStatus.Downloading)
                 return true;
             return false;
         }
@@ -159,7 +161,7 @@ namespace ViewModels.Files
 
         public virtual bool _canPlayFile()
         {
-            if (SelectedFile != null && SelectedFile.DownloadStatus != DownloadStatus.Downloading)
+            if (SelectedFile != null && SelectedFile.FileStatus != FileStatus.Downloading)
                 return true;
             return false;
         }

@@ -20,10 +20,11 @@ namespace TestMamaNetClient
         public void TestWrite()
         {
             string filename = Path.GetTempFileName();
-            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048);
-            file[0].SetData(DATA.Take(1024).ToArray());
-            file[1].SetData(DATA.Skip(1024).ToArray());
-            file.Close();
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048))
+            {
+                file[0].SetData(DATA.Take(1024).ToArray());
+                file[1].SetData(DATA.Skip(1024).ToArray());
+            }
             Assert.AreEqual(LOREM, File.ReadAllText(filename));
         }
 
@@ -32,12 +33,13 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable:true);
-            var data1 = file[0].GetData();
-            var data2 = file[1].GetData();
-            file.Close();
-            var output = Encoding.ASCII.GetString(data1.Concat(data2).ToArray());
-            Assert.AreEqual(LOREM, output);
+            using(var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable:true))
+            {
+                var data1 = file[0].GetData();
+                var data2 = file[1].GetData();
+                var output = Encoding.ASCII.GetString(data1.Concat(data2).ToArray());
+                Assert.AreEqual(LOREM, output);
+            }
         }
 
         [TestMethod]
@@ -45,38 +47,42 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable:true);
-            var data1 = file[0].GetData();
-            file[1].SetData(data1);
-            file.Close();
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048,isFullAvailable: true))
+            {
+                var data1 = file[0].GetData();
+                file[1].SetData(data1);
+            }
         }
 
         [TestMethod]
-        [Ignore]
         public void TestReadNotExactSize()
         {
             string filename = Path.GetTempFileName();
             string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
-            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, (int)new FileInfo(filename).Length);
-            var data1 = file[0].GetData();
-            file.Close();
-            CollectionAssert.AreEqual(data, data1);
+
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, (int) new FileInfo(filename).Length,isFullAvailable:true))
+            {
+                var data1 = file[0].GetData();
+                CollectionAssert.AreEqual(data, data1);
+            }
         }
 
         [TestMethod]
-        [Ignore]
         public void TestWriteNotExactSize()
         {
             string filename = Path.GetTempFileName();
             string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
-            var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, data.Length);
-            file[0].SetData(data);
-            file.Close();
-            Assert.AreEqual(text, File.ReadAllText(filename));
+
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, data.Length))
+            {
+
+                file[0].SetData(data);
+                Assert.AreEqual(text, File.ReadAllText(filename));
+            }
         }
 
         [TestMethod]
