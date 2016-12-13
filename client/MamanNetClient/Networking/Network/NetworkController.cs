@@ -194,7 +194,7 @@ namespace Networking.Network
         #region Hub Communication
         public void SynchronizeHubPeriodically()
         {
-            foreach (var file in _files)
+           foreach (var file in _files)
             {
                 PeerDetails myDetails = new PeerDetails(_port, file.GetAvailableParts());
                 if (!file.IsActive) continue;
