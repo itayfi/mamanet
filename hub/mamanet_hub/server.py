@@ -31,4 +31,4 @@ def update_file_info(file_md5):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0"hOST, port=PORT, debug=DEBUG)
+    app.run(host=HOST, port=PORT, debug=DEBUG)
