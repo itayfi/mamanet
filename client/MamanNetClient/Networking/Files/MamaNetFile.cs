@@ -171,7 +171,7 @@ namespace Networking.Files
             get
             {
                 var extention = FullName.Split('.').Last();
-                switch (extention)
+                switch (extention.ToLower())
                 {
                     case "jpeg":
                     case "jpg":

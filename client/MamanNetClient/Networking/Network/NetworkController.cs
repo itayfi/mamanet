@@ -194,32 +194,34 @@ namespace Networking.Network
         #region Hub Communication
         public void SynchronizeHubPeriodically()
         {
-            foreach (var file in _files)
+            foreach (var mamaNetFile in _files)
             {
-                PeerDetails myDetails = new PeerDetails(_port, file.GetAvailableParts());
-                if (!file.IsActive) continue;
+                var myFile = mamaNetFile;
+                PeerDetails myDetails = new PeerDetails(_port, mamaNetFile.GetAvailableParts());
+                if (!myFile.IsActive) continue;
 
-                foreach (var hub in file.RelatedHubs)
+                foreach (var hub in mamaNetFile.RelatedHubs)
                 {
                     var url = new StringBuilder(hub);
                     if (!hub.EndsWith("/"))
                     {
                         url.Append("/");
                     }
-                    url.Append(file.HexHash);
-                    Task.Run(()=>GetPeers(url.ToString(), myDetails));
+                    url.Append(mamaNetFile.HexHash);
+                    Task.Run(() => UpdateFileFromHub(myFile, url.ToString(), myDetails));
                 }
             }
         }
 
         private async void UpdateFileFromHub(MamaNetFile file, string hubUrl, PeerDetails myDetails)
         {
-            var peers = await GetPeers(hubUrl, myDetails);
+            var filePeers = await GetPeers(hubUrl, myDetails);
 
-            file.Peers = peers.ToList();
-            int[] missingParts = file.GetMissingParts();
-
-            foreach (var peer in peers)
+            file.Peers = filePeers;
+            var missingParts = file.GetMissingParts();
+            
+            //TODO: intersect
+            foreach (var peer in filePeers)
             {
                 SendPacket(new FilePartsRequestPacket(file.ExpectedHash, missingParts), peer.IPEndPoint);
             }
