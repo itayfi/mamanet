@@ -63,6 +63,7 @@ namespace ViewModels.Files
         public virtual void AddFile(MetadataFile file)
         {
             MamaNetFile sharedFile = new MamaNetFile(file, ConfigurationManager.AppSettings["DonwloadFolderPath"]);
+            sharedFile.IsActive = true;
             AddFile(sharedFile);
         }
 
@@ -102,7 +103,7 @@ namespace ViewModels.Files
 
         public virtual void _addMetadataFileByPath(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (!string.IsNullOrEmpty(filePath))
             {
                 var provider = new MetadataFileProvider();
                 AddFile(provider.Load(filePath));
