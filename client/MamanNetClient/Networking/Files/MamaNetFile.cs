@@ -43,10 +43,14 @@ namespace Networking.Files
         internal FileStream _writeStream;
         [NonSerialized]
         private IEnumerable<PeerDetails> _peers;
-        [NonSerialized]
-        internal object writeLock = new Object();
+        [NonSerialized] 
+        internal object _writeLock;
         [NonSerialized]
         private byte[] _currentFileHash;
+        [NonSerialized]
+        private int _seeders;
+        [NonSerialized]
+        private int _leechers;
 
         #endregion
 
@@ -55,6 +59,7 @@ namespace Networking.Files
         public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, string[] relatedHubs = null, bool isFullAvailable = false)
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize)
         {
+            _writeLock = new object();
             _localPath = localPath;
             _parts = new FilePart[NumberOfParts];
             for (var i = 0; i < NumberOfParts; i++)
@@ -183,7 +188,6 @@ namespace Networking.Files
                     case "docx":
                         return FileType.Word;
                     default:
-                        //Todo: support generic file icon
                         return FileType.Generic;
                 }
             }
@@ -201,6 +205,33 @@ namespace Networking.Files
                 FireChangeEvent("Peers");
             }
         }
+
+        public int Seeders
+        {
+            get
+            {
+                return _seeders;
+            }
+            set
+            {
+                _seeders = value;
+                FireChangeEvent("Seeders");
+            }
+        }
+
+        public int Leechers
+        {
+            get
+            {
+                return _leechers;
+            }
+            set
+            {
+                _leechers = value;
+                FireChangeEvent("Leechers");
+            }
+        }
+
         #endregion
 
         #region Methods

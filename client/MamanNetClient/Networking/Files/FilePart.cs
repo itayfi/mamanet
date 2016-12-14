@@ -75,10 +75,10 @@ namespace Networking.Files
 
             //probably already downloaded the file from someone else
             if (IsPartAvailable) return;
-
-            var stream = MamaNetFile.GetWriteStream();
-            lock (MamaNetFile.writeLock)
+            
+            lock (MamaNetFile._writeLock)
             {
+                var stream = MamaNetFile.GetWriteStream();
                 GoToPart(stream);
                 stream.Write(data, 0, data.Length);
                 IsPartAvailable = true;

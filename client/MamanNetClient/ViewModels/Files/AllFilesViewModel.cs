@@ -5,6 +5,7 @@ using DAL;
 using System;
 using Networking.Files;
 using System.Configuration;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Networking.Network;
@@ -30,16 +31,21 @@ namespace ViewModels.Files
 
         #region Methods
 
-        public AllFilesViewModel():base()
+        public AllFilesViewModel()
         {
-            RelevatFilesCollection = AllFiles;
+            var downloadDirectory = ConfigurationManager.AppSettings["DonwloadFolderPath"];
+            if(!Directory.Exists(downloadDirectory))
+                Directory.CreateDirectory(downloadDirectory);
+
             _dataStoreProvider = new DataStoreProvider();
             LoadSavedFiles();
-            _networkController = new NetworkController(AllFiles);
-            Task.Run(() => _networkController.StartListen());
+            RelevatFilesCollection = AllFiles;
             DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFiles);
             UploadingFilesViewModel = new UploadingFilesViewModel(AllFiles);
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);
+
+            _networkController = new NetworkController(AllFiles);
+            Task.Run(() => _networkController.StartListen());
         }
 
         public override void AddFile(MamaNetFile file)
@@ -85,7 +91,8 @@ namespace ViewModels.Files
 
         public override void FilterAllFilesToCollectionFiles()
         {
-            throw new NotImplementedException();
+            //Intentionally does nothing
+            return;
         }
     }
 }

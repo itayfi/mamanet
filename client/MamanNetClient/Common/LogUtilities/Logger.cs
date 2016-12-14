@@ -5,28 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Utilities
+namespace Common.LogUtilities
 {
-    public enum LogSeverity
-    {
-        Info,
-        Error,
-        CriticalError
-    }
 
     public class Logger
     {
         private static readonly string FilePath = Directory.GetCurrentDirectory()+"\\"+"MamaNet.log";
-        private static object logLock = new Object();
+        private static readonly object LogLock = new Object();
 
-        //TODO: also serialize to object
         public static void WriteLogEntry(string entry, LogSeverity severity)
         {
             var logEntry = string.Format("[{0}] ({1}): {2}{3}", severity, DateTime.Now, entry, Environment.NewLine);
 
-            lock (logLock)
+            lock (LogLock)
             {
                 File.AppendAllText(FilePath, logEntry);
+                LogStoreProvider.AppendLog(entry,severity);
             }
         }
     }

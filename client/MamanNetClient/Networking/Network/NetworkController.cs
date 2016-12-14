@@ -9,12 +9,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
-using Common.Utilities;
 using Networking.Files;
 using Networking.Packets;
 using System.Configuration;
 using System.Data.SqlTypes;
 using System.Threading;
+using Common.LogUtilities;
 
 namespace Networking.Network
 {
@@ -86,7 +86,9 @@ namespace Networking.Network
             {
                 //TODO: handle dispose exception  - cannot access a disposed object
                 var recieveResult = await _client.ReceiveAsync();
+                #pragma warning disable 4014
                 Task.Run(() => HandlePacket(recieveResult));
+                #pragma warning restore 4014
             }
         }
 
@@ -132,7 +134,6 @@ namespace Networking.Network
 
         private void HandleFilePartsRequest(FilePartsRequestPacket packet, IPEndPoint peer)
         {
-
             var relevantFile = _files.SingleOrDefault(file => file.ExpectedHash.SequenceEqual(packet.FileHash));
             if (relevantFile == null)
                 return;
@@ -215,12 +216,23 @@ namespace Networking.Network
 
         private async void UpdateFileFromHub(MamaNetFile file, string hubUrl, PeerDetails myDetails)
         {
-            var filePeers = await GetPeers(hubUrl, myDetails);
+            List<PeerDetails> filePeers = Enumerable.Empty<PeerDetails>().ToList();
+            //Todo: handle exceptions from Hub5
+            try
+            {
+                filePeers = await GetPeers(hubUrl, myDetails);
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLogEntry("hub eeror: " + e.Message, LogSeverity.Error);
+                return;
+            }
+       
 
             file.Peers = filePeers;
             var missingParts = file.GetMissingParts();
             
-            //TODO: intersect
+            //TODO: add intersect filter
             foreach (var peer in filePeers)
             {
                 SendPacket(new FilePartsRequestPacket(file.ExpectedHash, missingParts), peer.IPEndPoint);

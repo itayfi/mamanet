@@ -36,7 +36,7 @@ namespace MamaNet.UI.Popup
                 message = value;
                 if (PropertyChanged != null)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("Message"));    
+                    PropertyChanged(this, new PropertyChangedEventArgs("Entry"));    
                 }
             }
         }

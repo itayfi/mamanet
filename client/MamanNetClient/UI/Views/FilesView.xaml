@@ -96,11 +96,13 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="0.1"/>
                         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="FlowDirection" Value="LeftToRight"/>
                     </Style>
                     <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     </Style>
-                    <converters:PrecentageConverter x:Key="precentage"/>
+                    <converters:PrecentageConverter x:Key="precentageConverter"/>
+                    <converters:NameWithoutExtentionConverter x:Key="nameWithoutExtentionConverter"/>
                 </DataGrid.Resources>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
@@ -127,6 +129,9 @@
                                                 <DataTrigger Binding="{Binding Type}" Value="Word">
                                                     <Setter Property="Source" Value="../Icons/wordIcon.ico"></Setter>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Generic">
+                                                    <Setter Property="Source" Value="../Icons/genericFileIcon.png"></Setter>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Image.Style>
@@ -134,18 +139,18 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם" Binding="{Binding FullName}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="גודל" Binding="{Binding Size}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="ירד" Binding="{Binding Availability, Converter={StaticResource precentage}}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="סטטוס תהליך ההורדה" Binding="{Binding DownloadStatus}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם" Binding="{Binding FullName, Converter={StaticResource nameWithoutExtentionConverter}}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="גודל (בבתים)" Binding="{Binding Size}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="ירד" Binding="{Binding Availability, Converter={StaticResource precentageConverter}}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="סטטוס קובץ" Binding="{Binding FileStatus}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מפיצים" Binding="{Binding Seeders}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                     <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="משתפים" Binding="{Binding Leechers}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <TabControl Grid.Row="2" Margin="5,0,8,5">
+            <TabControl Grid.Row="2" Margin="5,0,8,20">
+                <TabItem Header="מידע"/>
                 <TabItem Header="עמיתים"/>
                 <TabItem Header="חלקי קובץ"/>
-                <TabItem Header="מידע"/>
             </TabControl>
         </Grid>
     </DataTemplate>
