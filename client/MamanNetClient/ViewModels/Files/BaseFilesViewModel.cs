@@ -89,10 +89,9 @@ namespace ViewModels.Files
             AddFile(file);
 
             var metadata = new MetadataFile(file);
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            //TODO: handle file extention name
-            provider.Save(metadata, Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileInfo.Name + ".mamanet"));
-
+            provider.Save(metadata, Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
             if (ShowPopup != null) ShowPopup(this, "קןבץ Metadata נוצר בהצלחה");
         }
 
@@ -119,19 +118,21 @@ namespace ViewModels.Files
 
         public virtual void _deleteFile()
         {
-            int indexRelevantCollection = 0;
+            var indexRelevantCollection = 0;
             if (RelevatFilesCollection != null)
             {
                 indexRelevantCollection = RelevatFilesCollection.IndexOf(SelectedFile);
             }
 
-            int indexInAllFiles = AllFiles.IndexOf(SelectedFile);
+            var indexInAllFiles = AllFiles.IndexOf(SelectedFile);
             if (RelevatFilesCollection != null)
             {
                 RelevatFilesCollection.RemoveAt(indexRelevantCollection);
             }
 
             AllFiles.RemoveAt(indexInAllFiles);
+            SelectedFile = null;
+            _raiseCommandsCanExecute();
         }
 
         public virtual bool _canDeleteFile()
@@ -141,54 +142,54 @@ namespace ViewModels.Files
             return true;
         }
 
-        public virtual void _stopFile()
+        public virtual void _disableFile()
         {
             SelectedFile.IsActive = false;
             _raiseCommandsCanExecute();
         }
 
-        public virtual bool _canStopFile()
+        public virtual bool _canDisableFile()
         {
-            if (SelectedFile != null && SelectedFile.FileStatus == FileStatus.Downloading)
+            if (SelectedFile != null && SelectedFile.IsActive)
                 return true;
             return false;
         }
 
-        public virtual void _playFile()
+        public virtual void _activateFile()
         {
-            SelectedFile.IsActive = false;
+            SelectedFile.IsActive = true;
             _raiseCommandsCanExecute();
         }
 
-        public virtual bool _canPlayFile()
+        public virtual bool _canActivateFile()
         {
-            if (SelectedFile != null && SelectedFile.FileStatus != FileStatus.Downloading)
+            if (SelectedFile != null && !SelectedFile.IsActive)
                 return true;
             return false;
         }
 
-        public virtual void _upFile()
+        public virtual void _moveUpFile()
         {
             var index = RelevatFilesCollection.IndexOf(SelectedFile);
             RelevatFilesCollection.Move(index, index - 1);
             _raiseCommandsCanExecute();
         }
 
-        public virtual bool _canUpFile()
+        public virtual bool _canMoveUpFile()
         {
             if (SelectedFile == null || RelevatFilesCollection.First() == SelectedFile)
                 return false;
             return true;
         }
 
-        public virtual void _downFile()
+        public virtual void _moveDownFile()
         {
             var index = RelevatFilesCollection.IndexOf(SelectedFile);
             RelevatFilesCollection.Move(index, index + 1);
             _raiseCommandsCanExecute();
         }
 
-        public virtual bool _canDownFile()
+        public virtual bool _canMoveDownFile()
         {
             if (SelectedFile == null || RelevatFilesCollection.Last() == SelectedFile)
                 return false;
@@ -212,10 +213,10 @@ namespace ViewModels.Files
             UploadFileCommand = new RelayCommand<string>(_uploadFileByPath, _canUploadFile);
             AddMetadataFileCommand = new RelayCommand<string>(_addMetadataFileByPath, _canAddFile);
             RemoveFileCommand = new RelayCommand(_deleteFile, _canDeleteFile);
-            StopCommand = new RelayCommand(_stopFile, _canStopFile);
-            PlayCommand = new RelayCommand(_playFile, _canPlayFile);
-            UpCommand = new RelayCommand(_upFile, _canUpFile);
-            DownCommand = new RelayCommand(_downFile, _canDownFile);
+            StopCommand = new RelayCommand(_disableFile, _canDisableFile);
+            PlayCommand = new RelayCommand(_activateFile, _canActivateFile);
+            UpCommand = new RelayCommand(_moveUpFile, _canMoveUpFile);
+            DownCommand = new RelayCommand(_moveDownFile, _canMoveDownFile);
         }
 
         public void FireChangeEvent(string propertyName)

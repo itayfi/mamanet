@@ -3,8 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModel="clr-namespace:ViewModels;assembly=ViewModels"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:behaviors="clr-namespace:MamaNet.UI.Behaviors"
         xmlns:converters="clr-namespace:MamaNet.UI.Converters"
         xmlns:files="clr-namespace:ViewModels.Files;assembly=ViewModels"
         Title="MamaNet" Height="853" Width="1361" FlowDirection="RightToLeft" 
@@ -14,10 +12,8 @@
         <viewModel:MainViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <converters:TreeViewItemConverter x:Key="TreeViewItemConverter"/>
         <converters:FilesCounterConverter x:Key="FilesCounterConverter"/>
         <converters:SpeedConverter x:Key="SpeedConverter"/>
-        <converters:ContentPresenterConverter x:Key="ContentPresenterConverter"/>
         <files:AllFilesViewModel x:Key="AllFileViewModel"/>
         <viewModel:HomepageViewModel x:Key="HomepageViewModel"/>
         <viewModel:BrowserViewModel x:Key="BrowserViewModel"/>
@@ -29,6 +25,7 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
             <RowDefinition Height="37*"/>
             <RowDefinition Height="205*"/>
             <RowDefinition Height="20" />
@@ -48,20 +45,68 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
-        <Border BorderThickness="5" Grid.RowSpan="2">
-            <TreeView x:Name="MyTreeView" Grid.Row="0" Grid.Column="0" Margin="0" Background="#FFF0F4FA" FontSize="18" FontFamily="Arial" >
+        <StatusBar Background="#FFF7F7F7"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Padding="0">
+            <StatusBarItem Margin="0" Padding="0">
+                <Button Margin="5,0,0,0" FontSize="18" FontFamily="Arial" Padding="5" Content="הגדרות" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+            </StatusBarItem>
+            <StatusBarItem Margin="0" Padding="0" >
+                <Button Margin="0" FontSize="18" FontFamily="Arial" Padding="5" Content="לוג" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/> 
+            </StatusBarItem>
+        </StatusBar>
+        <Border BorderThickness="5" Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="0,-5,0,15">
+            <TreeView x:Name="MyTreeView"  Margin="0" Background="#FFF0F4FA" FontSize="18" FontFamily="Arial" >
                 <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectedItemChanged">
                         <i:InvokeCommandAction Command="{Binding SelectedCommandChanged}" CommandParameter="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource TreeViewItemConverter}}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>-->
-                <TreeViewItem Header="מסך פתיחה" IsSelected="True" DataContext="{StaticResource HomepageViewModel}"/>
-                <TreeViewItem Header="{Binding Path=.AllFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=קבצים}" DataContext="{StaticResource AllFileViewModel}" >
-                    <TreeViewItem DataContext="{Binding Path=.DownloadingFilesViewModel}" Header="{Binding Path=.DownloadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוריד}" />
-                    <TreeViewItem DataContext="{Binding Path=.UploadingFilesViewModel}"  Header="{Binding Path=.UploadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=משתף}"/>
-                    <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}" Header="{Binding Path=.DownloadedFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוכן}" />
+                <TreeViewItem IsSelected="True" DataContext="{StaticResource HomepageViewModel}">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0" Background="Transparent">
+                            <Image Source="../../Icons/MamaNet.ico" Width="20" Height="20" Margin="5"/>
+                            <TextBlock Text="מסך פתיחה"/>
+                        </StackPanel>
+                    </TreeViewItem.Header>
                 </TreeViewItem>
-                <TreeViewItem Header="חפש" DataContext="{StaticResource BrowserViewModel}">
+                <TreeViewItem DataContext="{StaticResource AllFileViewModel}" BorderThickness="0">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <Image Source="../../Icons/cloud-AllFiles.png" Width="20" Height="20" Margin="5"/>
+                            <TextBlock Text="{Binding Path=.AllFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=קבצים}"/>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                    <TreeViewItem DataContext="{Binding Path=.DownloadingFilesViewModel}">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" Margin="0">
+                                <Image Source="../../Icons/cloud-download.png" Width="20" Height="20" Margin="5"/>
+                                <TextBlock Text="{Binding Path=.DownloadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוריד}"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem DataContext="{Binding Path=.UploadingFilesViewModel}">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" Margin="0">
+                                <Image Source="../../Icons/cloud-upload.png" Width="20" Height="20" Margin="5"/>
+                                <TextBlock Text="{Binding Path=.UploadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=משתף}"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                    <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}">
+                            <TreeViewItem.Header>
+                                <StackPanel Orientation="Horizontal" Margin="0">
+                                    <Image Source="../../Icons/cloud-complete.png" Width="20" Height="20" Margin="5"/>
+                                    <TextBlock Text="{Binding Path=.DownloadedFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=מוכן}"/>
+                                </StackPanel>
+                            </TreeViewItem.Header>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem  DataContext="{StaticResource BrowserViewModel}">
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <Image Source="../../Icons/cloud-search.png" Width="20" Height="20" Margin="5"/>
+                            <TextBlock Text="חפש"/>
+                        </StackPanel>
+                    </TreeViewItem.Header>
                 </TreeViewItem>
             </TreeView>
         </Border>
@@ -69,11 +114,12 @@
                       FlowDirection="LeftToRight"
                       VerticalAlignment="Stretch" 
                       Grid.Column="1" ResizeBehavior="PreviousAndNext"
-                      Grid.RowSpan="2" Width="5" Background="#FFBCBCBC"
-                      Margin="0,5,0,5"/>
+                      Grid.Row="1"
+                      Grid.RowSpan="3" Width="5" Background="#FFBCBCBC"
+                      Margin="0,0,0,5"/>
         <!--<ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2"/>-->
-        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem.DataContext}" Grid.RowSpan="2"/>
-        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0" >
+        <ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem.DataContext}" Grid.RowSpan="3" Margin="0,-5,0,0"/>
+        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid FlowDirection="LeftToRight">

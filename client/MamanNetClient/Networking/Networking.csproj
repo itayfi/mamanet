@@ -75,13 +75,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Models\Common.csproj">
-      <Project>{6a74c252-b8ed-46a2-a140-1d7d86f848e5}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7e25b9f5-014b-4db6-8399-42ba8c67b30e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using Common.Utilities;
+using Common.LogUtilities;
 using MamaNet.UI.Popup;
 using ViewModels.Files;
 

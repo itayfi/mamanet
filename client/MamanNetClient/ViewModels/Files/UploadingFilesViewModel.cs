@@ -51,7 +51,8 @@ namespace ViewModels.Files
 
         public override void FilterAllFilesToCollectionFiles()
         {
-            throw new NotImplementedException();
+            //Intentionally does nothing
+            return;
         }
     }
 }
