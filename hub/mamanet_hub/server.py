@@ -1,34 +1,14 @@
-from flask import Flask, jsonify, request
-from collections import defaultdict
-from expiringdict import ExpiringDict
+from tornado.wsgi import WSGIContainer
+from tornado.ioloop import IOLoop
+from tornado.httpserver import HTTPServer
 
-from config import HOST, PORT, DEBUG
+from app import app
+from config import PORT
 
+tr = WSGIContainer(app)
 
-app = Flask(__name__)
-cache = defaultdict(lambda: ExpiringDict(max_len=1000, max_age_seconds=60))
+if __name__ == "__main__":
+    http_server = HTTPServer(WSGIContainer(app))
 
-
-@app.route('/')
-def index():
-    return jsonify(service='MamaNet Hub', version='1.0.0')
-
-
-@app.route('/<string:file_md5>', methods=['GET'])
-def file_info(file_md5):
-    return jsonify(clients=cache[file_md5].values())
-
-
-@app.route('/<string:file_md5>', methods=['POST'])
-def update_file_info(file_md5):
-    data = request.get_json(True)
-    cache[file_md5][request.remote_addr] = {
-        'ip': request.remote_addr,
-        'port': data.get('port'),
-        'availableFileParts': data.get('availableFileParts')
-    }
-    return jsonify(clients=cache[file_md5].values())
-
-
-if __name__ == '__main__':
-    app.run(host=HOST, port=PORT, debug=DEBUG)
+    http_server.listen(PORT)
+    IOLoop.instance().start()
