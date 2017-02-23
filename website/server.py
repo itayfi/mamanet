@@ -1,13 +1,3 @@
-# This file provided by Facebook is for non-commercial testing and evaluation
-# purposes only. Facebook reserves all rights not expressly granted.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 import json
 import os
 import time
@@ -17,15 +7,18 @@ app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 
-@app.route('/api/items', methods=['GET', 'POST'])
+@app.route('/api/items', methods=['GET', 'POST', 'PUT'])
 def items_handler():
     with open('items.json', 'r') as f:
         items = json.loads(f.read())
 
-    if request.method == 'POST':
-        new_item = request.form.to_dict()
-        new_item['id'] = int(time.time() * 1000)
-        items.append(new_item)
+    if request.method in ('POST', 'PUT'):
+        new_item = request.json
+        old_item = [item for item in items if item['hash'] == new_item['hash']]
+        if len(old_item) > 0:
+            old_item[0].update(new_item)
+        else:
+            items.append(new_item)
 
         with open('items.json', 'w') as f:
             f.write(json.dumps(items, indent=4, separators=(',', ': ')))

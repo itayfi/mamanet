@@ -5,8 +5,6 @@ from tornado.httpserver import HTTPServer
 from app import app
 from config import PORT
 
-tr = WSGIContainer(app)
-
 if __name__ == "__main__":
     http_server = HTTPServer(WSGIContainer(app))
 
