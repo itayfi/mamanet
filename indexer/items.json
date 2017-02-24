@@ -1,26 +1,97 @@
 {
-  "bf44284df412c35f6d85": {
-    "_hash": [191, 68, 40, 77, 244, 18, 195, 95, 109, 133],
-    "_description": "Hypertext Transfer Protocol -- HTTP/1.1\n",
-    "_size": "489 B",
-    "_fullName": "rfc2616.txt"
-  },
-  "8b55b8967cccd5a14905": {
-    "_hash": [139, 85, 184, 150, 124, 204, 213, 161, 73, 5],
-    "_description": "INTERNET PROTOCOL",
-    "_fullName": "rfc791.txt",
-    "_size": "22.1 KB"
-  },
-  "fe164f1cf235ede2fbad": {
-    "_hash": [254, 22, 79, 28, 242, 53, 237, 226, 251, 173],
-    "_description": "A Standard for the Transmission of IP Datagrams on Avian Carriers",
-    "_fullName": "rfc1149.txt",
-    "_size": "487 B"
-  },
-  "c2de3a8839c8d70881d4": {
-    "_hash": [194, 222, 58, 136, 57, 200, 215, 8, 129, 212],
-    "_description": "The application/json Media Type for JavaScript Object Notation (JSON)",
-    "_fullName": "rfc4627.txt",
-    "_size": "488 B"
-  }
+    "8b55b8967cccd5a14905": {
+        "_size": 22630,
+        "_fullName": "rfc791.txt",
+        "_hash": [
+            139,
+            85,
+            184,
+            150,
+            124,
+            204,
+            213,
+            161,
+            73,
+            5
+        ],
+        "_description": "INTERNET PROTOCOL"
+    },
+    "c2de3a8839c8d70881d4": {
+        "_size": 488,
+        "_fullName": "rfc4627.txt",
+        "_hash": [
+            194,
+            222,
+            58,
+            136,
+            57,
+            200,
+            215,
+            8,
+            129,
+            212
+        ],
+        "_description": "The application/json Media Type for JavaScript Object Notation (JSON)"
+    },
+    "bf44284df412c35f6d85": {
+        "_size": 489,
+        "_fullName": "rfc2616.txt",
+        "_hash": [
+            191,
+            68,
+            40,
+            77,
+            244,
+            18,
+            195,
+            95,
+            109,
+            133
+        ],
+        "_description": "Hypertext Transfer Protocol -- HTTP/1.1\n"
+    },
+    "525b978d93081763cc32639b0916b725": {
+        "_description": "Idan is the man!",
+        "_partSize": 1024,
+        "_relatedHubs": [
+            "http://192.168.0.100:2143/"
+        ],
+        "_hash": [
+            82,
+            91,
+            151,
+            141,
+            147,
+            8,
+            23,
+            99,
+            204,
+            50,
+            99,
+            155,
+            9,
+            22,
+            183,
+            37
+        ],
+        "_size": 1769916,
+        "_fullName": "Ruby-Idan.pdf"
+    },
+    "fe164f1cf235ede2fbad": {
+        "_size": 487,
+        "_fullName": "rfc1149.txt",
+        "_hash": [
+            254,
+            22,
+            79,
+            28,
+            242,
+            53,
+            237,
+            226,
+            251,
+            173
+        ],
+        "_description": "A Standard for the Transmission of IP Datagrams on Avian Carriers"
+    }
 }

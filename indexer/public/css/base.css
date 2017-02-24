@@ -97,7 +97,6 @@ input[type=text], textarea {
 
 input[type=text]:focus, textarea:focus {
   outline: none;
-  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) inset, 0 0 2px #6d41c4;*/
   border: 1px solid #6d41c4;
 }
 

@@ -30,15 +30,15 @@ def items_handler():
         }
     )
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 def upload():
-    data = request.get_json()
-    hash = ''.join(map(chr, data['hash'])).encode('hex')
+    data = json.loads(request.data)
+    h = ''.join(map(chr, data['_hash'])).encode('hex')
     with open('items.json', 'r') as f:
         items = json.loads(f.read())
-    if hash in items:
+    if h in items:
         return 'File already exists', 400
-    items[hash] = data
+    items[h] = data
     with open('items.json', 'w') as f:
         f.write(json.dumps(items, indent=4, separators=(',', ': ')))
     return Response(status=200)
