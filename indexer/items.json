@@ -1,26 +1,26 @@
-[
-    {
-        "hash": "bf44284df412c35f6d85",
-        "description": "Hypertext Transfer Protocol -- HTTP/1.1\n",
-        "size": "489 B",
-        "name": "rfc2616.txt"
-    },
-    {
-        "hash": "8b55b8967cccd5a14905",
-        "description": "INTERNET PROTOCOL",
-        "name": "rfc791.txt",
-        "size": "22.1 KB"
-    },
-    {
-        "hash": "fe164f1cf235ede2fbad",
-        "description": "A Standard for the Transmission of IP Datagrams on Avian Carriers",
-        "name": "rfc1149.txt",
-        "size": "487 B"
-    },
-    {
-        "hash": "c2de3a8839c8d70881d4",
-        "description": "The application/json Media Type for JavaScript Object Notation (JSON)",
-        "name": "rfc4627.txt",
-        "size": "488 B"
-    }
-]
+{
+  "bf44284df412c35f6d85": {
+    "_hash": [191, 68, 40, 77, 244, 18, 195, 95, 109, 133],
+    "_description": "Hypertext Transfer Protocol -- HTTP/1.1\n",
+    "_size": "489 B",
+    "_fullName": "rfc2616.txt"
+  },
+  "8b55b8967cccd5a14905": {
+    "_hash": [139, 85, 184, 150, 124, 204, 213, 161, 73, 5],
+    "_description": "INTERNET PROTOCOL",
+    "_fullName": "rfc791.txt",
+    "_size": "22.1 KB"
+  },
+  "fe164f1cf235ede2fbad": {
+    "_hash": [254, 22, 79, 28, 242, 53, 237, 226, 251, 173],
+    "_description": "A Standard for the Transmission of IP Datagrams on Avian Carriers",
+    "_fullName": "rfc1149.txt",
+    "_size": "487 B"
+  },
+  "c2de3a8839c8d70881d4": {
+    "_hash": [194, 222, 58, 136, 57, 200, 215, 8, 129, 212],
+    "_description": "The application/json Media Type for JavaScript Object Notation (JSON)",
+    "_fullName": "rfc4627.txt",
+    "_size": "488 B"
+  }
+}

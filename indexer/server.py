@@ -1,30 +1,28 @@
 import json
 import os
 import time
-from flask import Flask, Response, request
+import re
+from flask import Flask, Response, request, jsonify
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 
-@app.route('/api/items', methods=['GET', 'POST', 'PUT'])
+@app.route('/api/items')
 def items_handler():
     with open('items.json', 'r') as f:
         items = json.loads(f.read())
-
-    if request.method in ('POST', 'PUT'):
-        new_item = request.json
-        old_item = [item for item in items if item['hash'] == new_item['hash']]
-        if len(old_item) > 0:
-            old_item[0].update(new_item)
-        else:
-            items.append(new_item)
-
-        with open('items.json', 'w') as f:
-            f.write(json.dumps(items, indent=4, separators=(',', ': ')))
+    
+    result = []
+    
+    for h, data in items.iteritems():
+        data = dict((k[1:], v) for k, v in data.iteritems())
+        data['hash'] = h
+        data['downloadName'] = re.sub(r'\.\w+$', '.mamanet', data['fullName'])
+        result.append(data)
 
     return Response(
-        json.dumps(items),
+        json.dumps(result),
         mimetype='application/json',
         headers={
             'Cache-Control': 'no-cache',
@@ -32,17 +30,26 @@ def items_handler():
         }
     )
 
-@app.route('/api/items/<string:hash_>', methods=['PUT'])
-def item_change_handler(hash_):
+@app.route('/upload')
+def upload():
+    data = request.get_json()
+    hash = ''.join(map(chr, data['hash'])).encode('hex')
     with open('items.json', 'r') as f:
         items = json.loads(f.read())
-    for item in items:
-        if item['hash'] == hash_:
-            item.update(request.form.to_dict())
+    if hash in items:
+        return 'File already exists', 400
+    items[hash] = data
     with open('items.json', 'w') as f:
         f.write(json.dumps(items, indent=4, separators=(',', ': ')))
     return Response(status=200)
 
+
+@app.route('/download/<string:hash>/<string:name>')
+def download(hash, name):
+    with open('items.json', 'r') as f:
+        items = json.loads(f.read())
+    data = json.dumps(items[hash])
+    return Response(data, mimetype="application/octatestream")
 
 
 if __name__ == '__main__':
