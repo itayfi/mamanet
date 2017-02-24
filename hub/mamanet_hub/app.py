@@ -8,12 +8,17 @@ from config import HOST, PORT, DEBUG
 
 app = Flask('mamanet_hub')
 app.debug = DEBUG
-cache = defaultdict(lambda: ExpiringDict(max_len=1000, max_age_seconds=60))
+cache = defaultdict(lambda: ExpiringDict(max_len=1000, max_age_seconds=10))
 
 
 @app.route('/')
 def index():
     return jsonify(service='MamaNet Hub', version='1.0.0')
+
+
+@app.route('/files')
+def all_files():
+	return json.dumps(cache.keys())
 
 
 @app.route('/<string:file_md5>', methods=['GET'])
@@ -29,7 +34,7 @@ def update_file_info(file_md5):
         'port': data.get('port'),
         'availableFileParts': data.get('availableFileParts')
     }
-    return json.dumps(cache[file_md5].values())
+    return json.dumps([f for f in cache[file_md5].values() if f['ip'] != request.remote_addr])
 
 
 if __name__ == '__main__':

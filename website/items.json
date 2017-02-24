@@ -1,26 +1,26 @@
 [
     {
         "hash": "bf44284df412c35f6d85",
-        "description": "Hypertext Transfer Protocol -- HTTP/1.1",
+        "description": "Hypertext Transfer Protocol -- HTTP/1.1\n",
         "size": "489 B",
         "name": "rfc2616.txt"
     },
     {
-        "size": "22.1 KB",
         "hash": "8b55b8967cccd5a14905",
         "description": "INTERNET PROTOCOL",
-        "name": "rfc791.txt"
+        "name": "rfc791.txt",
+        "size": "22.1 KB"
     },
     {
-        "size": "487 B",
         "hash": "fe164f1cf235ede2fbad",
         "description": "A Standard for the Transmission of IP Datagrams on Avian Carriers",
-        "name": "rfc1149.txt"
+        "name": "rfc1149.txt",
+        "size": "487 B"
     },
     {
-        "size": "488 B",
         "hash": "c2de3a8839c8d70881d4",
         "description": "The application/json Media Type for JavaScript Object Notation (JSON)",
-        "name": "rfc4627.txt"
+        "name": "rfc4627.txt",
+        "size": "488 B"
     }
 ]

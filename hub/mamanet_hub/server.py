@@ -6,6 +6,9 @@ from app import app
 from config import PORT
 
 if __name__ == "__main__":
+    import os
+    print os.getpid()
+
     http_server = HTTPServer(WSGIContainer(app))
 
     http_server.listen(PORT)
