@@ -198,7 +198,7 @@ namespace Networking.Network
             foreach (var mamaNetFile in _files)
             {
                 var myFile = mamaNetFile;
-                PeerDetails myDetails = new PeerDetails(_port, mamaNetFile.GetAvailableParts());
+                PeerDetails myFileDetails = new PeerDetails(_port, mamaNetFile.GetAvailableParts());
                 if (!myFile.IsActive) continue;
 
                 foreach (var hub in mamaNetFile.RelatedHubs)
@@ -209,7 +209,7 @@ namespace Networking.Network
                         url.Append("/");
                     }
                     url.Append(mamaNetFile.HexHash);
-                    Task.Run(() => UpdateFileFromHub(myFile, url.ToString(), myDetails));
+                    Task.Run(() => UpdateFileFromHub(myFile, url.ToString(), myFileDetails));
                 }
             }
         }
@@ -224,18 +224,26 @@ namespace Networking.Network
             }
             catch (Exception e)
             {
-                Logger.WriteLogEntry("hub eeror: " + e.Message, LogSeverity.Error);
+                Logger.WriteLogEntry("hub error: " + e.Message, LogSeverity.Error);
                 return;
             }
-       
-
             file.Peers = filePeers;
             var missingParts = file.GetMissingParts();
+
+            //Meaning that I already have the file
+            if (missingParts.Length == 0)
+            {
+                return;
+            }
             
-            //TODO: add intersect filter
+            //TODO: add intersect filter - which parts I don't have
             foreach (var peer in filePeers)
             {
-                SendPacket(new FilePartsRequestPacket(file.ExpectedHash, missingParts), peer.IPEndPoint);
+                var partsToAsk = missingParts.Where(part => peer.AvailableFileParts.Contains(part)).ToArray();
+                if (partsToAsk.Any())
+                {
+                    SendPacket(new FilePartsRequestPacket(file.ExpectedHash, partsToAsk), peer.IPEndPoint);
+                }
             }
         }
 
