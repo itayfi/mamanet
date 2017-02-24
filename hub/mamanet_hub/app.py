@@ -32,12 +32,14 @@ def file_info(file_md5):
 @app.route('/<string:file_md5>', methods=['POST'])
 def update_file_info(file_md5):
     data = request.get_json(True)
-    cache.setdefault(file_md5, ExpiringDict(max_len=1000, max_age_seconds=10))[request.remote_addr] = {
+    cache.setdefault(file_md5, 
+            ExpiringDict(max_len=1000, max_age_seconds=10))[(request.remote_addr, data.get('port'))] = {
         'ip': request.remote_addr,
         'port': data.get('port'),
         'availableFileParts': data.get('availableFileParts')
     }
-    return json.dumps([f for f in cache[file_md5].values() if f['ip'] != request.remote_addr])
+    return json.dumps([f for f in cache[file_md5].values() if f['ip'] != request.remote_addr or
+        f['port'] != data['port']])
 
 
 if __name__ == '__main__':
