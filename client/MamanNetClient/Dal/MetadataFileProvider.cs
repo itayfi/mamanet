@@ -22,21 +22,29 @@ namespace DAL
             formatter = new DataContractJsonSerializer(typeof (MetadataFile));
         }
 
-        public async Task SaveAndSend(MetadataFile data, string path)
+        public void SaveToFile(MetadataFile data, string path)
         {
             using (var fileStream = File.OpenWrite(path))
             {
                 formatter.WriteObject(fileStream, data);
             }
+        }
 
-            var request = WebRequest.CreateHttp(data.Indexer+"/upload");
+        public async Task UploadToIndexer(MetadataFile data, string indexerUploadUrl)
+        { 
+            var request = WebRequest.CreateHttp(indexerUploadUrl + "/upload");
             request.Method = "POST";
             request.ContentType = "application/json; charset=UTF-8";
-            request.Accept = "application/json";
 
             using (var networkStream = await request.GetRequestStreamAsync())
             {
                  formatter.WriteObject(networkStream, data);
+            }
+
+            var response = (await request.GetResponseAsync()) as HttpWebResponse;
+            if (response?.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception(String.Format("The indexer {0} did not approve your file", indexerUploadUrl));
             }
         }
 

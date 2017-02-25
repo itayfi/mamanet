@@ -28,7 +28,6 @@ namespace Networking.Files
         private int _size;
         private int _partSize;
         private string _description;
-        private string _indexer;
 
         #endregion 
 
@@ -118,17 +117,11 @@ namespace Networking.Files
             get { return _description; }
         }
 
-        public string Indexer
-        {
-            set { _indexer = value; }
-            get { return _indexer; }
-        }
-
         #endregion
 
         #region Methods
 
-        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize, string description, string indexer)
+        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize, string description)
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
@@ -136,7 +129,6 @@ namespace Networking.Files
             Size = size;
             PartSize = partSize;
             Description = description;
-            Indexer = indexer;
         }
 
         public MetadataFile(MetadataFile other)
@@ -147,7 +139,6 @@ namespace Networking.Files
             Size = other.Size;
             PartSize = other.PartSize;
             Description = other.Description;
-            Indexer = other.Indexer;
         }
 
         protected void FireChangeEvent(string propertyName)

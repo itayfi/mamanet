@@ -99,7 +99,7 @@ namespace MamaNet.UI.Upload
 
             if (!UploadFileRequest.Hubs.Any() || string.IsNullOrWhiteSpace(UploadFileRequest.FilePath))
             {
-                MainWindow.ShowPopup(this, "שגיאר בעת ניסיון יצירת קובץ Metadata.");
+                MainWindow.ShowPopup(this, "לא ניתן להעלות קובץ ללא תיאור וללא Hub");
                 return;
             }
 
@@ -108,7 +108,7 @@ namespace MamaNet.UI.Upload
             MamaNetFile file;
             using (var stream = fileInfo.OpenRead())
             {
-                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, indexer: UploadFileRequest.Indexers.SingleOrDefault(), description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs.ToArray())
+                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs.ToArray())
                 {
                     IsActive = true
                 };
@@ -117,8 +117,18 @@ namespace MamaNet.UI.Upload
             var metadata = new MetadataFile(file);
             var fileName = System.IO.Path.GetFileNameWithoutExtension(UploadFileRequest.FilePath);
 
-            await provider.SaveAndSend(metadata, System.IO.Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
-            MainWindow.ShowPopup(this, "קובץ Metadata נוצר בהצלחה");
+            provider.SaveToFile(metadata, System.IO.Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
+            MainWindow.ShowPopup(this, "קובץ Mamanet נוצר בהצלחה בתיקיית ההורדות שלך");
+            foreach(var indexer in UploadFileRequest.Indexers)
+            {
+                try
+                {
+                    await provider.UploadToIndexer(metadata, indexer);
+                } catch (Exception ex)
+                {
+                    MainWindow.ShowPopup(this, String.Format("לא ניתן להעלות קובץ: {0}", ex.Message));
+                }
+            }
             this.Close();
         }
     }
