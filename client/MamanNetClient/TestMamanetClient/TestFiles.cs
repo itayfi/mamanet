@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System.IO;
 using System.Linq;
 using Networking.Files;
 using DAL;
+using Networking.Network;
 using Networking.Utilities;
 
 namespace TestMamaNetClient
@@ -89,7 +91,7 @@ namespace TestMamaNetClient
         public void TestMetadataFile()
         {
             string filename = Path.GetTempFileName();
-            MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new string[] { "http://localhost:12345" },indexer:"http://localhost:666"));
+            MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new ObservableCollection<HubDetails>() {new HubDetails("http://localhost:12345")},indexer:"http://localhost:666"));
             MetadataFileProvider provider = new MetadataFileProvider();
 
             provider.SaveAndSend(file, filename);

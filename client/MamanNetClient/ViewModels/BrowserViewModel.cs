@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Utils;
 using GalaSoft.MvvmLight.Command;
 
 namespace ViewModels
@@ -29,7 +31,11 @@ namespace ViewModels
         }
         private void _OpenWebBrowser()
         {
-            Process.Start("http://www.ynet.co.il");
+             var hubEndPoints = (ConfigurationManager.GetSection("availableIndexers") as EndPointsConfigurationSection);
+            foreach (EndPointElement hubElement in hubEndPoints.Instance)
+            {
+                Process.Start(hubElement.EndPoint);
+            }
         }
 
         #endregion

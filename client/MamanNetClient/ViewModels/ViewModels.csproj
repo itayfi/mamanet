@@ -123,6 +123,10 @@
     <Compile Include="Files\UploadingFilesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{7e25b9f5-014b-4db6-8399-42ba8c67b30e}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dal\DAL.csproj">
       <Project>{f3f818bf-3881-4f0f-9288-de1f5add8d11}</Project>
       <Name>DAL</Name>

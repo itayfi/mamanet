@@ -30,13 +30,22 @@ namespace DAL
             }
 
             var request = WebRequest.CreateHttp(data.Indexer+"/upload");
+            request.Timeout = 500;
+            request.ContinueTimeout = 1;
+            request.ReadWriteTimeout = 500;
             request.Method = "POST";
             request.ContentType = "application/json; charset=UTF-8";
             request.Accept = "application/json";
-
+          
             using (var networkStream = await request.GetRequestStreamAsync())
             {
                  formatter.WriteObject(networkStream, data);
+            }
+
+            var response = await request.GetResponseAsync() as HttpWebResponse;
+            if (response != null && response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception(string.Format("Indexer {0} couldn't get the upload request of file {1}",data.FullName, data.Indexer));
             }
         }
 

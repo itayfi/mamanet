@@ -44,6 +44,7 @@ namespace Networking.Network
         private UdpClient _client;
         private IPEndPoint _myEndPoint;
         private readonly int _port;
+        private readonly string _ip;
         private Timer _hubTimer;
 
         #endregion
@@ -203,12 +204,8 @@ namespace Networking.Network
 
                 foreach (var hub in mamaNetFile.RelatedHubs)
                 {
-                    var url = new StringBuilder(hub);
-                    if (!hub.EndsWith("/"))
-                    {
-                        url.Append("/");
-                    }
-                    url.Append(mamaNetFile.HexHash);
+                    var url = new StringBuilder(hub.Url);
+                    url.Append(@"/"+mamaNetFile.HexHash);
                     Task.Run(() => UpdateFileFromHub(myFile, url.ToString(), myFileDetails));
                 }
             }

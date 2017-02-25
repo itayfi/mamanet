@@ -143,14 +143,126 @@
                 </DataGrid.Columns>
             </DataGrid>
             <TabControl Grid.Row="2" Margin="5,0,8,20">
+                <TabControl.Resources>
+                    <converters:AvailablePartsConverter x:Key="AvailablePartsConverter"/>
+                </TabControl.Resources>
                 <TabItem Header="קובץ">
-                    
+                    <StackPanel Orientation="Vertical" FlowDirection="RightToLeft">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="תאריך הוספה:" TextDecorations="underline" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateAdded}" Margin="3" FlowDirection="LeftToRight"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="תאריך סיום הורדה:" TextDecorations="underline" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateDownloaded}" Margin="3" FlowDirection="LeftToRight"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="גודל כולל:" TextDecorations="underline"  Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.Size}" Margin="3"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="מס' חלקים כולל:" TextDecorations="underline" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.NumberOfParts}" Margin="3"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="מס' חלקים שהתקבלו:" TextDecorations="underline" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem, Converter={StaticResource AvailablePartsConverter}}" Margin="3"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="גודל חלק:" TextDecorations="underline" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.PartSize}" Margin="3"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Hash:" TextDecorations="underline"  Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.HexHash}" Margin="3"/>
+                        </StackPanel>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Hub">
-                    
+                    <DataGrid IsReadOnly="True" 
+                      HeadersVisibility="Column"
+                      VerticalContentAlignment="Center" 
+                      SelectionUnit="FullRow" 
+                      IsEnabled="False"
+                      HorizontalContentAlignment="Center" 
+                      CanUserResizeColumns="False" 
+                      CanUserResizeRows="False" 
+                      CanUserReorderColumns="True" 
+                      CanUserAddRows="False" 
+                      CanUserDeleteRows="False" 
+                      CanUserSortColumns="True" 
+                      SelectionMode="Extended" 
+                      AutoGenerateColumns="False" 
+                      x:Name="HubsDataGrid"
+                      Margin="5,10,8,10" 
+                      Background="White"
+                      BorderBrush="Gray"
+                      GridLinesVisibility="None"
+                      ItemsSource="{Binding ElementName=MyDataGrid, Path=SelectedItem.RelatedHubs}">
+                        <DataGrid.Resources>
+                            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" >
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style x:Key="CenteredCell" TargetType="DataGridCell">
+                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="0.1"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                            </Style>
+                            <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="כתובת" Binding="{Binding Url}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מס' עמיתים" Binding="{Binding ConnectedUsers}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מועד התקשרות אחרון" Binding="{Binding LastCommunicationTime}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </TabItem>
                 <TabItem Header="עמיתים">
-                    
+                    <DataGrid IsReadOnly="True" 
+                      HeadersVisibility="Column"
+                      VerticalContentAlignment="Center" 
+                      SelectionUnit="FullRow" 
+                      IsEnabled="False"
+                      HorizontalContentAlignment="Center" 
+                      CanUserResizeColumns="False" 
+                      CanUserResizeRows="False" 
+                      CanUserReorderColumns="True" 
+                      CanUserAddRows="False" 
+                      CanUserDeleteRows="False" 
+                      CanUserSortColumns="True" 
+                      SelectionMode="Extended" 
+                      AutoGenerateColumns="False" 
+                      x:Name="PeerDataGrid"
+                      Margin="5,10,8,10" 
+                      Background="White"
+                      BorderBrush="Gray"
+                      GridLinesVisibility="None"
+                      ItemsSource="{Binding ElementName=MyDataGrid, Path=SelectedItem.Peers}">
+                        <DataGrid.Resources>
+                            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" >
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style x:Key="CenteredCell" TargetType="DataGridCell">
+                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="BorderThickness" Value="0.1"/>
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                            </Style>
+                            <Style x:Key="CenteredHeader" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם מחשב" Binding="{Binding Hostname}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="כתובת IP" Binding="{Binding Ip}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="זמינות חלקים" Binding="{Binding AvailableFileParts}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </TabItem>
             </TabControl>
         </Grid>

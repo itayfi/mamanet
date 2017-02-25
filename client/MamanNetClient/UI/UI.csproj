@@ -112,12 +112,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\AvailablePartsConverter.cs" />
     <Compile Include="Converters\NameWithoutExtentionConverter.cs" />
     <Compile Include="Converters\PrecentageConverter.cs" />
     <Compile Include="Upload\UploadFile.xaml.cs">
       <DependentUpon>UploadFile.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\EndPointsConfigurationSection.cs" />
     <Compile Include="Views\FileViewCodeBehind.cs" />
     <Compile Include="Behaviors\WindowBehaviour.cs" />
     <Page Include="Upload\UploadFile.xaml">

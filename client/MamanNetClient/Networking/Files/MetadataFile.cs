@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +22,15 @@ namespace Networking.Files
         #region Private Members
 
         private byte[] _hash;
+        
+        private ObservableCollection<HubDetails> _relatedHubsDetails;
 
-        //for future support multiple RelatedHubs downloading
         private string[] _relatedHubs;
-
         private string _fullName;
         private int _size;
         private int _partSize;
         private string _description;
+
         private string _indexer;
 
         #endregion 
@@ -87,19 +90,20 @@ namespace Networking.Files
             }
         }
 
-        public string[] RelatedHubs
+        public ObservableCollection<HubDetails> RelatedHubs
         {
             get
             {
-                if (_relatedHubs != null)
+                if (_relatedHubsDetails != null)
                 {
-                    return (string[])_relatedHubs.Clone();
+                    return _relatedHubsDetails;
                 }
                 return null;
             }
             set
             {
-                _relatedHubs = value;
+                _relatedHubsDetails = value;
+                _relatedHubs = value.Select(hub=>hub.Url).ToArray();
                 FireChangeEvent("RelatedHubs");
             }
         }
@@ -128,11 +132,11 @@ namespace Networking.Files
 
         #region Methods
 
-        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize, string description, string indexer)
+        public MetadataFile(string fullName, byte[] expectedHash, ObservableCollection<HubDetails> relatedHubs, int size, int partSize, string description, string indexer)
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
-            RelatedHubs = relatedHubs ?? new [] {ConfigurationManager.AppSettings["DefaultHubUrl"]};
+            RelatedHubs = relatedHubs;
             Size = size;
             PartSize = partSize;
             Description = description;
@@ -143,7 +147,7 @@ namespace Networking.Files
         {
             FullName = other.FullName;
             _hash = (byte[])other._hash.Clone();
-            _relatedHubs = (string[])(other._relatedHubs != null ? other._relatedHubs.Clone() : null);
+            RelatedHubs = (other._relatedHubsDetails != null) ? other._relatedHubsDetails : null;
             Size = other.Size;
             PartSize = other.PartSize;
             Description = other.Description;
@@ -167,12 +171,12 @@ namespace Networking.Files
             }
             MetadataFile other = (MetadataFile)obj;
             return other._fullName == _fullName && other._hash.SequenceEqual(_hash) &&
-                ((_relatedHubs == null || other._relatedHubs == null) ? _relatedHubs == other._relatedHubs : other._relatedHubs.OrderBy(h => h).SequenceEqual(_relatedHubs.OrderBy(h => h)));
+                ((_relatedHubsDetails == null || other._relatedHubsDetails == null) ? _relatedHubsDetails == other._relatedHubsDetails : other._relatedHubsDetails.OrderBy(h => h).SequenceEqual(_relatedHubsDetails.OrderBy(h => h)));
         }
 
         public override int GetHashCode()
         {
-            return _fullName.GetHashCode() + _hash.GetHashCode() + (_relatedHubs != null ? _relatedHubs.OrderBy(h => h).ToArray().GetHashCode() : -1);
+            return _fullName.GetHashCode() + _hash.GetHashCode() + (_relatedHubsDetails != null ? _relatedHubsDetails.OrderBy(h => h).ToArray().GetHashCode() : -1);
         }
 
 

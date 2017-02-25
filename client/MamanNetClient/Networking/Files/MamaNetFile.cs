@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,7 +57,7 @@ namespace Networking.Files
 
         #region Ctors
 
-        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, string indexer, int partSize = 1024, string[] relatedHubs = null, bool isFullAvailable = false, string description="")
+        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, string indexer, int partSize = 1024, ObservableCollection<HubDetails> relatedHubs = null, bool isFullAvailable = false, string description = "")
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize,description, indexer)
         {
             _writeLock = new object();
@@ -68,6 +69,7 @@ namespace Networking.Files
             }
             _currentFileHash = new byte[0];
             UpdateAvailability();
+            DateAdded = DateTime.Now;
         }
 
         public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.Indexer, other.PartSize, other.RelatedHubs)
@@ -231,6 +233,14 @@ namespace Networking.Files
                 FireChangeEvent("Leechers");
             }
         }
+
+        #endregion
+
+        #region Public Members
+
+        public DateTime DateAdded { get; set; }
+
+        public DateTime DateDownloaded { get; set; }
 
         #endregion
 

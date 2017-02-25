@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
@@ -15,10 +16,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Common.LogUtilities;
+using Common.Utils;
 using DAL;
-using MamaNet.UI.Utils;
 using MamaNet.UI.Views;
 using Networking.Files;
+using Networking.Network;
 using Networking.Utilities;
 using ViewModels.Files;
 using Path = System.Windows.Shapes.Path;
@@ -77,12 +80,13 @@ namespace MamaNet.UI.Upload
         private async void UploadFileButtonClicked(object sender, RoutedEventArgs e)
         {
             UploadFileRequest = new UploadFileRequest();
-            UploadFileRequest.Hubs = new List<string>();
+            UploadFileRequest.Hubs = new ObservableCollection<HubDetails>();
             foreach (SelectableEndPoint hub in FileHubs.Items)
             {
                 if (hub.IsSelected)
                 {
-                    UploadFileRequest.Hubs.Add(hub.EndPoint);
+                    HubDetails hubDetails = new HubDetails(hub.EndPoint);
+                    UploadFileRequest.Hubs.Add(hubDetails);
                 }
             }
             UploadFileRequest.Indexers = new List<string>();
@@ -99,7 +103,8 @@ namespace MamaNet.UI.Upload
 
             if (!UploadFileRequest.Hubs.Any() || string.IsNullOrWhiteSpace(UploadFileRequest.FilePath))
             {
-                MainWindow.ShowPopup(this, "שגיאר בעת ניסיון יצירת קובץ Metadata.");
+                MainWindow.ShowPopup(this, "שגיאה בעת ניסיון יצירת קובץ Metadata");
+                Logger.WriteLogEntry("טופס העלאת קובץ לא תקין", LogSeverity.Error);
                 return;
             }
 
@@ -108,7 +113,7 @@ namespace MamaNet.UI.Upload
             MamaNetFile file;
             using (var stream = fileInfo.OpenRead())
             {
-                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, indexer: UploadFileRequest.Indexers.SingleOrDefault(), description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs.ToArray())
+                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, indexer: UploadFileRequest.Indexers.SingleOrDefault(), description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs)
                 {
                     IsActive = true
                 };
@@ -117,7 +122,18 @@ namespace MamaNet.UI.Upload
             var metadata = new MetadataFile(file);
             var fileName = System.IO.Path.GetFileNameWithoutExtension(UploadFileRequest.FilePath);
 
-            await provider.SaveAndSend(metadata, System.IO.Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
+            try
+            {
+                await provider.SaveAndSend(metadata, System.IO.Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
+
+            }
+            catch (Exception exception)
+            {
+                Logger.WriteLogEntry(exception.Message, LogSeverity.Error);
+                MainWindow.ShowPopup(this, "שגיאה בעת ניסיון יצירת קובץ Metadata");
+                this.Close();
+                return;
+            }
             MainWindow.ShowPopup(this, "קובץ Metadata נוצר בהצלחה");
             this.Close();
         }
@@ -131,7 +147,7 @@ namespace MamaNet.UI.Upload
 
     public class UploadFileRequest
     {
-        public List<string> Hubs { get; set; }
+        public ObservableCollection<HubDetails> Hubs { get; set; }
         public List<string> Indexers { get; set; }
         public string Description { get; set; }
         public int PartSize { get; set; }
