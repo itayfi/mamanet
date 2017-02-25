@@ -129,14 +129,7 @@ namespace Networking.Files
 
         public ObservableCollection<HubDetails> RelatedHubs
         {
-            get
-            {
-                if (_relatedHubsDetails != null)
-                {
-                    
-                }
-                return null;
-            }
+            get { return _relatedHubsDetails; }
             set
             {
                 _relatedHubsDetails = value;
