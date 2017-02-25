@@ -76,6 +76,10 @@ namespace Networking.Files
             //probably already downloaded the file from someone else
             if (IsPartAvailable) return;
             
+            if (MamaNetFile._writeLock == null) {
+                // When a MamanNetFile is created from serialization, it will not have a write lock :(
+                MamaNetFile._writeLock = new object();
+            }
             lock (MamaNetFile._writeLock)
             {
                 var stream = MamaNetFile.GetWriteStream();
