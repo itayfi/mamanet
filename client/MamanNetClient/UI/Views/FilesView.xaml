@@ -258,8 +258,8 @@
                             </Style>
                         </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="שם מחשב" Binding="{Binding Hostname}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                             <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="כתובת IP" Binding="{Binding Ip}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="פורט" Binding="{Binding Port}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                             <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="זמינות חלקים" Binding="{Binding AvailableFileParts}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                         </DataGrid.Columns>
                     </DataGrid>

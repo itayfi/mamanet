@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Threading;
 using Networking.Network;
 using Networking.Utilities;
 
@@ -43,7 +44,7 @@ namespace Networking.Files
         [NonSerialized]
         internal FileStream _writeStream;
         [NonSerialized]
-        private IEnumerable<PeerDetails> _peers;
+        private ObservableCollection<PeerDetails> _peers;
         [NonSerialized] 
         internal object _writeLock;
         [NonSerialized]
@@ -70,6 +71,7 @@ namespace Networking.Files
             _currentFileHash = new byte[0];
             UpdateAvailability();
             DateAdded = DateTime.Now;
+            Peers = new ObservableCollection<PeerDetails>();
         }
 
         public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.PartSize, other.RelatedHubs)
@@ -195,7 +197,7 @@ namespace Networking.Files
             }
         }
 
-        public IEnumerable<PeerDetails> Peers
+        public ObservableCollection<PeerDetails> Peers
         {
             get
             {
@@ -308,6 +310,36 @@ namespace Networking.Files
             {
                 _currentFileHash = HashUtils.CalculateHash(fileStream);
             }
+        }
+
+        public void SyncPeersInformation(List<PeerDetails> peers, TaskScheduler syncContextScheduler)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                _peers.Clear();
+                foreach (var peer in peers)
+                {
+                    Peers.Add(peer);
+                }
+            }, CancellationToken.None, TaskCreationOptions.None, syncContextScheduler);
+        }
+
+        public void SyncHubInformation(HubDetails hubDetails, TaskScheduler syncContextScheduler)
+        {
+       
+
+            Task.Factory.StartNew(() =>
+            {
+                foreach (var hub in RelatedHubs)
+                {
+                    if (hub.Url == hubDetails.Url)
+                    {
+                        hub.LastCommunicationTime = DateTime.Now;
+                        hub.ConnectedUsers = hubDetails.ConnectedUsers;
+                    }
+                }
+
+            }, CancellationToken.None, TaskCreationOptions.None, syncContextScheduler);
         }
 
         #endregion

@@ -17,6 +17,13 @@ namespace Networking.Network
             LastCommunicationTime = DateTime.Now;
         }
 
+        public HubDetails(string url, int connectedUsers)
+        {
+            Url = url;
+            ConnectedUsers = connectedUsers;
+            LastCommunicationTime = DateTime.Now;
+        }
+
         public string Url { get; set; }
         
         public DateTime LastCommunicationTime { get; set; }

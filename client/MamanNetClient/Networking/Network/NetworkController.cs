@@ -46,6 +46,7 @@ namespace Networking.Network
         private readonly int _port;
         private readonly string _ip;
         private Timer _hubTimer;
+        private TaskScheduler _syncContextScheduler;
 
         #endregion
 
@@ -66,6 +67,18 @@ namespace Networking.Network
 
             _hubTimer = new Timer((state) => SynchronizeHubPeriodically(), null, 0, 5000);
             IsListenning = false;
+
+            if (SynchronizationContext.Current != null)
+            {
+                _syncContextScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            }
+            else
+            {
+                // If there is no SyncContext for this thread (e.g. we are in a unit test
+                // or console scenario instead of running in an app), then just use the
+                // default scheduler because there is no UI thread to sync with.
+                _syncContextScheduler = TaskScheduler.Current;
+            }
         }
 
         #endregion
@@ -213,8 +226,8 @@ namespace Networking.Network
 
         private async void UpdateFileFromHub(MamaNetFile file, string hubUrl, PeerDetails myDetails)
         {
-            List<PeerDetails> filePeers = Enumerable.Empty<PeerDetails>().ToList();
-            //Todo: handle exceptions from Hub5
+            var filePeers = Enumerable.Empty<PeerDetails>().ToList();
+            //Todo: handle exceptions from Hub
             try
             {
                 filePeers = await GetPeers(hubUrl, myDetails);
@@ -224,7 +237,12 @@ namespace Networking.Network
                 Logger.WriteLogEntry("hub error: " + e.Message, LogSeverity.Error);
                 return;
             }
-            file.Peers = filePeers;
+            
+            file.SyncPeersInformation(filePeers, _syncContextScheduler);
+            var concatedHub = hubUrl.LastIndexOf("/", StringComparison.Ordinal);
+            HubDetails hubDetails = new HubDetails(hubUrl.Substring(0, concatedHub), filePeers.Count);
+            file.SyncHubInformation(hubDetails, _syncContextScheduler);
+
             var missingParts = file.GetMissingParts();
 
             //Meaning that I already have the file
