@@ -49,17 +49,21 @@ namespace Networking.Files
                 throw new NotAvailableException(string.Format("The part {0} of MamaNetFile {0} was not downloaded yet", PartNumber, MamaNetFile));
             }
 
-            FileStream stream = MamaNetFile.GetReadStream();
-            GoToPart(stream);
             var partSize = MamaNetFile.PartSize;
-
-            if (PartNumber == MamaNetFile.NumberOfParts - 1)
-            {
-                partSize = (int)(stream.Length - stream.Position);
-            }
-
             byte[] buffer = new byte[partSize];
-            stream.Read(buffer, 0, partSize);
+
+            using (FileStream stream = MamaNetFile.GetReadStream())
+            {
+                GoToPart(stream);
+
+                if (PartNumber == MamaNetFile.NumberOfParts - 1)
+                {
+                    partSize = (int)(stream.Length - stream.Position);
+                }
+                
+                stream.Read(buffer, 0, partSize);    
+            }
+            
             return buffer;
         }
 
@@ -82,11 +86,13 @@ namespace Networking.Files
             }
             lock (MamaNetFile._writeLock)
             {
-                var stream = MamaNetFile.GetWriteStream();
-                GoToPart(stream);
-                stream.Write(data, 0, data.Length);
-                IsPartAvailable = true;
-                MamaNetFile.UpdateAvailability();
+                using (var stream = MamaNetFile.GetWriteStream())
+                {
+                    GoToPart(stream);
+                    stream.Write(data, 0, data.Length);
+                    IsPartAvailable = true;
+                    MamaNetFile.UpdateAvailability();    
+                }
             }
         }
 
