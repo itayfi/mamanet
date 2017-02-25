@@ -47,6 +47,7 @@ namespace Networking.Network
         private readonly string _ip;
         private Timer _hubTimer;
         private TaskScheduler _syncContextScheduler;
+        private const int MaxBatchSize = 1024;
 
         #endregion
 
@@ -151,11 +152,17 @@ namespace Networking.Network
             var relevantFile = _files.SingleOrDefault(file => file.ExpectedHash.SequenceEqual(packet.FileHash));
             if (relevantFile == null)
                 return;
+            var packetsSent = 0;
             foreach (var part in packet.Parts)
             {
                 if (relevantFile[part].IsPartAvailable)
                 {
+                    if (packetsSent > MaxBatchSize)
+                    {
+                        return;
+                    }
                     SendPacket(DataPacket.FromFilePart(relevantFile[part]), peer);
+                    packetsSent++;
                 }
             }
         }
@@ -254,7 +261,7 @@ namespace Networking.Network
             foreach (var peer in filePeers)
             {
                 //intersect filter - which parts I don't have
-                var partsToAsk = missingParts.Where(part => peer.AvailableFileParts.Contains(part)).ToArray();
+                var partsToAsk = missingParts.Where(part => peer.AvailableFileParts.Contains(part)).Take(MaxBatchSize).ToArray();
                 if (partsToAsk.Any())
                 {
                     SendPacket(new FilePartsRequestPacket(file.ExpectedHash, partsToAsk), peer.IPEndPoint);
