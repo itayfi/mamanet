@@ -22,7 +22,7 @@ namespace DAL
             formatter = new DataContractJsonSerializer(typeof (MetadataFile));
         }
 
-        public async void SaveAndSend(MetadataFile data, string path)
+        public async Task SaveAndSend(MetadataFile data, string path)
         {
             using (var fileStream = File.OpenWrite(path))
             {
@@ -34,9 +34,10 @@ namespace DAL
             request.ContentType = "application/json; charset=UTF-8";
             request.Accept = "application/json";
 
-            var networkStream = await request.GetRequestStreamAsync();
-            formatter.WriteObject(networkStream, data);
-            networkStream.Close(); // Send the request
+            using (var networkStream = await request.GetRequestStreamAsync())
+            {
+                 formatter.WriteObject(networkStream, data);
+            }
         }
 
 

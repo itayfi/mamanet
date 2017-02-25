@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -71,6 +72,12 @@ namespace MamaNet.UI.Views
         {
             UploadFile uplodaFileDialog = new UploadFile(this);
             uplodaFileDialog.ShowDialog();
+        }
+
+        private void DonwloadFolderButtonClick(object sender, RoutedEventArgs e)
+        {
+            var downloadFolderPath = ConfigurationManager.AppSettings["DonwloadFolderPath"];
+            Process.Start(downloadFolderPath);
         }
     }
 }
