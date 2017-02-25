@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -26,6 +27,8 @@ namespace Networking.Files
         private string _fullName;
         private int _size;
         private int _partSize;
+        private string _description;
+        private string _indexer;
 
         #endregion 
 
@@ -109,17 +112,31 @@ namespace Networking.Files
             }
         }
 
+        public string Description
+        {
+            set { _description = value; }
+            get { return _description; }
+        }
+
+        public string Indexer
+        {
+            set { _indexer = value; }
+            get { return _indexer; }
+        }
+
         #endregion
 
         #region Methods
 
-        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize)
+        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize, string description, string indexer)
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
             RelatedHubs = relatedHubs ?? new [] {ConfigurationManager.AppSettings["DefaultHubUrl"]};
             Size = size;
             PartSize = partSize;
+            Description = description;
+            Indexer = indexer;
         }
 
         public MetadataFile(MetadataFile other)
@@ -129,6 +146,8 @@ namespace Networking.Files
             _relatedHubs = (string[])(other._relatedHubs != null ? other._relatedHubs.Clone() : null);
             Size = other.Size;
             PartSize = other.PartSize;
+            Description = other.Description;
+            Indexer = other.Indexer;
         }
 
         protected void FireChangeEvent(string propertyName)

@@ -10,19 +10,19 @@ namespace Networking.Network
     [Serializable]
     public class PeerDetails
     {
-        private int port;
-        private string ip;
-        private int[] availableFileParts;
+        private int _port;
+        private string _ip;
+        private int[] _availableFileParts;
 
         public int Port
         {
             get
             {
-                return port;
+                return _port;
             }
             set
             {
-                port = value;
+                _port = value;
             }
         }
 
@@ -30,11 +30,11 @@ namespace Networking.Network
         {
             get
             {
-                return ip;
+                return _ip;
             }
-            set
+            set 
             {
-                ip = value;
+                _ip = value;
             }
         }
 
@@ -42,11 +42,11 @@ namespace Networking.Network
         {
             get
             {
-                return availableFileParts;
+                return _availableFileParts;
             }
             set
             {
-                availableFileParts = value;
+                _availableFileParts = value;
             }
         }
 

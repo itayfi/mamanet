@@ -3,34 +3,48 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Networking.Network;
 
 namespace DAL
 {
     public class MetadataFileProvider
     {
-        BinaryFormatter formatter;
+        DataContractJsonSerializer formatter; 
+
 
         public MetadataFileProvider()
         {
-            formatter = new BinaryFormatter();
+            formatter = new DataContractJsonSerializer(typeof (MetadataFile));
         }
 
-        public void Save(MetadataFile data, string path)
+        public async void SaveAndSend(MetadataFile data, string path)
         {
-            using (var stream = File.OpenWrite(path))
+            using (var fileStream = File.OpenWrite(path))
             {
-                formatter.Serialize(stream, data);
+                formatter.WriteObject(fileStream, data);
             }
+
+            var request = WebRequest.CreateHttp(data.Indexer+"/upload");
+            request.Method = "POST";
+            request.ContentType = "application/json; charset=UTF-8";
+            request.Accept = "application/json";
+
+            var networkStream = await request.GetRequestStreamAsync();
+            formatter.WriteObject(networkStream, data);
+            networkStream.Close(); // Send the request
         }
+
 
         public MetadataFile Load(string path)
         {
             using (var stream = File.OpenRead(path))
             {
-                return (MetadataFile)formatter.Deserialize(stream);
+                return (MetadataFile)formatter.ReadObject(stream);
             }
         }
     }

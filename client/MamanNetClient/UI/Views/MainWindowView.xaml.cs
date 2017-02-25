@@ -1,10 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using Common.LogUtilities;
+using DAL;
 using MamaNet.UI.Popup;
+using MamaNet.UI.Upload;
+using Networking.Files;
+using Networking.Utilities;
 using ViewModels.Files;
 
 namespace MamaNet.UI.Views
@@ -38,7 +45,7 @@ namespace MamaNet.UI.Views
             _baseFilesViewModel.SavedDownloadedFiles();
         }
 
-        void ShowPopup(object sender, string e)
+        public void ShowPopup(object sender, string e)
         {
             SystemTray.ShowCustomBalloon(new FancyBalloon(e), PopupAnimation.Fade, 5000);
         }
@@ -60,5 +67,10 @@ namespace MamaNet.UI.Views
             Application.Current.Shutdown(1);
         }
 
+        private void UploadButtonClick(object sender, RoutedEventArgs e)
+        {
+            UploadFile uplodaFileDialog = new UploadFile(this);
+            uplodaFileDialog.ShowDialog();
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace ViewModels.Files
     public abstract class BaseFilesViewModel : INotifyPropertyChanged
     {
         #region Public Fields
+
         public ObservableCollection<MamaNetFile> AllFiles { get; set; }
         public ObservableCollection<MamaNetFile> RelevatFilesCollection { get; set; }
         public RelayCommand<MamaNetFile> SelectionChangedCommand { get; set; }
-        public RelayCommand<string> UploadFileCommand { get; set; }
         public RelayCommand<string> AddMetadataFileCommand { get; set; }
         public RelayCommand RemoveFileCommand { get; set; }
         public RelayCommand StopCommand { get; set; }
@@ -71,33 +71,6 @@ namespace ViewModels.Files
         {
             AllFiles.Add(file);
             RelevatFilesCollection.Add(file);
-        }
-
-        public virtual void _uploadFileByPath(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath)) return;
-            var provider = new MetadataFileProvider();
-            var fileInfo = new FileInfo(filePath);
-            MamaNetFile file;
-            using (var stream = fileInfo.OpenRead())
-            {
-                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), filePath, (int)fileInfo.Length, isFullAvailable: true)
-                {
-                    IsActive = true
-                };
-            }
-            AddFile(file);
-
-            var metadata = new MetadataFile(file);
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-
-            provider.Save(metadata, Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
-            if (ShowPopup != null) ShowPopup(this, "קןבץ Metadata נוצר בהצלחה");
-        }
-
-        public virtual bool _canUploadFile(string filePath)
-        {
-            return true;
         }
 
         public virtual void _addMetadataFileByPath(string filePath)
@@ -210,7 +183,6 @@ namespace ViewModels.Files
         {
             AllFiles = new ObservableCollection<MamaNetFile>();
             SelectionChangedCommand = new RelayCommand<MamaNetFile>(_selectionChanged);
-            UploadFileCommand = new RelayCommand<string>(_uploadFileByPath, _canUploadFile);
             AddMetadataFileCommand = new RelayCommand<string>(_addMetadataFileByPath, _canAddFile);
             RemoveFileCommand = new RelayCommand(_deleteFile, _canDeleteFile);
             StopCommand = new RelayCommand(_disableFile, _canDisableFile);
@@ -239,6 +211,7 @@ namespace ViewModels.Files
             UpCommand.RaiseCanExecuteChanged();
             DownCommand.RaiseCanExecuteChanged();
         }
+
         #endregion
 
     }

@@ -87,6 +87,7 @@
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -113,8 +114,16 @@
     </ApplicationDefinition>
     <Compile Include="Converters\NameWithoutExtentionConverter.cs" />
     <Compile Include="Converters\PrecentageConverter.cs" />
+    <Compile Include="Upload\UploadFile.xaml.cs">
+      <DependentUpon>UploadFile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\EndPointsConfigurationSection.cs" />
     <Compile Include="Views\FileViewCodeBehind.cs" />
     <Compile Include="Behaviors\WindowBehaviour.cs" />
+    <Page Include="Upload\UploadFile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BrowserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -188,6 +197,14 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{7e25b9f5-014b-4db6-8399-42ba8c67b30e}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dal\DAL.csproj">
+      <Project>{f3f818bf-3881-4f0f-9288-de1f5add8d11}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Networking\Networking.csproj">
+      <Project>{3c70044c-e5bf-43b0-9bbe-fa9753e454e9}</Project>
+      <Name>Networking</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViewModels\ViewModels.csproj">
       <Project>{5fb0fdb8-cdf3-4019-9697-29981bcdf167}</Project>

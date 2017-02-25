@@ -29,11 +29,6 @@
                 <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="5,4,8,0" Orientation="Horizontal">
-                <Button x:Name="UploadButton" Command="{Binding UploadFileCommand}" CommandParameter="{Binding ElementName=UploadButton, Path=Tag}" Click="UploadFileClick">
-                    <Button.Content>
-                        <Image Source="../Icons/upload-button.png"/>
-                    </Button.Content>
-                </Button>
                 <Button x:Name="MyButton" Command="{Binding AddMetadataFileCommand}" CommandParameter="{Binding ElementName=MyButton, Path=Tag}" Click="AddNewFileClick">
                     <Button.Content>
                         <Image Source="../Icons/add-button.png"/>

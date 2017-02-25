@@ -28,8 +28,8 @@ namespace TestMamaNetClient
             File.WriteAllText(sourceFile, LOREM);
             var uploader = new NetworkController(null, 20589);
             var downloader = new NetworkController(null, 20560);
-            var uploadedFile = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isFullAvailable: true);
-            var downloadedFile = new MamaNetFile("test.txt", HASH, destFile, DATA.Length);
+            var uploadedFile = new MamaNetFile("test.txt", HASH, sourceFile, DATA.Length, isFullAvailable: true, indexer: "MamanNetIndexer");
+            var downloadedFile = new MamaNetFile("test.txt", HASH, destFile, DATA.Length, indexer: "MamanNetIndexer");
 
             uploader.AddFile(uploadedFile);
             downloader.AddFile(downloadedFile);

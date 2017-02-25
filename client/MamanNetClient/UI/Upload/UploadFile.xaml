@@ -1,0 +1,84 @@
+﻿<Window x:Class="MamaNet.UI.Upload.UploadFile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Topmost="True"
+             HorizontalAlignment="Center"
+             Width="auto" 
+             Height="auto"
+             Background="#FFF7F7F7" 
+             Icon="../Icons/MamaNet.ico" 
+             WindowStartupLocation="CenterScreen" 
+             WindowStyle="ToolWindow" 
+             FlowDirection="RightToLeft" 
+             Title="יצירת קובץ שיתוף"
+             SizeToContent="WidthAndHeight">
+    
+        <Grid FlowDirection="RightToLeft" Height="auto" Width="auto" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+            <RowDefinition MinHeight="50"  Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100" Width="Auto"/>
+            <ColumnDefinition MinWidth="100" Width="Auto"/>
+        </Grid.ColumnDefinitions>
+            
+        <TextBlock FlowDirection="RightToLeft" Grid.Column="0" Grid.Row="0" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Text="תיאור:"/>
+        <TextBox TextWrapping="Wrap"  x:Name="FileDescription"  Grid.Column="1" Grid.Row="0" MinHeight="30" Height="auto" Padding="10" HorizontalAlignment="Stretch"/>
+
+        <TextBlock   Grid.Column="0" Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Hub:"/>
+
+        <ItemsControl x:Name="FileHubs" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <CheckBox FlowDirection="LeftToRight" IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                        <TextBlock Text="{Binding EndPoint}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+            
+        <TextBlock  Grid.Column="0" Grid.Row="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Indexer:"/>
+
+        <ItemsControl x:Name="FileIndexer" Grid.Column="1" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <CheckBox FlowDirection="LeftToRight" IsChecked="{Binding IsSelected, Mode=OneWay}" IsEnabled="False"/>
+                        <TextBlock Text="{Binding EndPoint}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock  Grid.Column="0" Grid.Row="3" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Text="גודל חלק:"/>
+        <ComboBox x:Name="FilePartSizes"  Margin="10" MinWidth="40" Width="auto" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="כמות חלקים:" />
+
+        <TextBlock  Grid.Column="0" Grid.Row="4" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Text="קובץ קיים:"/>
+        <Button Grid.Column="1" Grid.Row="4" Width="auto" Height="auto" Click="OpenFileDialog" Content="עיון במערכת קבצים"/>
+
+        <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Margin="0,10,0,0" Background="Transparent" Click="UploadFileButtonClicked">
+            <Button.Content>
+                <Image Source="../Icons/upload-button.png" />
+            </Button.Content>
+        </Button>
+    </Grid>
+</Window>
