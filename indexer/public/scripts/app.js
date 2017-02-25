@@ -26,7 +26,7 @@
               <li>
                   <a href={"/download/" + this.props.hash + "/" + this.props.downloadName}>
                       <i className="fa fa-download"></i>
-                      <span>Download</span>
+                      <span>הורדה</span>
                   </a>
               </li>
               <li>
@@ -71,7 +71,7 @@
             return <ListItem key={item.hash} hash={item.hash} size={item.size} name={item.fullName} downloadName={item.downloadName} onChange={changed}>{item.description}</ListItem>
           });
           if (items.length == 0) {
-            return <div className="no-results">No results found</div>;
+            return <div className="no-results">לא נמצאו תוצאות</div>;
           }
           return <ul className="list">
             {items}
@@ -87,14 +87,17 @@
         },
         render: function () {
           return <div>
-            <input id="filter-box" type="text" value={this.state.filter} onChange={this.handleFilterChange} placeholder="Filter" />
+            <input id="filter-box" type="text" value={this.state.filter} onChange={this.handleFilterChange} placeholder="חיפוש" />
             <List url={this.props.url} filter={this.state.filter} />
           </div>;
         }
       });
       ReactDOM.render(
         <div>
-          <h1>MamanNet Indexer</h1>
+          <h1>
+            <img src="images/MamaNet.png" />
+            חיפוש
+          </h1>
           <ListFilter url="/api/items" />
         </div>,
         document.getElementById('content')

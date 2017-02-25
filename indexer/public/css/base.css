@@ -1,11 +1,12 @@
 body {
   background: #fff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI Semilight", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.7;
   margin: 0;
   padding: 0;
   color: #333;
+  direction: rtl;
 }
 
 #content {
@@ -73,11 +74,12 @@ strong {
 
 .item-hash {
   color: #9285ad;
+  float: left;
+  font-family: Consolas, "Courier New", monospace;
 }
 
-.item-hash {
-  float: right;
-  font-family: monospace;
+.item-size {
+  direction: ltr;
 }
 
 i.fa + span:before {
@@ -119,7 +121,7 @@ input[type=text]:focus, textarea:focus {
 .inline-list li {
   padding: 0;
   margin: 0;
-  margin-right: 15px;
+  margin-left: 15px;
   display: inline-block;
 }
 
