@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from collections import defaultdict
 from expiringdict import ExpiringDict
 
@@ -8,7 +8,7 @@ from config import HOST, PORT, DEBUG
 
 app = Flask('mamanet_hub')
 app.debug = DEBUG
-cache = defaultdict(lambda: ExpiringDict(max_len=1000, max_age_seconds=10))
+cache = dict()
 
 
 @app.route('/')
@@ -23,18 +23,23 @@ def all_files():
 
 @app.route('/<string:file_md5>', methods=['GET'])
 def file_info(file_md5):
-    return jsonify(clients=cache[file_md5].values())
+    entry = cache.get(file_md5)
+    if entry is None:
+        abort(404)
+    return jsonify(clients=entry.values())
 
 
 @app.route('/<string:file_md5>', methods=['POST'])
 def update_file_info(file_md5):
     data = request.get_json(True)
-    cache[file_md5][request.remote_addr] = {
+    cache.setdefault(file_md5, 
+            ExpiringDict(max_len=1000, max_age_seconds=10))[(request.remote_addr, data.get('port'))] = {
         'ip': request.remote_addr,
         'port': data.get('port'),
         'availableFileParts': data.get('availableFileParts')
     }
-    return json.dumps([f for f in cache[file_md5].values() if f['ip'] != request.remote_addr])
+    return json.dumps([f for f in cache[file_md5].values() if f['ip'] != request.remote_addr or
+        f['port'] != data['port']])
 
 
 if __name__ == '__main__':

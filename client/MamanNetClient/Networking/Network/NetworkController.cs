@@ -236,9 +236,9 @@ namespace Networking.Network
                 return;
             }
             
-            //TODO: add intersect filter - which parts I don't have
             foreach (var peer in filePeers)
             {
+                //intersect filter - which parts I don't have
                 var partsToAsk = missingParts.Where(part => peer.AvailableFileParts.Contains(part)).ToArray();
                 if (partsToAsk.Any())
                 {
