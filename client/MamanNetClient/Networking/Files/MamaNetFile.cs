@@ -316,7 +316,11 @@ namespace Networking.Files
         {
             Task.Factory.StartNew(() =>
             {
-                _peers.Clear();
+                if(Peers == null)
+                {
+                    Peers = new ObservableCollection<PeerDetails>();
+                }
+
                 foreach (var peer in peers)
                 {
                     Peers.Add(peer);
