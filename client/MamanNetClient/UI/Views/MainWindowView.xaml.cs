@@ -33,7 +33,13 @@ namespace MamaNet.UI.Views
             _baseFilesViewModel = Resources["AllFileViewModel"] as AllFilesViewModel;
             if (_baseFilesViewModel == null) throw new ArgumentNullException();
             _baseFilesViewModel.DownloadingFilesViewModel.ShowPopup += ShowPopup;
-            
+            _baseFilesViewModel.DownloadedFilesViewModel.ShowPopup += ShowPopup;
+            _baseFilesViewModel.UploadingFilesViewModel.ShowPopup += ShowPopup;
+        }
+
+        public void AddNewFile(MamaNetFile file)
+        {
+            _baseFilesViewModel.DownloadedFilesViewModel.AddFile(file);
         }
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

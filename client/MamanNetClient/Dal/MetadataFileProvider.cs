@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -28,27 +29,29 @@ namespace DAL
             {
                 formatter.WriteObject(fileStream, data);
             }
+        }
 
-            var request = WebRequest.CreateHttp(data.Indexer+"/upload");
+        public async Task Send(MetadataFile data, string indexer)
+        {
+            var request = WebRequest.CreateHttp(indexer + "/upload");
             request.Timeout = 500;
             request.ContinueTimeout = 1;
             request.ReadWriteTimeout = 500;
             request.Method = "POST";
             request.ContentType = "application/json; charset=UTF-8";
             request.Accept = "application/json";
-          
+
             using (var networkStream = await request.GetRequestStreamAsync())
             {
-                 formatter.WriteObject(networkStream, data);
+                formatter.WriteObject(networkStream, data);
             }
 
             var response = await request.GetResponseAsync() as HttpWebResponse;
             if (response != null && response.StatusCode != HttpStatusCode.OK)
             {
-                throw new Exception(string.Format("Indexer {0} couldn't get the upload request of file {1}",data.FullName, data.Indexer));
+                throw new Exception(string.Format("Indexer {0} couldn't get the upload request of file {1}", data.FullName, indexer));
             }
         }
-
 
         public MetadataFile Load(string path)
         {

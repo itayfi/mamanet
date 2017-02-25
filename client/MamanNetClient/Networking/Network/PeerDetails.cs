@@ -12,26 +12,26 @@ namespace Networking.Network
     [Serializable]
     public class PeerDetails:INotifyPropertyChanged
     {
-        private int _port;
-        private string _ip;
-        private int[] _availableFileParts;
-        private string _hostname;
+        private int port;
+        private string ip;
+        private int[] availableFileParts;
+        private string hostname;
 
-        public string hostname
+        public string Hostname
         {
-            get { return _hostname; }
-            set { _hostname = value; }
+            get { return hostname; }
+            set { hostname = value; }
         }
 
         public int Port
         {
             get
             {
-                return _port;
+                return port;
             }
             set
             {
-                _port = value;
+                port = value;
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Port"));   
@@ -43,11 +43,11 @@ namespace Networking.Network
         {
             get
             {
-                return _ip;
+                return ip;
             }
             set 
             {
-                _ip = value;
+                ip = value;
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Ip"));
@@ -59,11 +59,11 @@ namespace Networking.Network
         {
             get
             {
-                return _availableFileParts;
+                return availableFileParts;
             }
             set
             {
-                _availableFileParts = value;
+                availableFileParts = value;
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("AvailableFileParts"));
@@ -72,11 +72,11 @@ namespace Networking.Network
         }
 
 
-        public PeerDetails(int port, int[] availableFileParts, string ip = null)
+        public PeerDetails(int port, int[] availableFileParts)
         {
             Port = port;
-            Ip = ip;
             AvailableFileParts = availableFileParts;
+            Hostname = Dns.GetHostName();
         }
 
         public IPEndPoint IPEndPoint

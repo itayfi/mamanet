@@ -57,8 +57,8 @@ namespace Networking.Files
 
         #region Ctors
 
-        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, string indexer, int partSize = 1024, ObservableCollection<HubDetails> relatedHubs = null, bool isFullAvailable = false, string description = "")
-            : base(fullName, expectedHash, relatedHubs, totalSize, partSize,description, indexer)
+        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, ObservableCollection<HubDetails> relatedHubs = null, bool isFullAvailable = false, string description = "")
+            : base(fullName, expectedHash, relatedHubs, totalSize, partSize,description)
         {
             _writeLock = new object();
             _localPath = localPath;
@@ -72,7 +72,7 @@ namespace Networking.Files
             DateAdded = DateTime.Now;
         }
 
-        public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.Indexer, other.PartSize, other.RelatedHubs)
+        public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.PartSize, other.RelatedHubs)
         {
             
         }
@@ -233,6 +233,8 @@ namespace Networking.Files
                 FireChangeEvent("Leechers");
             }
         }
+
+        public string Indexer { get; set; }
 
         #endregion
 

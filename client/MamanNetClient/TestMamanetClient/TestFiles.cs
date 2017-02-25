@@ -22,7 +22,7 @@ namespace TestMamaNetClient
         public void TestWrite()
         {
             string filename = Path.GetTempFileName();
-            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048,indexer:"MamaNetIndexer"))
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048))
             {
                 file[0].SetData(DATA.Take(1024).ToArray());
                 file[1].SetData(DATA.Skip(1024).ToArray());
@@ -35,7 +35,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable: true, indexer: "MamaNetIndexer"))
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable: true))
             {
                 var data1 = file[0].GetData();
                 var data2 = file[1].GetData();
@@ -49,7 +49,7 @@ namespace TestMamaNetClient
         {
             string filename = Path.GetTempFileName();
             File.WriteAllText(filename, LOREM);
-            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable: true, indexer: "MamaNetIndexer"))
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, 2048, isFullAvailable: true))
             {
                 var data1 = file[0].GetData();
                 file[1].SetData(data1);
@@ -64,7 +64,7 @@ namespace TestMamaNetClient
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
 
-            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, (int)new FileInfo(filename).Length, isFullAvailable: true, indexer: "MamaNetIndexer"))
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, (int)new FileInfo(filename).Length, isFullAvailable: true))
             {
                 var data1 = file[0].GetData();
                 CollectionAssert.AreEqual(data, data1);
@@ -79,7 +79,7 @@ namespace TestMamaNetClient
             byte[] data = Encoding.ASCII.GetBytes(text);
             File.WriteAllText(filename, text);
 
-            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, data.Length, indexer: "MamaNetIndexer"))
+            using (var file = new MamaNetFile("test", HashUtils.HexStringToByteArray("deadbeef"), filename, data.Length))
             {
 
                 file[0].SetData(data);
@@ -91,7 +91,7 @@ namespace TestMamaNetClient
         public void TestMetadataFile()
         {
             string filename = Path.GetTempFileName();
-            MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new ObservableCollection<HubDetails>() {new HubDetails("http://localhost:12345")},indexer:"http://localhost:666"));
+            MetadataFile file = new MetadataFile(new MamaNetFile("test.txt", new byte[] { 1, 2, 3, 4, 5, 6 }, "", 2048, relatedHubs: new ObservableCollection<HubDetails>() {new HubDetails("http://localhost:12345")}));
             MetadataFileProvider provider = new MetadataFileProvider();
 
             provider.SaveAndSend(file, filename);

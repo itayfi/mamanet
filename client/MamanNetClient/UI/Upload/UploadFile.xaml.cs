@@ -113,7 +113,7 @@ namespace MamaNet.UI.Upload
             MamaNetFile file;
             using (var stream = fileInfo.OpenRead())
             {
-                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, indexer: UploadFileRequest.Indexers.SingleOrDefault(), description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs)
+                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs)
                 {
                     IsActive = true
                 };
@@ -125,6 +125,7 @@ namespace MamaNet.UI.Upload
             try
             {
                 await provider.SaveAndSend(metadata, System.IO.Path.Combine(ConfigurationManager.AppSettings["DonwloadFolderPath"], fileName + ".mamanet"));
+                await provider.Send(metadata, UploadFileRequest.Indexers.Single());
 
             }
             catch (Exception exception)
@@ -135,6 +136,8 @@ namespace MamaNet.UI.Upload
                 return;
             }
             MainWindow.ShowPopup(this, "קובץ Metadata נוצר בהצלחה");
+            MainWindow.AddNewFile(file);
+
             this.Close();
         }
     }
