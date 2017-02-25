@@ -126,6 +126,7 @@ namespace Networking.Files
             Size = other.Size;
             PartSize = other.PartSize;
             Description = other.Description;
+            RelatedHubs = other.RelatedHubs;
         }
 
         protected void FireChangeEvent(string propertyName)
