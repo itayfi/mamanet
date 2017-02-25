@@ -22,9 +22,6 @@ namespace Networking.Files
         #region Private Members
 
         private byte[] _hash;
-        
-        private ObservableCollection<HubDetails> _relatedHubsDetails;
-        
         private string[] _relatedHubs;
         private string _fullName;
         private int _size;
@@ -88,24 +85,12 @@ namespace Networking.Files
             }
         }
 
-        public ObservableCollection<HubDetails> RelatedHubs
+        public string[] RelatedHubs
         {
-            get
-            {
-                if (_relatedHubsDetails != null)
-                {
-                    return _relatedHubsDetails;
-                }
-                return null;
-            }
-            set
-            {
-                _relatedHubsDetails = value;
-                _relatedHubs = value.Select(hub=>hub.Url).ToArray();
-                FireChangeEvent("RelatedHubs");
-            }
+            get { return _relatedHubs; }
+            set { _relatedHubs = value; }
         }
-
+      
         public int NumberOfParts
         {
             get
@@ -124,21 +109,20 @@ namespace Networking.Files
 
         #region Methods
 
-        public MetadataFile(string fullName, byte[] expectedHash, ObservableCollection<HubDetails> relatedHubs, int size, int partSize, string description)
+        public MetadataFile(string fullName, byte[] expectedHash, string[] relatedHubs, int size, int partSize, string description)
         {
             FullName = fullName;
             ExpectedHash = expectedHash;
-            RelatedHubs = relatedHubs;
             Size = size;
             PartSize = partSize;
             Description = description;
+            _relatedHubs = relatedHubs;
         }
 
         public MetadataFile(MetadataFile other)
         {
             FullName = other.FullName;
             _hash = (byte[])other._hash.Clone();
-            RelatedHubs = (other._relatedHubsDetails != null) ? other._relatedHubsDetails : null;
             Size = other.Size;
             PartSize = other.PartSize;
             Description = other.Description;
@@ -160,13 +144,12 @@ namespace Networking.Files
                 return false;
             }
             MetadataFile other = (MetadataFile)obj;
-            return other._fullName == _fullName && other._hash.SequenceEqual(_hash) &&
-                ((_relatedHubsDetails == null || other._relatedHubsDetails == null) ? _relatedHubsDetails == other._relatedHubsDetails : other._relatedHubsDetails.OrderBy(h => h).SequenceEqual(_relatedHubsDetails.OrderBy(h => h)));
+            return other._fullName == _fullName && other._hash.SequenceEqual(_hash);
         }
 
         public override int GetHashCode()
         {
-            return _fullName.GetHashCode() + _hash.GetHashCode() + (_relatedHubsDetails != null ? _relatedHubsDetails.OrderBy(h => h).ToArray().GetHashCode() : -1);
+            return _fullName.GetHashCode() + _hash.GetHashCode();
         }
 
 

@@ -53,12 +53,14 @@ namespace Networking.Files
         private int _seeders;
         [NonSerialized]
         private int _leechers;
+        private int _availableFileParts;
+        private ObservableCollection<HubDetails> _relatedHubsDetails;
 
         #endregion
 
         #region Ctors
 
-        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, int partSize = 1024, ObservableCollection<HubDetails> relatedHubs = null, bool isFullAvailable = false, string description = "")
+        public MamaNetFile(string fullName, byte[] expectedHash, string localPath, int totalSize, string[] relatedHubs, bool isFullAvailable = false, string description = "", int partSize = 1024)
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize,description)
         {
             _writeLock = new object();
@@ -72,9 +74,15 @@ namespace Networking.Files
             UpdateAvailability();
             DateAdded = DateTime.Now;
             Peers = new ObservableCollection<PeerDetails>();
+            RelatedHubs = new ObservableCollection<HubDetails>();
+            foreach (var hub in relatedHubs)
+            {
+                RelatedHubs.Add(new HubDetails(hub));
+            }
         }
 
-        public MamaNetFile(MetadataFile other,string folderPath) : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), other.Size, other.PartSize, other.RelatedHubs)
+        public MamaNetFile(MetadataFile other, string folderPath)
+            : this(other.FullName, other.ExpectedHash, Path.Combine(folderPath, other.FullName), totalSize: other.Size, relatedHubs: other.RelatedHubs, partSize: other.PartSize)
         {
             
         }
@@ -119,6 +127,24 @@ namespace Networking.Files
 
         #region Calculated Members
 
+        public ObservableCollection<HubDetails> RelatedHubs
+        {
+            get
+            {
+                if (_relatedHubsDetails != null)
+                {
+                    
+                }
+                return null;
+            }
+            set
+            {
+                _relatedHubsDetails = value;
+                FireChangeEvent("RelatedHubs");
+            }
+        }
+
+
         public FilePart this[int number]
         {
             get
@@ -140,6 +166,17 @@ namespace Networking.Files
                 return _availability;
             }
         }
+
+        public int AvailableFileParts
+        {
+            get { return _availableFileParts; }
+            set
+            {
+                _availableFileParts = value;
+                FireChangeEvent("AvailableFileParts");
+            }
+        }
+
         public FileStatus FileStatus
         {
             get
@@ -294,14 +331,16 @@ namespace Networking.Files
 
         internal void UpdateAvailability()
         {
-            Availability = Convert.ToDecimal(_parts.Count(part => part.IsPartAvailable)) /
-                    Convert.ToDecimal(NumberOfParts);
+            var availableFileParts = _parts.Count(part => part.IsPartAvailable);
+            Availability = Convert.ToDecimal(availableFileParts) / Convert.ToDecimal(NumberOfParts);
 
             if (Availability == 1)
             {
                 UpdateFileHash();
                 if (_writeStream != null) _writeStream.Dispose();
             }
+
+            AvailableFileParts = availableFileParts;
         }
 
         private void UpdateFileHash()
@@ -320,6 +359,7 @@ namespace Networking.Files
                 {
                     Peers = new ObservableCollection<PeerDetails>();
                 }
+                Peers.Clear();
 
                 foreach (var peer in peers)
                 {
@@ -330,8 +370,6 @@ namespace Networking.Files
 
         public void SyncHubInformation(HubDetails hubDetails, TaskScheduler syncContextScheduler)
         {
-       
-
             Task.Factory.StartNew(() =>
             {
                 foreach (var hub in RelatedHubs)

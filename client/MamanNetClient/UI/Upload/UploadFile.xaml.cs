@@ -113,7 +113,7 @@ namespace MamaNet.UI.Upload
             MamaNetFile file;
             using (var stream = fileInfo.OpenRead())
             {
-                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, description: UploadFileRequest.Description,relatedHubs: UploadFileRequest.Hubs)
+                file = new MamaNetFile(fileInfo.Name, HashUtils.CalculateHash(stream), UploadFileRequest.FilePath, (int)fileInfo.Length, isFullAvailable: true, description: UploadFileRequest.Description, relatedHubs: UploadFileRequest.Hubs.Select(hub=>hub.Url).ToArray())
                 {
                     IsActive = true
                 };

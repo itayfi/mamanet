@@ -144,7 +144,7 @@
             </DataGrid>
             <TabControl Grid.Row="2" Margin="5,0,8,20">
                 <TabControl.Resources>
-                    <converters:AvailablePartsConverter x:Key="AvailablePartsConverter"/>
+
                 </TabControl.Resources>
                 <TabItem Header="קובץ">
                     <StackPanel Orientation="Vertical" FlowDirection="RightToLeft">
@@ -166,7 +166,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="מס' חלקים שהתקבלו:" TextDecorations="underline" Margin="3"/>
-                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem, Converter={StaticResource AvailablePartsConverter}}" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.AvailableFileParts}" Margin="3"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="גודל חלק:" TextDecorations="underline" Margin="3"/>
