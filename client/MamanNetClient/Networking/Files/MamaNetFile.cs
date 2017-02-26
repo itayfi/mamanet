@@ -47,6 +47,8 @@ namespace Networking.Files
         [NonSerialized] 
         internal object _writeLock;
         [NonSerialized]
+        internal object _readLock;
+        [NonSerialized]
         private byte[] _currentFileHash;
         [NonSerialized]
         private int _seeders;
@@ -63,6 +65,7 @@ namespace Networking.Files
             : base(fullName, expectedHash, relatedHubs, totalSize, partSize,description)
         {
             _writeLock = new object();
+            _readLock = new object();
             _localPath = localPath;
             _parts = new FilePart[NumberOfParts];
             for (var i = 0; i < NumberOfParts; i++)

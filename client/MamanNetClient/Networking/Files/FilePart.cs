@@ -52,16 +52,19 @@ namespace Networking.Files
             var partSize = MamaNetFile.PartSize;
             byte[] buffer = new byte[partSize];
 
-            using (FileStream stream = MamaNetFile.GetReadStream())
+            lock (MamaNetFile._readLock)
             {
-                GoToPart(stream);
-
-                if (PartNumber == MamaNetFile.NumberOfParts - 1)
+                using (FileStream stream = MamaNetFile.GetReadStream())
                 {
-                    partSize = (int)(stream.Length - stream.Position);
+                    GoToPart(stream);
+
+                    if (PartNumber == MamaNetFile.NumberOfParts - 1)
+                    {
+                        partSize = (int)(stream.Length - stream.Position);
+                    }
+
+                    stream.Read(buffer, 0, partSize);
                 }
-                
-                stream.Read(buffer, 0, partSize);    
             }
             
             return buffer;
