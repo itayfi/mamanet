@@ -63,6 +63,7 @@ namespace Networking.Network
             return 1;
         }
 
+        [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
