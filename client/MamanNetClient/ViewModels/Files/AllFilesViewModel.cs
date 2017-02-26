@@ -42,7 +42,7 @@ namespace ViewModels.Files
             DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFiles);
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);
 
-            _networkController = new NetworkController(AllFiles);
+            _networkController = new NetworkController(AllFiles, fileChange: this);
             Task.Run(() => _networkController.StartListen());
         }
 

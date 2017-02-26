@@ -20,7 +20,11 @@ namespace MamaNet.UI.Behaviors
         {
             base.OnAttached();
             AssociatedObject.Drop += AssociatedObject_Drop;
-            AssociatedObject.AllowDrop = true;
+            if (AssociatedObject.DataContext is DownloadingFilesViewModel)
+            {
+                AssociatedObject.AllowDrop = true;    
+            }
+            
             _fileProvider = new MetadataFileProvider();
         }
 

@@ -340,11 +340,10 @@ namespace Networking.Files
         {
             var availableFileParts = _parts.Count(part => part.IsPartAvailable);
             Availability = Convert.ToDecimal(availableFileParts) / Convert.ToDecimal(NumberOfParts);
+            UpdateFileHash();
 
             if (Availability == 1)
             {
-                UpdateFileHash();
-                if (_writeStream != null) _writeStream.Dispose();
                 FireChangeEvent("FileStatus");
             }
 
