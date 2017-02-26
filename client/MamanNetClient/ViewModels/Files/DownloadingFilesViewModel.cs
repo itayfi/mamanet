@@ -45,8 +45,9 @@ namespace ViewModels.Files
 
         public sealed override void FilterAllFilesToCollectionFiles()
         {
-            var downloadedingFiles = AllFiles.Where(file => file.Availability != 1);
-            foreach (var file in downloadedingFiles)
+            var downloadingFiles = AllFiles.Where(file => file.Availability != 1);
+            DownloadingFiles.Clear();
+            foreach (var file in downloadingFiles)
             {
                 DownloadingFiles.Add(file);
             }
