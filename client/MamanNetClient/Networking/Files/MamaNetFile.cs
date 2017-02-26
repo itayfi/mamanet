@@ -312,14 +312,22 @@ namespace Networking.Files
 
         internal FileStream GetReadStream()
         {
-            return _readStream ??
-                   (_readStream = File.Open(_localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+            if (_readStream == null || !_readStream.CanRead)
+            {
+                _readStream = File.Open(_localPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
+
+            return _readStream;
         }
 
         internal FileStream GetWriteStream()
         {
-            return _writeStream ??
-                   (_writeStream = File.Open(_localPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
+            if (_writeStream == null || !_writeStream.CanWrite)
+            {
+                _writeStream = File.Open(_localPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+            }
+
+            return _writeStream;
         }
 
         internal void UpdateAvailability()
