@@ -7,16 +7,21 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 using ViewModels.Files;
+using Networking.Files;
+using DAL;
 
 namespace MamaNet.UI.Behaviors
 {
     class DataGridBehaviour : Behavior<DataGrid>
     {
+        private MetadataFileProvider _fileProvider; 
+
         protected override void OnAttached()
         {
             base.OnAttached();
             AssociatedObject.Drop += AssociatedObject_Drop;
             AssociatedObject.AllowDrop = true;
+            _fileProvider = new MetadataFileProvider();
         }
 
         void AssociatedObject_Drop(object sender, System.Windows.DragEventArgs e)
@@ -24,7 +29,12 @@ namespace MamaNet.UI.Behaviors
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                (AssociatedObject.DataContext as BaseFilesViewModel).AddFile();
+                foreach(var file in files)
+                {
+                    
+                    var metadataFile = _fileProvider.Load(file);
+                    (AssociatedObject.DataContext as BaseFilesViewModel).AddFile(metadataFile);
+                }
             }
         }
     }
