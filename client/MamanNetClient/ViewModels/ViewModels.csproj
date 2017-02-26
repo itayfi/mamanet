@@ -120,7 +120,6 @@
     <Compile Include="HomepageViewModel.cs" />
     <Compile Include="Files\AllFilesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Files\UploadingFilesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

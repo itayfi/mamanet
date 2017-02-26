@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Data.SqlTypes;
 using System.Threading;
 using Common.LogUtilities;
+using ViewModels.Files;
 
 namespace Networking.Network
 {
@@ -48,11 +49,12 @@ namespace Networking.Network
         private Timer _hubTimer;
         private TaskScheduler _syncContextScheduler;
         private const int MaxBatchSize = 1024;
+        private INotifyFileChange _fileChange;
 
         #endregion
 
         #region Ctor
-        public NetworkController(ObservableCollection<MamaNetFile> files = null, int? port = null)
+        public NetworkController(ObservableCollection<MamaNetFile> files = null, int? port = null, INotifyFileChange fileChange = null)
         {
             if (files == null)
             {
@@ -80,6 +82,8 @@ namespace Networking.Network
                 // default scheduler because there is no UI thread to sync with.
                 _syncContextScheduler = TaskScheduler.Current;
             }
+
+            _fileChange = fileChange;
         }
 
         #endregion
@@ -183,6 +187,15 @@ namespace Networking.Network
             {
                 relevantFile[packet.PartNumber].SetData(packet.Data);
             }
+
+            if (relevantFile.Availability == 1)
+            {
+                if (_fileChange != null)
+                {
+                    _fileChange.NotifyFileChange();
+                }
+            }
+            
         }
 
         #endregion

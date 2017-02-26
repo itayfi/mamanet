@@ -12,7 +12,7 @@ using Networking.Network;
 
 namespace ViewModels.Files
 {
-    public class AllFilesViewModel:BaseFilesViewModel
+    public class AllFilesViewModel : BaseFilesViewModel, INotifyFileChange
     {
         #region Public Fields
        
@@ -91,6 +91,12 @@ namespace ViewModels.Files
         {
             //Intentionally does nothing
             return;
+        }
+
+        public void NotifyFileChange()
+        {
+            DownloadedFilesViewModel.FilterAllFilesToCollectionFiles();
+            DownloadingFilesViewModel.FilterAllFilesToCollectionFiles();
         }
     }
 }

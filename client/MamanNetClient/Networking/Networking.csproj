@@ -67,6 +67,7 @@
     <Compile Include="Files\MamaNetFile.cs" />
     <Compile Include="Files\MetadataFile.cs" />
     <Compile Include="Network\HubDetails.cs" />
+    <Compile Include="Network\INotifyFileChange.cs" />
     <Compile Include="Network\PeerDetails.cs" />
     <Compile Include="Utilities\HashUtils.cs" />
     <Compile Include="Packets\DataPacket.cs" />

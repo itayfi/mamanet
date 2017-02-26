@@ -14,12 +14,11 @@ namespace Networking.Files
 {
     public enum FileStatus
     {
-        Uploading,
-        Downloading,
-        DownladingError,
+        Paused,
+        DownloadFailure,
         Downloaded,
-        DownloadFailed,
-        Paused
+        Downloading,
+        Uploading
     }
 
     public enum FileType
@@ -176,18 +175,22 @@ namespace Networking.Files
             {
                 if (IsActive)
                 {
-                    //TODO: change this to find online RelatedHubs only!
                     if (Availability == 1)
                     {
-                        return FileStatus.Uploading;
+                        if (ExpectedHash.SequenceEqual(_currentFileHash))
+                        {
+                            return FileStatus.Uploading;
+                        }
+                        else
+                        {
+                            return FileStatus.DownloadFailure;
+                        }
                     }
                     else
                     {
-                        return RelatedHubs.Any() ? FileStatus.Downloading : FileStatus.DownladingError;    
+                        return FileStatus.Downloading;
                     }
-                    
                 }
-                else
                 {
                     if (Availability == 1)
                     {
@@ -195,7 +198,10 @@ namespace Networking.Files
                         {
                             return FileStatus.Downloaded;
                         }
-                        return FileStatus.DownloadFailed;
+                        else
+                        {
+                            return FileStatus.DownloadFailure;
+                        }
                     }
                     else
                     {
