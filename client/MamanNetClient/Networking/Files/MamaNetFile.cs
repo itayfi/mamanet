@@ -352,9 +352,12 @@ namespace Networking.Files
 
         private void UpdateFileHash()
         {
-            using (var fileStream = File.Open(LocalPath,FileMode.Open,FileAccess.Read, FileShare.ReadWrite))
+            if(File.Exists(LocalPath))
             {
-                _currentFileHash = HashUtils.CalculateHash(fileStream);
+                using (var fileStream = File.Open(LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    _currentFileHash = HashUtils.CalculateHash(fileStream);
+                }
             }
         }
 
