@@ -112,6 +112,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behaviors\DataGridBehaviour.cs" />
     <Compile Include="Converters\NameWithoutExtentionConverter.cs" />
     <Compile Include="Converters\PrecentageConverter.cs" />
     <Compile Include="Upload\UploadFile.xaml.cs">

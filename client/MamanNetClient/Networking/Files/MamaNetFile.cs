@@ -356,6 +356,9 @@ namespace Networking.Files
         {
             Task.Factory.StartNew(() =>
             {
+                Leechers = peers.Count;
+                int seeders = 0;
+
                 if(Peers == null)
                 {
                     Peers = new ObservableCollection<PeerDetails>();
@@ -364,8 +367,13 @@ namespace Networking.Files
 
                 foreach (var peer in peers)
                 {
+                    if (peer.AvailableFileParts.Length == NumberOfParts)
+                    {
+                        seeders++;
+                    }
                     Peers.Add(peer);
                 }
+                Seeders = seeders;
             }, CancellationToken.None, TaskCreationOptions.None, syncContextScheduler);
         }
 
