@@ -30,6 +30,7 @@ namespace ViewModels.Files
         public RelayCommand PlayCommand { get; set; }
         public RelayCommand UpCommand { get; set; }
         public RelayCommand DownCommand { get; set; }
+        public event EventHandler FilesChanged;
 
         public MamaNetFile SelectedFile
         {
@@ -189,6 +190,12 @@ namespace ViewModels.Files
             PlayCommand = new RelayCommand(_activateFile, _canActivateFile);
             UpCommand = new RelayCommand(_moveUpFile, _canMoveUpFile);
             DownCommand = new RelayCommand(_moveDownFile, _canMoveDownFile);
+            AllFiles.CollectionChanged += AllFiles_CollectionChanged;
+        }
+
+        private void AllFiles_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            FilterAllFilesToCollectionFiles();
         }
 
         public void FireChangeEvent(string propertyName)
@@ -199,6 +206,8 @@ namespace ViewModels.Files
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+
 
         public abstract void FilterAllFilesToCollectionFiles();
 

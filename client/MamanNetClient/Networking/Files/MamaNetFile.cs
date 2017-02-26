@@ -339,6 +339,7 @@ namespace Networking.Files
             {
                 UpdateFileHash();
                 if (_writeStream != null) _writeStream.Dispose();
+                FireChangeEvent("FileStatus");
             }
 
             AvailableFileParts = availableFileParts;

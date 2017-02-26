@@ -17,7 +17,6 @@ namespace ViewModels.Files
         #region Public Fields
        
         public DownloadingFilesViewModel DownloadingFilesViewModel { get; set; }
-        public UploadingFilesViewModel UploadingFilesViewModel { get; set; }
         public DownloadedFilesViewModel DownloadedFilesViewModel { get; set; }
 
         #endregion
@@ -41,7 +40,6 @@ namespace ViewModels.Files
             LoadSavedFiles();
             RelevatFilesCollection = AllFiles;
             DownloadingFilesViewModel = new DownloadingFilesViewModel(AllFiles);
-            UploadingFilesViewModel = new UploadingFilesViewModel(AllFiles);
             DownloadedFilesViewModel = new DownloadedFilesViewModel(AllFiles);
 
             _networkController = new NetworkController(AllFiles);

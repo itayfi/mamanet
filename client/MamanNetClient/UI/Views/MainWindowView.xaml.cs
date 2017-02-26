@@ -34,7 +34,6 @@ namespace MamaNet.UI.Views
             if (_baseFilesViewModel == null) throw new ArgumentNullException();
             _baseFilesViewModel.DownloadingFilesViewModel.ShowPopup += ShowPopup;
             _baseFilesViewModel.DownloadedFilesViewModel.ShowPopup += ShowPopup;
-            _baseFilesViewModel.UploadingFilesViewModel.ShowPopup += ShowPopup;
         }
 
         public void AddNewFile(MamaNetFile file)

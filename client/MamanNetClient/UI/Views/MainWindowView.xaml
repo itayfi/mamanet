@@ -86,14 +86,6 @@
                             </StackPanel>
                         </TreeViewItem.Header>
                     </TreeViewItem>
-                    <TreeViewItem DataContext="{Binding Path=.UploadingFilesViewModel}">
-                        <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal" Margin="0">
-                                <Image Source="../../Icons/cloud-upload.png" Width="20" Height="20" Margin="5"/>
-                                <TextBlock Text="{Binding Path=.UploadingFiles.Count,Converter={StaticResource FilesCounterConverter}, ConverterParameter=משתף}"/>
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                    </TreeViewItem>
                     <TreeViewItem DataContext="{Binding Path=.DownloadedFilesViewModel}">
                             <TreeViewItem.Header>
                                 <StackPanel Orientation="Horizontal" Margin="0">

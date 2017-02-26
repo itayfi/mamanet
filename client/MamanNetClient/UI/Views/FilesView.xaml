@@ -291,16 +291,6 @@
         </ContentPresenter>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type files:UploadingFilesViewModel}"  >
-        <ContentPresenter x:Name="UploadingFilesPresenter" ContentTemplate="{StaticResource BasicDataTemplate}">
-            <ContentPresenter.Resources>
-                <Style x:Name="uploadingStyle" TargetType="DataGrid">
-                    <Setter x:Name="uploadingFilesSetter" Property="ItemsSource" Value="{Binding UploadingFiles}"/>
-                </Style>
-            </ContentPresenter.Resources>
-        </ContentPresenter>
-    </DataTemplate>
-
     <DataTemplate DataType="{x:Type files:DownloadedFilesViewModel}" >
         <ContentPresenter x:Name="DownloadedFilesPresenter"  ContentTemplate="{StaticResource BasicDataTemplate}">
             <ContentPresenter.Resources>
