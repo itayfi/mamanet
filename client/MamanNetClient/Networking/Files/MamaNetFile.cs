@@ -342,11 +342,20 @@ namespace Networking.Files
         internal void UpdateAvailability()
         {
             var availableFileParts = _parts.Count(part => part.IsPartAvailable);
-            Availability = Convert.ToDecimal(availableFileParts) / Convert.ToDecimal(NumberOfParts);
+            if (availableFileParts == 0)
+            {
+                Availability = 0;
+            }
+            else
+            {
+                Availability = Convert.ToDecimal(availableFileParts) / Convert.ToDecimal(NumberOfParts);    
+            }
+            
             UpdateFileHash();
 
             if (Availability == 1)
             {
+                DateDownloaded = DateTime.Now;
                 FireChangeEvent("FileStatus");
             }
 
@@ -399,6 +408,10 @@ namespace Networking.Files
                     {
                         hub.LastCommunicationTime = DateTime.Now;
                         hub.ConnectedUsers = hubDetails.ConnectedUsers;
+                    }
+                    else
+                    {
+                        hub.LastCommunicationTime = hub.LastCommunicationTime;
                     }
                 }
 

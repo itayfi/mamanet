@@ -7,11 +7,14 @@ using System.Windows.Data;
 
 namespace MamaNet.UI.Converters
 {
-    public class SpeedConverter:IValueConverter
+    public class CommunicationQualityConverter:IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return string.Format("{0} kb/s", value);
+            var lastCommunication = (DateTime) value;
+            if (lastCommunication >= DateTime.Now.Subtract(TimeSpan.FromSeconds(10)))
+                return "Green";
+            return "Red";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

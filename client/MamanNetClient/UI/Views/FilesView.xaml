@@ -147,21 +147,21 @@
             </DataGrid>
             <TabControl Grid.Row="2" Margin="5,0,8,20">
                 <TabControl.Resources>
-
+                    <converters:EmptyDateTimeConverter x:Key="EmptyDateTimeConverter"/>
                 </TabControl.Resources>
                 <TabItem Header="קובץ">
                     <StackPanel Orientation="Vertical" FlowDirection="RightToLeft">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="תאריך הוספה:" TextDecorations="underline" Margin="3"/>
-                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateAdded}" Margin="3" FlowDirection="LeftToRight"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateAdded, StringFormat=\{0:G\}, ConverterCulture=es-ES, Converter={StaticResource EmptyDateTimeConverter}}" Margin="3" FlowDirection="LeftToRight"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="תאריך סיום הורדה:" TextDecorations="underline" Margin="3"/>
-                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateDownloaded}" Margin="3" FlowDirection="LeftToRight"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.DateDownloaded, StringFormat=\{0:G\}, ConverterCulture=es-ES, Converter={StaticResource EmptyDateTimeConverter}}" Margin="3" FlowDirection="LeftToRight"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="גודל כולל:" TextDecorations="underline"  Margin="3"/>
-                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.Size}" Margin="3"/>
+                            <TextBlock Text="גודל:" TextDecorations="underline"  Margin="3"/>
+                            <TextBlock FlowDirection="RightToLeft" Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.Size, StringFormat='{}{0} בתים'}" Margin="3"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="מס' חלקים כולל:" TextDecorations="underline" Margin="3"/>
@@ -173,7 +173,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="גודל חלק:" TextDecorations="underline" Margin="3"/>
-                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.PartSize}" Margin="3"/>
+                            <TextBlock Text="{Binding ElementName=MyDataGrid, Path=SelectedItem.PartSize, StringFormat='{}{0} בתים'}" Margin="3"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Hash:" TextDecorations="underline"  Margin="3"/>
@@ -203,8 +203,20 @@
                       GridLinesVisibility="None"
                       ItemsSource="{Binding ElementName=MyDataGrid, Path=SelectedItem.RelatedHubs}">
                         <DataGrid.Resources>
-                            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" >
+                            <converters:EmptyDateTimeConverter x:Key="EmptyDateTimeConverter"/>
+                            <converters:CommunicationQualityConverter x:Key="CommunicationQualityConverter"/>
+                            <!--<Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" >
                                 <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>-->
+                            <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=LastCommunicationTime, Converter={StaticResource CommunicationQualityConverter}}" Value="Green">
+                                       <Setter Property="Background" Value="DarkSeaGreen"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=LastCommunicationTime, Converter={StaticResource CommunicationQualityConverter}}" Value="Red">
+                                        <Setter Property="Background" Value="DarkGray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                             <Style x:Key="CenteredCell" TargetType="DataGridCell">
                                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -220,7 +232,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="כתובת" Binding="{Binding Url}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                             <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מס' עמיתים" Binding="{Binding ConnectedUsers}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
-                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מועד התקשרות אחרון" Binding="{Binding LastCommunicationTime}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
+                            <DataGridTextColumn ElementStyle="{StaticResource TextBlockStyle}" Width="*" Header="מועד התקשרות אחרון" Binding="{Binding LastCommunicationTime, StringFormat=\{0:G\}, ConverterCulture=es-ES, Converter={StaticResource EmptyDateTimeConverter}}" CellStyle="{StaticResource CenteredCell}"  HeaderStyle="{StaticResourceExtension CenteredHeader}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

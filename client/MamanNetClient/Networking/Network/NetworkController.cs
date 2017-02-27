@@ -192,7 +192,7 @@ namespace Networking.Network
             {
                 if (_fileChange != null)
                 {
-                    _fileChange.NotifyFileChange();
+                    _fileChange.NotifyFileChange(_syncContextScheduler);
                 }
             }
             

@@ -93,10 +93,15 @@ namespace ViewModels.Files
             return;
         }
 
-        public void NotifyFileChange()
+        public void NotifyFileChange(TaskScheduler taskScheduler)
         {
-            DownloadedFilesViewModel.FilterAllFilesToCollectionFiles();
-            DownloadingFilesViewModel.FilterAllFilesToCollectionFiles();
+            Task.Factory.StartNew(() =>
+            {
+                DownloadedFilesViewModel.FilterAllFilesToCollectionFiles();
+                DownloadingFilesViewModel.FilterAllFilesToCollectionFiles();
+
+            }, CancellationToken.None, TaskCreationOptions.None, taskScheduler);
+
         }
     }
 }

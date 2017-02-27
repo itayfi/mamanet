@@ -18,7 +18,7 @@ namespace Networking.Network
         {
             Url = url;
             ConnectedUsers = 0;
-            LastCommunicationTime = DateTime.Now;
+            LastCommunicationTime = DateTime.MinValue;
         }
 
         public HubDetails(string url, int connectedUsers)

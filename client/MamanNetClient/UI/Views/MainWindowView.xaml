@@ -13,7 +13,6 @@
     </Window.DataContext>
     <Window.Resources>
         <converters:FilesCounterConverter x:Key="FilesCounterConverter"/>
-        <converters:SpeedConverter x:Key="SpeedConverter"/>
         <files:AllFilesViewModel x:Key="AllFileViewModel"/>
         <viewModel:HomepageViewModel x:Key="HomepageViewModel"/>
         <viewModel:BrowserViewModel x:Key="BrowserViewModel"/>
@@ -114,32 +113,9 @@
                       Margin="0,0,0,5"/>
         <!--<ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem, Converter={StaticResource ContentPresenterConverter}}" Grid.RowSpan="2"/>-->
         <ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding ElementName=MyTreeView,Path=SelectedItem.DataContext}" Grid.RowSpan="3" Margin="0,-5,0,0"/>
-        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" Background="#FFF0F0F0" >
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid FlowDirection="LeftToRight">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="2" DataContext="{StaticResource AllFileViewModel}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="מהירות הורדה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=DownloadingFilesViewModel.DownloadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="../Icons/download.png"/>
-                </StackPanel>
-            </StatusBarItem>
-            <Separator  Grid.Column="1" Background="#FFD7D7D7" Width="2"/>
-            <StatusBarItem Grid.Column="0" DataContext="{StaticResource AllFileViewModel}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="מהירות העלאה: "></TextBlock>
-                    <TextBlock FlowDirection="LeftToRight" Text="{Binding Path=UploadingFilesViewModel.UploadSpeed, Converter={StaticResource SpeedConverter}}"/>
-                    <Image Source="..\Icons\upload.png"/>
-                </StackPanel>
+        <StatusBar Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,5,-2" Background="#FFF0F0F0" >
+            <StatusBarItem Grid.Column="2" DataContext="{StaticResource AllFileViewModel}" HorizontalAlignment="Right">
+                <TextBlock Text="עידן וולף ואיתי פינץ ©" HorizontalAlignment="Right"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

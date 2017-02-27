@@ -113,6 +113,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\DataGridBehaviour.cs" />
+    <Compile Include="Converters\CommunicationQualityConverter.cs" />
+    <Compile Include="Converters\EmptyDateTimeConverter.cs" />
     <Compile Include="Converters\NameWithoutExtentionConverter.cs" />
     <Compile Include="Converters\PrecentageConverter.cs" />
     <Compile Include="Upload\UploadFile.xaml.cs">
@@ -146,7 +148,6 @@
     </Compile>
     <Compile Include="Converters\FilesCounterConverter.cs" />
     <Compile Include="Converters\ContentPresenterConverter.cs" />
-    <Compile Include="Converters\SpeedConverter.cs" />
     <Compile Include="Converters\TreeViewItemConverter.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>

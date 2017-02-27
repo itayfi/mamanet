@@ -8,6 +8,6 @@ namespace ViewModels.Files
 {
     public interface INotifyFileChange
     {
-        void NotifyFileChange();
+        void NotifyFileChange(TaskScheduler taskScheduler);
     }
 }
