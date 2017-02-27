@@ -275,8 +275,6 @@ namespace Networking.Files
             }
         }
 
-        public string Indexer { get; set; }
-
         #endregion
 
         #region Public Members
@@ -288,6 +286,20 @@ namespace Networking.Files
         #endregion
 
         #region Methods
+
+        public void ResetAfterSerialization()
+        {
+            Peers = new ObservableCollection<PeerDetails>();
+            foreach (var hub in RelatedHubs)
+            {
+                hub.ResetHubDetailsAfterSerialization();
+            }
+            Seeders = 0;
+            Leechers = 0;
+            UpdateFileHash();
+            _writeLock = new object();
+            _readLock = new object();
+        }
 
         public int[] GetMissingParts()
         {
@@ -408,10 +420,6 @@ namespace Networking.Files
                     {
                         hub.LastCommunicationTime = DateTime.Now;
                         hub.ConnectedUsers = hubDetails.ConnectedUsers;
-                    }
-                    else
-                    {
-                        hub.LastCommunicationTime = hub.LastCommunicationTime;
                     }
                 }
 

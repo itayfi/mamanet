@@ -31,6 +31,10 @@ namespace DAL
                 {
                     data = new DataStore();
                 }
+                foreach (var mamaNetFile in data.SavedDataFiles)
+                {
+                    mamaNetFile.ResetAfterSerialization();
+                }
             }
             return data;
         }

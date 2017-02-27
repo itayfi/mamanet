@@ -30,7 +30,6 @@ namespace ViewModels.Files
         public RelayCommand PlayCommand { get; set; }
         public RelayCommand UpCommand { get; set; }
         public RelayCommand DownCommand { get; set; }
-        public event EventHandler FilesChanged;
 
         public MamaNetFile SelectedFile
         {

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Networking.Network
@@ -13,12 +14,15 @@ namespace Networking.Network
     {
         private DateTime _lastCommunicaitonTime;
         private int _connectedUsers;
+        [NonSerialized]
+        private Timer _timer;
 
         public HubDetails(string url)
         {
             Url = url;
             ConnectedUsers = 0;
             LastCommunicationTime = DateTime.MinValue;
+            _timer = new Timer(Callback, null, 0, 5);
         }
 
         public HubDetails(string url, int connectedUsers)
@@ -26,6 +30,21 @@ namespace Networking.Network
             Url = url;
             ConnectedUsers = connectedUsers;
             LastCommunicationTime = DateTime.Now;
+            _timer = new Timer(Callback, null, 0, 1000);
+        }
+
+        public void ResetHubDetailsAfterSerialization()
+        {
+            ConnectedUsers = 0;
+            _timer = new Timer(Callback, null, 0, 1000);
+        }
+
+        private void Callback(object state)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("LastCommunicationTime"));
+            }
         }
 
         public string Url { get; set; }
